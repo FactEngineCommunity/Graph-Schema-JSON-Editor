@@ -1,0 +1,47 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+JSON Graph Schema Editor
+</name>
+</assembly>
+<members>
+<member name="T:JSON_Graph_Schema_Editor.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.frmMain.TreeView_MouseUp(System.Object,System.Windows.Forms.MouseEventArgs)">
+ <summary>
+ ContextMenuStrip management.
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.frmMain.AddNodeToolStripMenuItem1_Click(System.Object,System.EventArgs)">
+ <summary>
+ Add Node to Schema
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.frmMain.AddRelationshipToolStripMenuItem1_Click(System.Object,System.EventArgs)">
+ <summary>
+ Add Relationship to Schema
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+</members>
+</doc>
