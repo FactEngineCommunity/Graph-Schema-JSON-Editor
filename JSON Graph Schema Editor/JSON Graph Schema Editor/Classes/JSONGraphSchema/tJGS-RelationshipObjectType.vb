@@ -8,13 +8,13 @@ Namespace JGS
         Public Property ID As String
 
         <JsonProperty("type")>
-        Public Property Type As RefType
+        Public Property Type As New RefType
 
         <JsonProperty("from")>
-        Public Property From As RefType
+        Public Property From As New RefType
 
         <JsonProperty("to")>
-        Public Property To As RefType
+        Public Property [To] As New RefType
     End Class
 
 End Namespace

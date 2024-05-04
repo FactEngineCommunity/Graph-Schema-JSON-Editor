@@ -79,18 +79,30 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Controls\tPGSRelationship.Designer.vb">
+      <DependentUpon>tPGSRelationship.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Controls\tPGSRelationship.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Classes\JSONGraphSchema\tJGS-Constraint.vb" />
     <Compile Include="Classes\JSONGraphSchema\tJGS-GraphSchema.vb" />
     <Compile Include="Classes\JSONGraphSchema\tJGS-GraphSchemaRepresentation.vb" />
     <Compile Include="Classes\JSONGraphSchema\tJGS-Index.vb" />
     <Compile Include="Classes\JSONGraphSchema\tJGS-NodeLabel.vb" />
     <Compile Include="Classes\JSONGraphSchema\tJGS-NodeObjectType.vb" />
-    <Compile Include="Classes\JSONGraphSchema\tJGS-PropertyTypesOneOf.vb" />
+    <Compile Include="Classes\JSONGraphSchema\tJGS-Property.vb" />
     <Compile Include="Classes\JSONGraphSchema\tJGS-RefType.vb" />
     <Compile Include="Classes\JSONGraphSchema\tJGS-RelationshipObjectType.vb" />
     <Compile Include="Classes\JSONGraphSchema\tJGS-RelationshipType.vb" />
     <Compile Include="Classes\JSONGraphSchema\tJGS-RootObject.vb" />
     <Compile Include="Classes\JSONGraphSchema\tJGS-Label.vb" />
+    <Compile Include="Forms\CRUD\frmCRUD-AddEditRelationship.Designer.vb">
+      <DependentUpon>frmCRUD-AddEditRelationship.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CRUD\frmCRUD-AddEditRelationship.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -98,6 +110,7 @@
       <DependentUpon>frmMain.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ModulesPublic\publicVariables.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -115,6 +128,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Classes\Controls\tPGSRelationship.resx">
+      <DependentUpon>tPGSRelationship.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CRUD\frmCRUD-AddEditRelationship.resx">
+      <DependentUpon>frmCRUD-AddEditRelationship.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
     </EmbeddedResource>
@@ -126,6 +145,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Classes\JSONGraphSchema\json-schema.json" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -138,6 +158,38 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Images\MenuImages\AddAttribute16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\Attribute.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\Attribute-PrimaryKey.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\delete16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\email16x16.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\Export16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\Import16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\Index.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\PGS16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\PGSNode.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\tick-button.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

@@ -22,6 +22,61 @@ JSON Graph Schema Editor
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.AddAttribute16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Attribute">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Attribute_PrimaryKey">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.delete16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.email16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Export16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Import16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Index">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.PGS16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.PGSNode">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.tick_button">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="M:JSON_Graph_Schema_Editor.frmMain.TreeView_MouseUp(System.Object,System.Windows.Forms.MouseEventArgs)">
  <summary>
  ContextMenuStrip management.

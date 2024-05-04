@@ -11,7 +11,8 @@ Namespace JGS
         Public Property Token As String
 
         <JsonProperty("properties")>
-        Public Property Properties As PropertyTypesOneOf
+        Public Property Properties As New List(Of JGS.Property)
+
     End Class
 
 End Namespace
