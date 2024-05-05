@@ -24,13 +24,29 @@ C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Sch
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\JSON Graph Schema Editor.pdb
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\JSON Graph Schema Editor.xml
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\FactEngineForServices.dll
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\Microsoft.Bcl.HashCode.dll
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Buffers.dll
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Memory.dll
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Numerics.Vectors.dll
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Reflection.DispatchProxy.dll
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Threading.Tasks.Extensions.dll
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\ADODB.dll
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\Microsoft.Bcl.HashCode.xml
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Buffers.xml
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Memory.xml
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Reflection.DispatchProxy.xml
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\Graph Schema JSON Editor.vbproj.AssemblyReference.cache
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.tPGSProperty.resources
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.tPGSRelationship.resources
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmCRUDAddEditProperty.resources
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmCRUDAddEditRelationship.resources
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmMain.resources
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.Resources.resources
@@ -40,5 +56,5 @@ C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Sch
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON Graph Schema Editor.exe
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON Graph Schema Editor.xml
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON Graph Schema Editor.pdb
-C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.tPGSProperty.resources
-C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmCRUDAddEditProperty.resources
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\CsvHelper.dll
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\CsvHelper.xml

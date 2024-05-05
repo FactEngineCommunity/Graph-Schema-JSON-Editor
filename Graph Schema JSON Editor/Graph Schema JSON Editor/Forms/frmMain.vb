@@ -2,6 +2,9 @@
 Imports System.Text.RegularExpressions
 
 Public Class frmMain
+
+    Private mrFBMModel As New FBM.Model("MyJSONGraphSchema", System.Guid.NewGuid.ToString)
+
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         Call Me.SetupForm()
@@ -14,10 +17,11 @@ Public Class frmMain
         Me.TreeView.ExpandAll()
 
         'Create a new FBM (FactBasedModel) to store the ObjectTypes and Relationships (FactTypes) for the Nodes/Relationships of the Model.
-        Dim lrFBMModel As New FBM.Model("MyJSONGraphSchema", System.Guid.NewGuid.ToString)
+        Dim lrFBMModel = Me.mrFBMModel
 
         'Create a new RDS (RelationalDataStructure) Model to store Nodes/Table in.
-        Dim lrRDSModel = New FactEngineForServices.RDS.Model(lrFBMModel)
+        Me.mrFBMModel.RDS = New FactEngineForServices.RDS.Model(lrFBMModel)
+        Dim lrRDSModel = Me.mrFBMModel.RDS
 
         'Store the RDS Model against the "Schema" TreeNode, so we can add Nodes/Tables to it.
         Me.TreeView.Nodes(0).Tag = lrRDSModel
@@ -32,7 +36,6 @@ Public Class frmMain
     Private Sub TreeView_MouseUp(sender As Object, e As MouseEventArgs) Handles TreeView.MouseUp
 
         Try
-
             If e.Button = MouseButtons.Right Then
                 ' Determine the node at the position of the mouse cursor
                 Dim nodeAtMousePosition As TreeNode = TreeView.GetNodeAt(e.X, e.Y)
@@ -156,6 +159,7 @@ Public Class frmMain
             loRelationshipTreeNode.Tag = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship
 
             loTreeNode.Nodes.Add(loRelationshipTreeNode)
+            loTreeNode.Expand()
 
         End If
 
@@ -199,11 +203,49 @@ Public Class frmMain
         ' Draw each segment
         For Each segment In segments
             Using brush As New SolidBrush(segment.Item2)
-                graphics.DrawString(segment.Item1, font, brush, drawPositionX, startAt.Y)
-                drawPositionX += TextRenderer.MeasureText(graphics, segment.Item1, font).Width
+                graphics.DrawString(segment.Item1, font, brush, New PointF(drawPositionX, startAt.Y))
+                ' Measure text width precisely to update position
+                drawPositionX += graphics.MeasureString(segment.Item1, font).Width - 2 'Was TextRendered.MeasureString
             End Using
         Next
     End Sub
+
+
+    'Private Sub DrawCustomText(graphics As Graphics, text As String, font As Font, startAt As Point, patterns As Dictionary(Of String, Color))
+    '    Dim currentPosition As Integer = 0
+    '    Dim drawPositionX As Integer = startAt.X
+
+    '    ' Clear the area to prevent shadow effect
+    '    graphics.FillRectangle(Brushes.White, New Rectangle(startAt, New Size(text.Length * font.Size, font.Height)))
+
+    '    ' Prepare to handle each segment of text
+    '    Dim segments As New List(Of Tuple(Of String, Color))
+    '    Dim regex As New Regex(String.Join("|", patterns.Keys))
+
+    '    ' Identify all matches
+    '    For Each match As Match In regex.Matches(text)
+    '        If match.Index > currentPosition Then
+    '            ' Add preceding black text
+    '            segments.Add(Tuple.Create(text.Substring(currentPosition, match.Index - currentPosition), Color.Black))
+    '        End If
+    '        ' Add colored text
+    '        segments.Add(Tuple.Create(match.Value, patterns.FirstOrDefault(Function(p) New Regex(p.Key).IsMatch(match.Value)).Value))
+    '        currentPosition = match.Index + match.Length
+    '    Next
+
+    '    ' Add the remaining text if any
+    '    If currentPosition < text.Length Then
+    '        segments.Add(Tuple.Create(text.Substring(currentPosition), Color.Black))
+    '    End If
+
+    '    ' Draw each segment
+    '    For Each segment In segments
+    '        Using brush As New SolidBrush(segment.Item2)
+    '            graphics.DrawString(segment.Item1, font, brush, drawPositionX, startAt.Y)
+    '            drawPositionX += TextRenderer.MeasureText(graphics, segment.Item1, font).Width
+    '        End Using
+    '    Next
+    'End Sub
 
     Private Sub TreeView1_DrawNode(sender As Object, e As DrawTreeNodeEventArgs) Handles TreeView.DrawNode
         'e.DrawDefault = False  ' Prevent default drawing
@@ -221,7 +263,9 @@ Public Class frmMain
         ' Define the drawing patterns and corresponding colors
         Dim patterns As New Dictionary(Of String, Color) From {
             {"\([^\)]*\)", Color.Purple},     ' Text in parentheses in purple
-            {"\[:[^\]]*\]", Color.DarkGreen}  ' Text between "[: " and "]" in dark green
+            {"\[:[^\]]*\]", Color.DarkGreen}, ' Text between "[: " and "]" in dark green
+            {"""[a-z]*"":", Color.Salmon},
+            {"""[a-z]*""", Color.SteelBlue}
         }
 
         ' Set a clipping region to constrain drawing to the node bounds
@@ -277,7 +321,9 @@ Public Class frmMain
 
             Dim lrRDSColumn As New RDS.Column(lrRDSTable, "New Property", lrFBMFactType.RoleGroup(0), lrFBMFactType.RoleGroup(1), False)
 
-            Dim lrNewPropertyTreeNode = New TreeNode(lrFBMValueType.Name, 4, 4)
+            Dim lsPropertyEmbellishment = lrFBMValueType.Name & " { ""type"": """ & If(lrRDSColumn.DataType Is Nothing, "string", lrRDSColumn.DataType.DataType) & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
+
+            Dim lrNewPropertyTreeNode = New TreeNode(lsPropertyEmbellishment, 4, 4)
             lrNewPropertyTreeNode.Tag = lrRDSColumn
             Me.TreeView.SelectedNode.Parent.Nodes(0).Nodes.Add(lrNewPropertyTreeNode)
             Me.TreeView.SelectedNode.Parent.Nodes(0).Expand()
@@ -303,5 +349,42 @@ Public Class frmMain
 
         End Try
 
+    End Sub
+
+    Private Sub SQLiteConnectToToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SQLiteConnectToToolStripMenuItem.Click
+
+        Try
+            Dim lrOpenFileDialog As New OpenFileDialog
+
+            lrOpenFileDialog.Filter = "SQLite database file (*.db)|*.db"
+            lrOpenFileDialog.FilterIndex = 0
+            lrOpenFileDialog.RestoreDirectory = True
+
+            Dim lsConnectionString As String = ""
+
+            If (lrOpenFileDialog.ShowDialog() = DialogResult.OK) Then
+                If System.IO.File.Exists(lrOpenFileDialog.FileName()) Then
+                    lsConnectionString = "Data Source=" & lrOpenFileDialog.FileName & ";Version=3;"
+                    Me.ToolStripLabelDatabaseName.Text = lrOpenFileDialog.FileName
+                    Me.ToolStripLabelPromptSourceDatabase.Visible = True
+                    Me.ToolStripLabelDatabaseName.Visible = True
+
+                    Me.mrFBMModel.DatabaseConnectionString = lsConnectionString
+                    Me.mrFBMModel.TargetDatabaseType = pcenumDatabaseType.SQLite
+                    Me.mrFBMModel.TargetDatabaseConnectionString = lsConnectionString
+                    Me.mrFBMModel.DatabaseConnection = New FactEngine.DatabaseConnection
+                    Me.mrFBMModel.DatabaseConnection.ConnectionString = lsConnectionString
+                    Call Me.mrFBMModel.connectToDatabase()
+                    For Each lrRDSTable In Me.mrFBMModel.DatabaseConnection.getTables
+
+                        Debugger.Break()
+                    Next
+
+                End If
+            End If
+
+        Catch ex As Exception
+
+        End Try
     End Sub
 End Class
