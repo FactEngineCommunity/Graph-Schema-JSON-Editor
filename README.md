@@ -1,2 +1,2 @@
-# JSON-Graph-Schema-Editor
+# Graph-Schema-JSON-Editor
 GUI Editor to create JSON Graph Schema for Graph Databases and Relational Knowledge Graphs
