@@ -23,10 +23,10 @@ Partial Class frmMain
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim TreeNode4 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Nodes", 1, 1)
-        Dim TreeNode5 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Relationships", 2, 2)
-        Dim TreeNode6 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Schema", New System.Windows.Forms.TreeNode() {TreeNode4, TreeNode5})
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
+        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Nodes", 1, 1)
+        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Relationships", 2, 2)
+        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Schema", New System.Windows.Forms.TreeNode() {TreeNode1, TreeNode2})
         Me.MenuStripMain = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -42,7 +42,7 @@ Partial Class frmMain
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GroupBoxMain = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.TreeView = New System.Windows.Forms.TreeView()
+        Me.ImageListMain = New System.Windows.Forms.ImageList(Me.components)
         Me.ToolStripMain = New System.Windows.Forms.ToolStrip()
         Me.ToolStripLabelPromptSourceDatabase = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripLabelDatabaseName = New System.Windows.Forms.ToolStripLabel()
@@ -57,7 +57,6 @@ Partial Class frmMain
         Me.EportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AsJSONGraphSchemaToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStripNode = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.PropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.EditNodeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeleteNodeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -69,8 +68,12 @@ Partial Class frmMain
         Me.ContextMenuStripRelationships = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AddRelationshipToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStripRelationship = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.TreeView = New System.Windows.Forms.TreeView()
+        Me.ToolStripButtonSave = New System.Windows.Forms.ToolStripButton()
+        Me.PropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItemRelationshipAddProperty = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ImageListMain = New System.Windows.Forms.ImageList(Me.components)
+        Me.ContextMenuStripProperties = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.AddPropertyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStripMain.SuspendLayout()
         Me.GroupBoxMain.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
@@ -82,6 +85,7 @@ Partial Class frmMain
         Me.ContextMenuStripNodes.SuspendLayout()
         Me.ContextMenuStripRelationships.SuspendLayout()
         Me.ContextMenuStripRelationship.SuspendLayout()
+        Me.ContextMenuStripProperties.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStripMain
@@ -104,14 +108,14 @@ Partial Class frmMain
         'OpenToolStripMenuItem
         '
         Me.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem"
-        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(155, 26)
+        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(224, 26)
         Me.OpenToolStripMenuItem.Text = "&Open"
         '
         'LoadToolStripMenuItem
         '
         Me.LoadToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.JSONGraphSchemaToolStripMenuItem})
         Me.LoadToolStripMenuItem.Name = "LoadToolStripMenuItem"
-        Me.LoadToolStripMenuItem.Size = New System.Drawing.Size(155, 26)
+        Me.LoadToolStripMenuItem.Size = New System.Drawing.Size(224, 26)
         Me.LoadToolStripMenuItem.Text = "&Load"
         '
         'JSONGraphSchemaToolStripMenuItem
@@ -123,36 +127,36 @@ Partial Class frmMain
         'SaveAsToolStripMenuItem
         '
         Me.SaveAsToolStripMenuItem.Name = "SaveAsToolStripMenuItem"
-        Me.SaveAsToolStripMenuItem.Size = New System.Drawing.Size(155, 26)
+        Me.SaveAsToolStripMenuItem.Size = New System.Drawing.Size(224, 26)
         Me.SaveAsToolStripMenuItem.Text = "Save &As"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(152, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(221, 6)
         '
         'DatabaseToolStripMenuItem
         '
         Me.DatabaseToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SQLiteConnectToToolStripMenuItem})
         Me.DatabaseToolStripMenuItem.Name = "DatabaseToolStripMenuItem"
-        Me.DatabaseToolStripMenuItem.Size = New System.Drawing.Size(155, 26)
-        Me.DatabaseToolStripMenuItem.Text = "&Database"
+        Me.DatabaseToolStripMenuItem.Size = New System.Drawing.Size(224, 26)
+        Me.DatabaseToolStripMenuItem.Text = "Source &Database"
         '
         'SQLiteConnectToToolStripMenuItem
         '
         Me.SQLiteConnectToToolStripMenuItem.Name = "SQLiteConnectToToolStripMenuItem"
-        Me.SQLiteConnectToToolStripMenuItem.Size = New System.Drawing.Size(223, 26)
+        Me.SQLiteConnectToToolStripMenuItem.Size = New System.Drawing.Size(224, 26)
         Me.SQLiteConnectToToolStripMenuItem.Text = "SQLite (Connect To)"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(152, 6)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(221, 6)
         '
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(155, 26)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(224, 26)
         Me.ExitToolStripMenuItem.Text = "E&xit"
         '
         'HelpToolStripMenuItem
@@ -180,8 +184,7 @@ Partial Class frmMain
         '
         'TableLayoutPanel1
         '
-        Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.ColumnCount = 1
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.TreeView, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.ToolStripMain, 0, 0)
@@ -194,49 +197,41 @@ Partial Class frmMain
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(961, 451)
         Me.TableLayoutPanel1.TabIndex = 0
         '
-        'TreeView
+        'ImageListMain
         '
-        Me.TreeView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TreeView.ImageIndex = 0
-        Me.TreeView.ImageList = Me.ImageListMain
-        Me.TreeView.Location = New System.Drawing.Point(3, 33)
-        Me.TreeView.Name = "TreeView"
-        TreeNode4.ImageIndex = 1
-        TreeNode4.Name = "Nodes"
-        TreeNode4.SelectedImageIndex = 1
-        TreeNode4.Text = "Nodes"
-        TreeNode5.ImageIndex = 2
-        TreeNode5.Name = "Relationships"
-        TreeNode5.SelectedImageIndex = 2
-        TreeNode5.Text = "Relationships"
-        TreeNode6.Name = "Schema"
-        TreeNode6.Text = "Schema"
-        Me.TreeView.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode6})
-        Me.TreeView.SelectedImageIndex = 0
-        Me.TreeView.Size = New System.Drawing.Size(474, 415)
-        Me.TreeView.TabIndex = 0
+        Me.ImageListMain.ImageStream = CType(resources.GetObject("ImageListMain.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.ImageListMain.TransparentColor = System.Drawing.Color.Transparent
+        Me.ImageListMain.Images.SetKeyName(0, "PGS16x16.png")
+        Me.ImageListMain.Images.SetKeyName(1, "PGSNode.png")
+        Me.ImageListMain.Images.SetKeyName(2, "Relationship16x16.png")
+        Me.ImageListMain.Images.SetKeyName(3, "AddAttribute16x16.png")
+        Me.ImageListMain.Images.SetKeyName(4, "Attribute.png")
+        Me.ImageListMain.Images.SetKeyName(5, "Attribute-PrimaryKey.png")
+        Me.ImageListMain.Images.SetKeyName(6, "Index.png")
         '
         'ToolStripMain
         '
         Me.ToolStripMain.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.ToolStripMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabelPromptSourceDatabase, Me.ToolStripLabelDatabaseName})
+        Me.ToolStripMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButtonSave, Me.ToolStripLabelPromptSourceDatabase, Me.ToolStripLabelDatabaseName})
         Me.ToolStripMain.Location = New System.Drawing.Point(0, 0)
         Me.ToolStripMain.Name = "ToolStripMain"
-        Me.ToolStripMain.Size = New System.Drawing.Size(480, 25)
+        Me.ToolStripMain.Size = New System.Drawing.Size(961, 27)
         Me.ToolStripMain.TabIndex = 1
         Me.ToolStripMain.Text = "ToolStrip1"
         '
         'ToolStripLabelPromptSourceDatabase
         '
         Me.ToolStripLabelPromptSourceDatabase.Name = "ToolStripLabelPromptSourceDatabase"
-        Me.ToolStripLabelPromptSourceDatabase.Size = New System.Drawing.Size(124, 22)
+        Me.ToolStripLabelPromptSourceDatabase.Size = New System.Drawing.Size(124, 24)
         Me.ToolStripLabelPromptSourceDatabase.Text = "Source Database:"
+        Me.ToolStripLabelPromptSourceDatabase.Visible = False
         '
         'ToolStripLabelDatabaseName
         '
         Me.ToolStripLabelDatabaseName.Name = "ToolStripLabelDatabaseName"
-        Me.ToolStripLabelDatabaseName.Size = New System.Drawing.Size(136, 22)
+        Me.ToolStripLabelDatabaseName.Size = New System.Drawing.Size(136, 24)
         Me.ToolStripLabelDatabaseName.Text = "<Database Name>"
+        Me.ToolStripLabelDatabaseName.Visible = False
         '
         'ContextMenuStripSchemas
         '
@@ -309,28 +304,21 @@ Partial Class frmMain
         Me.ContextMenuStripNode.Name = "ContextMenuStripNode"
         Me.ContextMenuStripNode.Size = New System.Drawing.Size(171, 88)
         '
-        'PropertiesToolStripMenuItem
-        '
-        Me.PropertiesToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.AddAttribute16x16
-        Me.PropertiesToolStripMenuItem.Name = "PropertiesToolStripMenuItem"
-        Me.PropertiesToolStripMenuItem.Size = New System.Drawing.Size(170, 26)
-        Me.PropertiesToolStripMenuItem.Text = "&Add Property"
-        '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(163, 6)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(167, 6)
         '
         'EditNodeToolStripMenuItem
         '
         Me.EditNodeToolStripMenuItem.Name = "EditNodeToolStripMenuItem"
-        Me.EditNodeToolStripMenuItem.Size = New System.Drawing.Size(166, 24)
+        Me.EditNodeToolStripMenuItem.Size = New System.Drawing.Size(170, 26)
         Me.EditNodeToolStripMenuItem.Text = "&Edit Node"
         '
         'DeleteNodeToolStripMenuItem
         '
         Me.DeleteNodeToolStripMenuItem.Name = "DeleteNodeToolStripMenuItem"
-        Me.DeleteNodeToolStripMenuItem.Size = New System.Drawing.Size(166, 24)
+        Me.DeleteNodeToolStripMenuItem.Size = New System.Drawing.Size(170, 26)
         Me.DeleteNodeToolStripMenuItem.Text = "&Delete Node"
         '
         'ContextMenuStripProperty
@@ -362,7 +350,7 @@ Partial Class frmMain
         'AddNodeToolStripMenuItem1
         '
         Me.AddNodeToolStripMenuItem1.Name = "AddNodeToolStripMenuItem1"
-        Me.AddNodeToolStripMenuItem1.Size = New System.Drawing.Size(210, 24)
+        Me.AddNodeToolStripMenuItem1.Size = New System.Drawing.Size(147, 24)
         Me.AddNodeToolStripMenuItem1.Text = "&Add Node"
         '
         'ContextMenuStripRelationships
@@ -383,26 +371,65 @@ Partial Class frmMain
         Me.ContextMenuStripRelationship.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.ContextMenuStripRelationship.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemRelationshipAddProperty})
         Me.ContextMenuStripRelationship.Name = "ContextMenuStripRelationship"
-        Me.ContextMenuStripRelationship.Size = New System.Drawing.Size(215, 58)
+        Me.ContextMenuStripRelationship.Size = New System.Drawing.Size(171, 30)
+        '
+        'TreeView
+        '
+        Me.TreeView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TreeView.ImageIndex = 0
+        Me.TreeView.ImageList = Me.ImageListMain
+        Me.TreeView.Location = New System.Drawing.Point(3, 33)
+        Me.TreeView.Name = "TreeView"
+        TreeNode1.ImageIndex = 1
+        TreeNode1.Name = "Nodes"
+        TreeNode1.SelectedImageIndex = 1
+        TreeNode1.Text = "Nodes"
+        TreeNode2.ImageIndex = 2
+        TreeNode2.Name = "Relationships"
+        TreeNode2.SelectedImageIndex = 2
+        TreeNode2.Text = "Relationships"
+        TreeNode3.Name = "Schema"
+        TreeNode3.Text = "Schema"
+        Me.TreeView.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode3})
+        Me.TreeView.SelectedImageIndex = 0
+        Me.TreeView.Size = New System.Drawing.Size(955, 415)
+        Me.TreeView.TabIndex = 0
+        '
+        'ToolStripButtonSave
+        '
+        Me.ToolStripButtonSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButtonSave.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.Save16x16
+        Me.ToolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButtonSave.Name = "ToolStripButtonSave"
+        Me.ToolStripButtonSave.Size = New System.Drawing.Size(29, 24)
+        Me.ToolStripButtonSave.Text = "ToolStripButton1"
+        '
+        'PropertiesToolStripMenuItem
+        '
+        Me.PropertiesToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.AddAttribute16x16
+        Me.PropertiesToolStripMenuItem.Name = "PropertiesToolStripMenuItem"
+        Me.PropertiesToolStripMenuItem.Size = New System.Drawing.Size(170, 26)
+        Me.PropertiesToolStripMenuItem.Text = "&Add Property"
         '
         'ToolStripMenuItemRelationshipAddProperty
         '
         Me.ToolStripMenuItemRelationshipAddProperty.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.AddAttribute16x16
         Me.ToolStripMenuItemRelationshipAddProperty.Name = "ToolStripMenuItemRelationshipAddProperty"
-        Me.ToolStripMenuItemRelationshipAddProperty.Size = New System.Drawing.Size(214, 26)
+        Me.ToolStripMenuItemRelationshipAddProperty.Size = New System.Drawing.Size(170, 26)
         Me.ToolStripMenuItemRelationshipAddProperty.Text = "&Add Property"
         '
-        'ImageListMain
+        'ContextMenuStripProperties
         '
-        Me.ImageListMain.ImageStream = CType(resources.GetObject("ImageListMain.ImageStream"), System.Windows.Forms.ImageListStreamer)
-        Me.ImageListMain.TransparentColor = System.Drawing.Color.Transparent
-        Me.ImageListMain.Images.SetKeyName(0, "PGS16x16.png")
-        Me.ImageListMain.Images.SetKeyName(1, "PGSNode.png")
-        Me.ImageListMain.Images.SetKeyName(2, "Relationship16x16.png")
-        Me.ImageListMain.Images.SetKeyName(3, "AddAttribute16x16.png")
-        Me.ImageListMain.Images.SetKeyName(4, "Attribute.png")
-        Me.ImageListMain.Images.SetKeyName(5, "Attribute-PrimaryKey.png")
-        Me.ImageListMain.Images.SetKeyName(6, "Index.png")
+        Me.ContextMenuStripProperties.ImageScalingSize = New System.Drawing.Size(20, 20)
+        Me.ContextMenuStripProperties.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddPropertyToolStripMenuItem})
+        Me.ContextMenuStripProperties.Name = "ContextMenuStripProperties"
+        Me.ContextMenuStripProperties.Size = New System.Drawing.Size(211, 56)
+        '
+        'AddPropertyToolStripMenuItem
+        '
+        Me.AddPropertyToolStripMenuItem.Name = "AddPropertyToolStripMenuItem"
+        Me.AddPropertyToolStripMenuItem.Size = New System.Drawing.Size(210, 24)
+        Me.AddPropertyToolStripMenuItem.Text = "&Add Property"
         '
         'frmMain
         '
@@ -416,6 +443,7 @@ Partial Class frmMain
         Me.Name = "frmMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "JSON Graph Schema Editor"
+        Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.MenuStripMain.ResumeLayout(False)
         Me.MenuStripMain.PerformLayout()
         Me.GroupBoxMain.ResumeLayout(False)
@@ -430,6 +458,7 @@ Partial Class frmMain
         Me.ContextMenuStripNodes.ResumeLayout(False)
         Me.ContextMenuStripRelationships.ResumeLayout(False)
         Me.ContextMenuStripRelationship.ResumeLayout(False)
+        Me.ContextMenuStripProperties.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -440,7 +469,6 @@ Partial Class frmMain
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents GroupBoxMain As GroupBox
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
-    Friend WithEvents TreeView As TreeView
     Friend WithEvents ContextMenuStripSchemas As ContextMenuStrip
     Friend WithEvents AddSchemaToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ContextMenuStripSchema As ContextMenuStrip
@@ -479,4 +507,8 @@ Partial Class frmMain
     Friend WithEvents ContextMenuStripRelationship As ContextMenuStrip
     Friend WithEvents ToolStripMenuItemRelationshipAddProperty As ToolStripMenuItem
     Friend WithEvents ImageListMain As ImageList
+    Friend WithEvents TreeView As TreeView
+    Friend WithEvents ToolStripButtonSave As ToolStripButton
+    Friend WithEvents ContextMenuStripProperties As ContextMenuStrip
+    Friend WithEvents AddPropertyToolStripMenuItem As ToolStripMenuItem
 End Class

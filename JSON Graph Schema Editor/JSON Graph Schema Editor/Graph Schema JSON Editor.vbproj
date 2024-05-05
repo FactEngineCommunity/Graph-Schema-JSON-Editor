@@ -58,6 +58,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Reflection.DispatchProxy, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.DispatchProxy.4.7.1\lib\net461\System.Reflection.DispatchProxy.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -85,18 +88,19 @@
     <Compile Include="Classes\Controls\tPGSRelationship.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Classes\JSONGraphSchema\tJGS-Constraint.vb" />
-    <Compile Include="Classes\JSONGraphSchema\tJGS-GraphSchema.vb" />
-    <Compile Include="Classes\JSONGraphSchema\tJGS-GraphSchemaRepresentation.vb" />
-    <Compile Include="Classes\JSONGraphSchema\tJGS-Index.vb" />
-    <Compile Include="Classes\JSONGraphSchema\tJGS-NodeLabel.vb" />
-    <Compile Include="Classes\JSONGraphSchema\tJGS-NodeObjectType.vb" />
-    <Compile Include="Classes\JSONGraphSchema\tJGS-Property.vb" />
-    <Compile Include="Classes\JSONGraphSchema\tJGS-RefType.vb" />
-    <Compile Include="Classes\JSONGraphSchema\tJGS-RelationshipObjectType.vb" />
-    <Compile Include="Classes\JSONGraphSchema\tJGS-RelationshipType.vb" />
-    <Compile Include="Classes\JSONGraphSchema\tJGS-RootObject.vb" />
-    <Compile Include="Classes\JSONGraphSchema\tJGS-Label.vb" />
+    <Compile Include="Classes\GraphSchemaJSON\tJGS-Constraint.vb" />
+    <Compile Include="Classes\GraphSchemaJSON\tJGS-GraphSchema.vb" />
+    <Compile Include="Classes\GraphSchemaJSON\tJGS-GraphSchemaRepresentation.vb" />
+    <Compile Include="Classes\GraphSchemaJSON\tJGS-Index.vb" />
+    <Compile Include="Classes\GraphSchemaJSON\tJGS-NodeLabel.vb" />
+    <Compile Include="Classes\GraphSchemaJSON\tJGS-NodeObjectType.vb" />
+    <Compile Include="Classes\GraphSchemaJSON\tJGS-Property.vb" />
+    <Compile Include="Classes\GraphSchemaJSON\tJGS-RefType.vb" />
+    <Compile Include="Classes\GraphSchemaJSON\tJGS-RelationshipObjectType.vb" />
+    <Compile Include="Classes\GraphSchemaJSON\tJGS-RelationshipType.vb" />
+    <Compile Include="Classes\GraphSchemaJSON\tJGS-RootObject.vb" />
+    <Compile Include="Classes\GraphSchemaJSON\tJGS-Label.vb" />
+    <Compile Include="Classes\SchemaTreeMenuType\tSchemaTreeMenuType.vb" />
     <Compile Include="Forms\CRUD\frmCRUD-AddEditRelationship.Designer.vb">
       <DependentUpon>frmCRUD-AddEditRelationship.vb</DependentUpon>
     </Compile>
@@ -110,6 +114,7 @@
       <DependentUpon>frmMain.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ModulesPublic\publicConstants.vb" />
     <Compile Include="ModulesPublic\publicVariables.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -145,7 +150,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Classes\JSONGraphSchema\json-schema.json" />
+    <None Include="Classes\GraphSchemaJSON\json-schema.json" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -191,5 +196,9 @@
   <ItemGroup>
     <None Include="Images\MenuImages\tick-button.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\Save16x16.png" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

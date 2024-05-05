@@ -17,3 +17,5 @@ C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\JSON-Grap
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\JSON-Graph-Schema-Editor\JSON Graph Schema Editor\JSON Graph Schema Editor\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\JSON-Graph-Schema-Editor\JSON Graph Schema Editor\JSON Graph Schema Editor\obj\Debug\JSON_Graph_Schema_Editor.frmCRUDAddEditRelationship.resources
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\JSON-Graph-Schema-Editor\JSON Graph Schema Editor\JSON Graph Schema Editor\obj\Debug\JSON Graph Schema Editor.vbproj.AssemblyReference.cache
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\JSON-Graph-Schema-Editor\JSON Graph Schema Editor\JSON Graph Schema Editor\bin\Debug\System.Reflection.DispatchProxy.dll
+C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\JSON-Graph-Schema-Editor\JSON Graph Schema Editor\JSON Graph Schema Editor\bin\Debug\System.Reflection.DispatchProxy.xml

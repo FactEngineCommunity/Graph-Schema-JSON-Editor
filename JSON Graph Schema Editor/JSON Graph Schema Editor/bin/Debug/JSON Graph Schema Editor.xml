@@ -72,10 +72,26 @@ JSON Graph Schema Editor
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Save16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.tick_button">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
+</member>
+<member name="T:JSON_Graph_Schema_Editor.tSchemaTreeMenuType">
+ <summary>
+ Added as Tag of TreeNode in the Schema TreeView, for those TreeNodes where need to identify the type of Menu for the TreeNode. I.e. e.g. ContextMenuStrip decision made on the type
+ </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.tSchemaTreeMenuType.#ctor(JSON_Graph_Schema_Editor.publicConstants.pcenumSchemaTreeMenuType)">
+ <summary>
+ Constructor. Identify the type of Menu for the Schema TreeView, TreeNode. I.e. e.g. ContextMenuStrip decision made on the type.
+ </summary>
+ <param name="aiSchemaTreeMenuType">The Type of the Tree Menu. E.g. Properties</param>
 </member>
 <member name="M:JSON_Graph_Schema_Editor.frmMain.TreeView_MouseUp(System.Object,System.Windows.Forms.MouseEventArgs)">
  <summary>

@@ -60,6 +60,17 @@ Public Class frmMain
 
                                 ContextMenuStripNode.Show(TreeView, e.Location)
 
+                            Case Is = GetType(tSchemaTreeMenuType)
+
+                                Select Case CType(TreeView.SelectedNode.Tag, tSchemaTreeMenuType).MenuType
+
+                                    Case Is = pcenumSchemaTreeMenuType.Properties
+
+                                        ContextMenuStripProperties.Show(TreeView, e.Location)
+
+                                End Select
+
+
                         End Select
 
                     End If
@@ -104,7 +115,9 @@ Public Class frmMain
 
         loTreeNode.Expand()
 
-        loNewNodeTreeNode.Nodes.Add(New TreeNode("Properties", 4, 4))
+        Dim loPropertiesTreeNode = New TreeNode("Properties", 4, 4)
+        loPropertiesTreeNode.Tag = New tSchemaTreeMenuType(pcenumSchemaTreeMenuType.Properties)
+        loNewNodeTreeNode.Nodes.Add(loPropertiesTreeNode)
         loNewNodeTreeNode.Expand()
 
     End Sub
@@ -142,7 +155,7 @@ Public Class frmMain
 
         Dim lrFBMModel As FBM.Model = lrRDSTable.Model.Model
 
-        Dim lrFBMValueType As New FBM.ValueType(lrRDSTable.Model.Model, pcenumLanguage.ORMModel, "New Property", False)
+        Dim lrFBMValueType As New FBM.ValueType(lrRDSTable.Model.Model, pcenumLanguage.ORMModel, "New Property", True)
 
         Dim larFBMModelElement As New List(Of FBM.ModelObject)
         larFBMModelElement.Add(lrRDSTable.FBMModelElement)
@@ -153,9 +166,39 @@ Public Class frmMain
 
         Dim lrRDSColumn As New RDS.Column(lrRDSTable, "New Property", lrFBMFactType.RoleGroup(0), lrFBMFactType.RoleGroup(1), False)
 
-        Dim lrNewPropertyTreeNode = New TreeNode(lrFBMValueType.Name)
-        Me.TreeView.SelectedNode.Nodes.Add(lrNewPropertyTreeNode)
+        Dim lrNewPropertyTreeNode = New TreeNode(lrFBMValueType.Name, 4, 4)
+        Me.TreeView.SelectedNode.Nodes(0).Nodes.Add(lrNewPropertyTreeNode)
+        Me.TreeView.SelectedNode.Nodes(0).Expand()
 
     End Sub
+
+    Private Sub AddPropertyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddPropertyToolStripMenuItem.Click
+
+        Try
+            Dim lrRDSTable As RDS.Table = Me.TreeView.SelectedNode.Parent.Tag
+
+            Dim lrFBMModel As FBM.Model = lrRDSTable.Model.Model
+
+            Dim lrFBMValueType As New FBM.ValueType(lrRDSTable.Model.Model, pcenumLanguage.ORMModel, "New Property", True)
+
+            Dim larFBMModelElement As New List(Of FBM.ModelObject)
+            larFBMModelElement.Add(lrRDSTable.FBMModelElement)
+            larFBMModelElement.Add(lrFBMValueType)
+
+            Dim lsNewFactTypeName = larFBMModelElement(0).Id & "Has" & larFBMModelElement(1).Id
+            Dim lrFBMFactType = lrRDSTable.Model.Model.CreateFactType(lsNewFactTypeName, larFBMModelElement, False, True, False, Nothing, True, Nothing, True, False)
+
+            Dim lrRDSColumn As New RDS.Column(lrRDSTable, "New Property", lrFBMFactType.RoleGroup(0), lrFBMFactType.RoleGroup(1), False)
+
+            Dim lrNewPropertyTreeNode = New TreeNode(lrFBMValueType.Name, 4, 4)
+            Me.TreeView.SelectedNode.Parent.Nodes(0).Nodes.Add(lrNewPropertyTreeNode)
+            Me.TreeView.SelectedNode.Parent.Nodes(0).Expand()
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
 
 End Class
