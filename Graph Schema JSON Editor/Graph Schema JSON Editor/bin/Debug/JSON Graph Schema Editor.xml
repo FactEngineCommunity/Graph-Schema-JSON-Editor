@@ -82,6 +82,11 @@ JSON Graph Schema Editor
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="M:JSON_Graph_Schema_Editor.JGS.DataType.#ctor">
+ <summary>
+ Parameterless Constructor
+ </summary>
+</member>
 <member name="T:JSON_Graph_Schema_Editor.tSchemaTreeMenuType">
  <summary>
  Added as Tag of TreeNode in the Schema TreeView, for those TreeNodes where need to identify the type of Menu for the TreeNode. I.e. e.g. ContextMenuStrip decision made on the type

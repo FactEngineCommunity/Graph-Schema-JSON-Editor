@@ -25,6 +25,16 @@ Namespace JGS
         <JsonProperty("type")>
         Public Property type As String
 
+        ''' <summary>
+        ''' Parameterless Constructor
+        ''' </summary>
+        Public Sub New()
+        End Sub
+
+        Public Sub New(ByVal asTypeName As String)
+            Me.type = asTypeName
+        End Sub
+
     End Class
 
 End Namespace
