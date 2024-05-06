@@ -58,3 +58,53 @@ C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Sch
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON Graph Schema Editor.pdb
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\CsvHelper.dll
 C:\Users\Viev\Documents\FactEngine\01-Marketing\01-Product\01-Products\Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\CsvHelper.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\JSON Graph Schema Editor.exe.config
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\JSON Graph Schema Editor.exe
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\JSON Graph Schema Editor.pdb
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\JSON Graph Schema Editor.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\CsvHelper.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\FactEngineForServices.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\Microsoft.Bcl.HashCode.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\Newtonsoft.Json.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Buffers.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Memory.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Numerics.Vectors.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Reflection.DispatchProxy.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Threading.Tasks.Extensions.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\ADODB.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\CsvHelper.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\Microsoft.Bcl.HashCode.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\Newtonsoft.Json.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Buffers.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Memory.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Numerics.Vectors.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Reflection.DispatchProxy.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Threading.Tasks.Extensions.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.tPGSProperty.resources
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.tPGSRelationship.resources
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmCRUDAddEditProperty.resources
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmCRUDAddEditRelationship.resources
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmMain.resources
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.Resources.resources
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\Graph Schema JSON Editor.vbproj.GenerateResource.cache
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\Graph Schema JSON Editor.vbproj.CoreCompileInputs.cache
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\Graph Schema JSON Editor.vbproj.CopyComplete
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON Graph Schema Editor.exe
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON Graph Schema Editor.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON Graph Schema Editor.pdb
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\EntityFramework.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\EntityFramework.SqlServer.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Data.SQLite.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Data.SQLite.EF6.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Data.SQLite.Linq.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\EntityFramework.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\EntityFramework.SqlServer.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\System.Data.SQLite.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\FactEngineForServices.pdb
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\FactEngineForServices.dll.config
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\FactEngineForServices.xml
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\Graph Schema JSON Editor.vbproj.AssemblyReference.cache

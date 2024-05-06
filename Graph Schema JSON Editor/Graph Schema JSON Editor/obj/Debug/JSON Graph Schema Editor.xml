@@ -112,12 +112,22 @@ JSON Graph Schema Editor
  <param name="sender"></param>
  <param name="e"></param>
 </member>
+<member name="M:JSON_Graph_Schema_Editor.frmMain.AddNodeToTreeView(FactEngineForServices.RDS.Table@)">
+ <summary>
+ Add Node to Schema
+ </summary>
+</member>
 <member name="M:JSON_Graph_Schema_Editor.frmMain.AddRelationshipToolStripMenuItem1_Click(System.Object,System.EventArgs)">
  <summary>
  Add Relationship to Schema
  </summary>
  <param name="sender"></param>
  <param name="e"></param>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.frmMain.AddRelationshipToTreeView(FactEngineForServices.RDS.Relation@)">
+ <summary>
+ Add Relationship to Schema
+ </summary>
 </member>
 </members>
 </doc>

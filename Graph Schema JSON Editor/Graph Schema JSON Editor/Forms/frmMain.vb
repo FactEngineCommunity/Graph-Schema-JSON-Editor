@@ -7,6 +7,9 @@ Public Class frmMain
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
 
+        Me.mrFBMModel.AddCore()
+        Me.mrFBMModel.RDSCreated = True
+
         Call Me.SetupForm()
 
     End Sub
@@ -131,6 +134,36 @@ Public Class frmMain
     End Sub
 
     ''' <summary>
+    ''' Add Node to Schema
+    ''' </summary>
+    Private Sub AddNodeToTreeView(ByRef arRDSTable As RDS.Table)
+
+        Dim loTreeNode As TreeNode = Me.TreeView.Nodes(0).Nodes(0)
+
+        Dim loNewNodeTreeNode = New TreeNode(arRDSTable.Name, 1, 1)
+        loTreeNode.Nodes.Add(loNewNodeTreeNode)
+        loNewNodeTreeNode.Tag = arRDSTable
+        loTreeNode.Expand()
+
+        Dim loPropertiesTreeNode = New TreeNode("Properties", 4, 4)
+        loPropertiesTreeNode.Tag = New tSchemaTreeMenuType(pcenumSchemaTreeMenuType.Properties)
+        loNewNodeTreeNode.Nodes.Add(loPropertiesTreeNode)
+
+        '==========================================================
+        'Properties
+        For Each lrRDSColumn In arRDSTable.Column
+
+            Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & If(lrRDSColumn.DataType Is Nothing, "string", lrRDSColumn.DataType.DataType) & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
+
+            Dim lrNewPropertyTreeNode = New TreeNode(lsPropertyEmbellishment, 4, 4)
+            lrNewPropertyTreeNode.Tag = lrRDSColumn
+            loPropertiesTreeNode.Nodes.Add(lrNewPropertyTreeNode)
+        Next
+
+    End Sub
+
+
+    ''' <summary>
     ''' Add Relationship to Schema
     ''' </summary>
     ''' <param name="sender"></param>
@@ -164,6 +197,28 @@ Public Class frmMain
         End If
 
     End Sub
+
+    ''' <summary>
+    ''' Add Relationship to Schema
+    ''' </summary>
+    Private Sub AddRelationshipToTreeView(ByRef arRDSRelationship As RDS.Relation)
+
+        Dim loTreeNode As TreeNode = Me.TreeView.Nodes(0).Nodes(1)
+
+        Dim lrModel As FBM.Model = loTreeNode.Parent.Tag.Model
+
+
+        Dim lsFromModelElementName = arRDSRelationship.OriginTable.Name
+        Dim lsToModelElementName = arRDSRelationship.DestinationTable.Name
+        Dim lsGraphLabel = "HAS"
+
+        Dim loRelationshipTreeNode As New TreeNode($"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})", 2, 2)
+        loRelationshipTreeNode.Tag = arRDSRelationship
+
+        loTreeNode.Nodes.Add(loRelationshipTreeNode)
+
+    End Sub
+
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
 
@@ -372,12 +427,27 @@ Public Class frmMain
                     Me.mrFBMModel.DatabaseConnectionString = lsConnectionString
                     Me.mrFBMModel.TargetDatabaseType = pcenumDatabaseType.SQLite
                     Me.mrFBMModel.TargetDatabaseConnectionString = lsConnectionString
-                    Me.mrFBMModel.DatabaseConnection = New FactEngine.DatabaseConnection
-                    Me.mrFBMModel.DatabaseConnection.ConnectionString = lsConnectionString
-                    Call Me.mrFBMModel.connectToDatabase()
-                    For Each lrRDSTable In Me.mrFBMModel.DatabaseConnection.getTables
 
-                        Debugger.Break()
+                    Me.mrFBMModel.DatabaseManager.establishConnection(Me.mrFBMModel.TargetDatabaseType, Me.mrFBMModel.TargetDatabaseType)
+
+                    Call Me.mrFBMModel.connectToDatabase()
+
+                    Dim lrBackgroundWorker As New System.ComponentModel.BackgroundWorker()
+                    lrBackgroundWorker.WorkerReportsProgress = True
+                    Dim lrReverseEngineerTool As New ODBCDatabaseReverseEngineer(Me.mrFBMModel, lsConnectionString, False, lrBackgroundWorker)
+
+                    pbReverseEngineeringKeepDatabaseColumnNames = True
+
+                    Dim lsErrorMessage As String = ""
+                    Call lrReverseEngineerTool.ReverseEngineerDatabase(lsErrorMessage)
+
+
+                    For Each lrRDSTable In Me.mrFBMModel.RDS.Table
+                        Call Me.AddNodeToTreeView(lrRDSTable)
+                    Next
+
+                    For Each lrRDSRelationship In Me.mrFBMModel.RDS.Relation
+                        Call Me.AddRelationshipToTreeView(lrRDSRelationship)
                     Next
 
                 End If
