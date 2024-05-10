@@ -28,6 +28,7 @@ Partial Class frmMain
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FactTypeReadingEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PropertiesGridToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -63,7 +64,7 @@ Partial Class frmMain
         '
         'ViewToolStripMenuItem
         '
-        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FactTypeReadingEditorToolStripMenuItem})
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FactTypeReadingEditorToolStripMenuItem, Me.PropertiesGridToolStripMenuItem})
         Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
         Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.ViewToolStripMenuItem.Text = "&View"
@@ -74,6 +75,12 @@ Partial Class frmMain
         Me.FactTypeReadingEditorToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.FactTypeReadingEditorToolStripMenuItem.Text = "Fact Type Reading Editor"
         '
+        'PropertiesGridToolStripMenuItem
+        '
+        Me.PropertiesGridToolStripMenuItem.Name = "PropertiesGridToolStripMenuItem"
+        Me.PropertiesGridToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.PropertiesGridToolStripMenuItem.Text = "&Properties Grid"
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -81,6 +88,7 @@ Partial Class frmMain
         Me.ClientSize = New System.Drawing.Size(800, 450)
         Me.Controls.Add(Me.DockPanel)
         Me.Controls.Add(Me.MenuStrip1)
+        Me.IsMdiContainer = True
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "frmMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -99,4 +107,5 @@ Partial Class frmMain
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents FactTypeReadingEditorToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PropertiesGridToolStripMenuItem As ToolStripMenuItem
 End Class

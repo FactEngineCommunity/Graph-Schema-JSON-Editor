@@ -63,6 +63,9 @@
     <Reference Include="FactEngineForServices">
       <HintPath>..\Dependencies\FactEngineForServices.dll</HintPath>
     </Reference>
+    <Reference Include="FilteredPropertyGrid">
+      <HintPath>..\Dependencies\FilteredPropertyGrid.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -89,6 +92,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.118.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Deployment" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.0\lib\netstandard2.0\System.Memory.dll</HintPath>
@@ -130,8 +134,10 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ClassesERD\tERD-Relationship.vb" />
     <Compile Include="Classes\ClassesGeneral\tRichtextCell.vb" />
     <Compile Include="Classes\ClassesGeneral\tRichtextColumn.vb" />
+    <Compile Include="Classes\ClassesGeneral\tStringCollectionEditor.vb" />
     <Compile Include="Classes\ClassesGeneral\tStrings.vb" />
     <Compile Include="Classes\ClassesGeneral\WaitCursor.vb" />
     <Compile Include="Classes\ClassesStrings\FEStringFunctions.vb" />
@@ -199,6 +205,12 @@
       <DependentUpon>frmSchema.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\frmStartup.Designer.vb">
+      <DependentUpon>frmStartup.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmStartup.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Toolboxes\frmAutoComplete.Designer.vb">
       <DependentUpon>frmAutoComplete.vb</DependentUpon>
     </Compile>
@@ -211,8 +223,15 @@
     <Compile Include="Forms\Toolboxes\frmToolboxORMReadingEditor.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Toolboxes\frmToolboxProperties.Designer.vb">
+      <DependentUpon>frmToolboxProperties.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Toolboxes\frmToolboxProperties.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ModulesPublic\MyMethodExtensions.vb" />
     <Compile Include="ModulesPublic\publicConstants.vb" />
+    <Compile Include="ModulesPublic\publicFunctions.vb" />
     <Compile Include="ModulesPublic\publicVariables.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -256,11 +275,17 @@
     <EmbeddedResource Include="Forms\frmSchema.resx">
       <DependentUpon>frmSchema.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmStartup.resx">
+      <DependentUpon>frmStartup.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Toolboxes\frmAutoComplete.resx">
       <DependentUpon>frmAutoComplete.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Toolboxes\frmToolboxORMReadingEditor.resx">
       <DependentUpon>frmToolboxORMReadingEditor.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Toolboxes\frmToolboxProperties.resx">
+      <DependentUpon>frmToolboxProperties.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
