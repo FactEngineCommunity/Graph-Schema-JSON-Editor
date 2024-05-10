@@ -8,6 +8,9 @@ Public Class frmMain
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
 
+        prApplication.DebugMode = pcenumDebugMode.DebugCriticalErrorsOnly
+        prApplication.ThrowCriticalDebugMessagesToScreen = True
+
         Call Me.SetupForm()
 
     End Sub

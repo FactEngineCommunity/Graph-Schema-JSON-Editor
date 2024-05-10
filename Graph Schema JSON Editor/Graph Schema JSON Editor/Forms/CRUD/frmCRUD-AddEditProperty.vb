@@ -1,7 +1,7 @@
 ﻿Public Class frmCRUDAddEditProperty
 
     Public mrRDSModel As FactEngineForServices.RDS.Model
-    Public mrPGSProperty As New JGS.Property
+    Public mrPGSProperty As New GSJ.Property
 
     Private Sub TPGSRelationship1_CancelClicked() Handles TPGSProperty1.CancelClicked
 
@@ -19,7 +19,7 @@
 
     Private Sub SetupForm()
 
-        'Me.TPGSProperty.JGSRelationship = Me.mrPGSRelationship
+        'Me.TPGSProperty.GSJRelationship = Me.mrPGSRelationship
 
     End Sub
 

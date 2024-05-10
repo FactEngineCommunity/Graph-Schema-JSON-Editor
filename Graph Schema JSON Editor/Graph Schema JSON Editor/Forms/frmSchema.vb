@@ -177,7 +177,7 @@ Public Class frmSchema
 
         Dim lfrmCRUDAddEditPGSRelationship As New frmCRUDAddEditRelationship
         lfrmCRUDAddEditPGSRelationship.mrRDSModel = lrModel.RDS
-        Dim lrPGSRelationship = New JGS.RelationshipObjectType
+        Dim lrPGSRelationship = New GSJ.RelationshipObjectType
         lrPGSRelationship.From.Ref = "Node Type 1"
         lrPGSRelationship.Type.Ref = "RELATES_TO"
         lrPGSRelationship.To.Ref = "Node Type 2"
@@ -521,4 +521,21 @@ Public Class frmSchema
         End Try
 
     End Sub
+
+    Private Sub AsJSONGraphSchemaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AsJSONGraphSchemaToolStripMenuItem.Click
+
+        Try
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+
 End Class

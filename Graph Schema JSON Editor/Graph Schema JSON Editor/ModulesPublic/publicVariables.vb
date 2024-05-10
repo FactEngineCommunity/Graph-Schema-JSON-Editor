@@ -2,7 +2,7 @@
 
 Module publicVariables
 
-    Public prApplication As tApplication = New FactEngineForServices.tApplication()
+    Dim prApplication = New FactEngineForServices.tApplication()
 
     Public pbAutoCompleteSingleClickSelects As Boolean = True
 

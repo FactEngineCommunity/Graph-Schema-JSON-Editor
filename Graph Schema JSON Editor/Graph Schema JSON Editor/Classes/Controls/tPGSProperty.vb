@@ -1,19 +1,20 @@
 ﻿Public Class tPGSProperty
 
-    Public JGSProperty As New JGS.Property
+    Public GSJProperty As New GSJ.Property
 
     Public Event OkayClicked()
     Public Event CancelClicked()
 
     Private Sub tPGSRelationship_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        Me.JGSProperty.Ref = "NewProperty"
+        Me.GSJProperty.id = System.Guid.NewGuid.ToString
 
-        Me.JGSProperty.Type = New JGS.DataType
-        Me.JGSProperty.Ref = "string"
+        Me.GSJProperty.token = "New Property"
 
+        Me.GSJProperty.type = New GSJ.DataType
+        Me.GSJProperty.type.type = "string"
 
-        Me.JGSProperty.Nullable = True
+        Me.GSJProperty.nullable = True
 
         Me.TabIndex = 2
 
@@ -23,22 +24,22 @@
     Private Sub ComboBoxDataType_TextChanged(sender As Object, e As EventArgs) Handles ComboBoxDataType.TextChanged
 
         Try
-            Me.JGSProperty.Type = Me.ComboBoxDataType.SelectedItem.ItemData
+            Me.GSJProperty.type = Me.ComboBoxDataType.SelectedItem.ItemData
         Catch
-            Me.JGSProperty.Type = New JGS.DataType(Me.ComboBoxDataType.Text)
+            Me.GSJProperty.type = New GSJ.DataType(Me.ComboBoxDataType.Text)
         End Try
 
     End Sub
 
     Private Sub TextBoxPropertyName_TextChanged(sender As Object, e As EventArgs) Handles TextBoxPropertyName.TextChanged
 
-        Me.JGSProperty.Ref = Me.TextBoxPropertyName.Text.Trim
+        Me.GSJProperty.token = Me.TextBoxPropertyName.Text.Trim
 
     End Sub
 
     Private Sub CheckBoxAllowNulls_CheckChanged(sender As Object, e As EventArgs) Handles CheckBoxAllowNulls.CheckedChanged
 
-        Me.JGSProperty.Nullable = Me.CheckBoxAllowNulls.Checked
+        Me.GSJProperty.nullable = Me.CheckBoxAllowNulls.Checked
 
     End Sub
 

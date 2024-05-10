@@ -98,7 +98,22 @@ JSON Graph Schema Editor
  <param name="abDestinationMandatory"></param>
  <param name="abCorrespondingTable">If the Relation is a PGSRelation, then has a corresponding Table.</param>
 </member>
-<member name="M:JSON_Graph_Schema_Editor.JGS.DataType.#ctor">
+<member name="M:JSON_Graph_Schema_Editor.GSJ.GraphSchema.#ctor">
+ <summary>
+ Parameterless Constructor
+ </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.NodeLabel.#ctor">
+ <summary>
+ Parameterless Constructor
+ </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.Property.#ctor">
+ <summary>
+ Parameterless Constructor
+ </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.DataType.#ctor">
  <summary>
  Parameterless Constructor
  </summary>
