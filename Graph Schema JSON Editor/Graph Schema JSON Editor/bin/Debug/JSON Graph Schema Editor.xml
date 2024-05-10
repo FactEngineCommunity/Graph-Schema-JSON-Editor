@@ -98,36 +98,76 @@ JSON Graph Schema Editor
  </summary>
  <param name="aiSchemaTreeMenuType">The Type of the Tree Menu. E.g. Properties</param>
 </member>
-<member name="M:JSON_Graph_Schema_Editor.frmMain.TreeView_MouseUp(System.Object,System.Windows.Forms.MouseEventArgs)">
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.TreeView_MouseUp(System.Object,System.Windows.Forms.MouseEventArgs)">
  <summary>
  ContextMenuStrip management.
  </summary>
  <param name="sender"></param>
  <param name="e"></param>
 </member>
-<member name="M:JSON_Graph_Schema_Editor.frmMain.AddNodeToolStripMenuItem1_Click(System.Object,System.EventArgs)">
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddNodeToolStripMenuItem1_Click(System.Object,System.EventArgs)">
  <summary>
  Add Node to Schema
  </summary>
  <param name="sender"></param>
  <param name="e"></param>
 </member>
-<member name="M:JSON_Graph_Schema_Editor.frmMain.AddNodeToTreeView(FactEngineForServices.RDS.Table@)">
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddNodeToTreeView(FactEngineForServices.RDS.Table@)">
  <summary>
  Add Node to Schema
  </summary>
 </member>
-<member name="M:JSON_Graph_Schema_Editor.frmMain.AddRelationshipToolStripMenuItem1_Click(System.Object,System.EventArgs)">
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddRelationshipToolStripMenuItem1_Click(System.Object,System.EventArgs)">
  <summary>
  Add Relationship to Schema
  </summary>
  <param name="sender"></param>
  <param name="e"></param>
 </member>
-<member name="M:JSON_Graph_Schema_Editor.frmMain.AddRelationshipToTreeView(FactEngineForServices.RDS.Relation@)">
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddRelationshipToTreeView(FactEngineForServices.RDS.Relation@)">
  <summary>
  Add Relationship to Schema
  </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.frmToolboxORMReadingEditor.Button3_Click(System.Object,System.EventArgs)">
+ <summary>
+ Clears the Reading TextBox
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+ <remarks></remarks>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.frmToolboxORMReadingEditor.PopulateTermList">
+ <summary>
+ 20221012-VM-Schedule for removal. Not called from anywhere.
+ </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.frmToolboxORMReadingEditor.GetPredicatePartsFromReadingUsingParser(System.String,FactEngineForServices.FBM.FactTypeReading@,System.Collections.Generic.List{FactEngineForServices.FBM.Role}@)">
+ <summary>
+ 20180419-VM-Finally deleted the old code. See below circa 2016
+ VM-20160511-This is the new process for the new model that matches the FBMWG08 model for PredicateParts.
+ i.e. Using a parser to retrieve FrontText, PreBoundText, PostBoundText and PredicateParts.
+ The previous method (GetPredicatePartsFromReading) used a parser written by VM and isn't sufficiently strong enough
+ to retrieve FrontText, PreboundText and PostBoundText.
+ This new process (will use) uses the TinyPG parser to parse the reading and to retrieve the relevant pieces from the 
+ ReadingText.
+ <remarks></remarks>
+ </summary>
+ <param name="asReading">The Fact Type Reading text</param>
+ <param name="arFactTypeReading">The Fact Type Reading that is populated as output of this process.</param>
+ <returns>TRUE if the FactTypeReading can be gleaned from the supplied Reading text (asReading),
+   ELSE RETURNS FALSE.
+ arFactTypeReading returns populated if asReading is successfully parsed and all Object Types of the reading match those joined by the Fact Type.
+ </returns>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.frmToolboxORMReadingEditor.ProtectFactTypeTerms(System.Object)">
+ <summary>
+ Protects the names of ORM Object Types within the Reading so that
+   the User doesn't accidentally delete or change them.
+   Makes it easier to structure the Fact Type Reading as a Predicate.
+     ''' </summary>
+ <param name="aoRichTextBox"></param>
+ <remarks></remarks>
 </member>
 </members>
 </doc>

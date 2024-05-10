@@ -1,5 +1,9 @@
-﻿Module publicVariables
+﻿Imports FactEngineForServices
 
-    Public prApplication = New FactEngineForServices.tApplication()
+Module publicVariables
+
+    Public prApplication As tApplication = New FactEngineForServices.tApplication()
+
+    Public pbAutoCompleteSingleClickSelects As Boolean = True
 
 End Module

@@ -88,7 +88,6 @@ D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema
 D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.tPGSRelationship.resources
 D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmCRUDAddEditProperty.resources
 D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmCRUDAddEditRelationship.resources
-D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmMain.resources
 D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.Resources.resources
 D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\Graph Schema JSON Editor.vbproj.GenerateResource.cache
 D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\Graph Schema JSON Editor.vbproj.CoreCompileInputs.cache
@@ -108,3 +107,11 @@ D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema
 D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\FactEngineForServices.dll.config
 D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\FactEngineForServices.xml
 D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\Graph Schema JSON Editor.vbproj.AssemblyReference.cache
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmToolboxORMReadingEditor.resources
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmAutoComplete.resources
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.DateTimePicker.resources
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmSchema.resources
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.tRichtextEditingControl.resources
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\WeifenLuo.WinFormsUI.Docking.dll
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\bin\Debug\WeifenLuo.WinFormsUI.Docking.pdb
+D:\00-FactEngine\01-Product\01-Products\09-Graph-Schema-JSON-Editor\Graph Schema JSON Editor\Graph Schema JSON Editor\obj\Debug\JSON_Graph_Schema_Editor.frmMain.resources

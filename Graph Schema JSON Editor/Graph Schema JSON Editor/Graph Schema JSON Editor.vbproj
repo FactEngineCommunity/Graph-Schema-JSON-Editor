@@ -112,6 +112,9 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\Dependencies\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -127,6 +130,18 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ClassesGeneral\tRichtextCell.vb" />
+    <Compile Include="Classes\ClassesGeneral\tRichtextColumn.vb" />
+    <Compile Include="Classes\ClassesGeneral\tStrings.vb" />
+    <Compile Include="Classes\ClassesGeneral\WaitCursor.vb" />
+    <Compile Include="Classes\ClassesStrings\FEStringFunctions.vb" />
+    <Compile Include="Classes\ClassesStrings\tFEStrings.vb" />
+    <Compile Include="Classes\Controls\DateTimePicker.Designer.vb">
+      <DependentUpon>DateTimePicker.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Controls\DateTimePicker.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Classes\Controls\tPGSProperty.Designer.vb">
       <DependentUpon>tPGSProperty.vb</DependentUpon>
     </Compile>
@@ -138,6 +153,12 @@
     </Compile>
     <Compile Include="Classes\Controls\tPGSRelationship.vb">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Classes\Controls\tRichtextEditingControl.designer.vb">
+      <DependentUpon>tRichtextEditingControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Controls\tRichtextEditingControl.vb">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Classes\GraphSchemaJSON\tJGS-Constraint.vb" />
     <Compile Include="Classes\GraphSchemaJSON\tJGS-GraphSchema.vb" />
@@ -152,6 +173,7 @@
     <Compile Include="Classes\GraphSchemaJSON\tJGS-RootObject.vb" />
     <Compile Include="Classes\GraphSchemaJSON\tJGS-Label.vb" />
     <Compile Include="Classes\SchemaTreeMenuType\tSchemaTreeMenuType.vb" />
+    <Compile Include="Classes\tComboBoxItem.vb" />
     <Compile Include="Forms\CRUD\frmCRUD-AddEditProperty.Designer.vb">
       <DependentUpon>frmCRUD-AddEditProperty.vb</DependentUpon>
     </Compile>
@@ -164,19 +186,39 @@
     <Compile Include="Forms\CRUD\frmCRUD-AddEditRelationship.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\frmMain.Designer.vb">
+      <DependentUpon>frmMain.vb</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmMain.Designer.vb">
-      <DependentUpon>frmMain.vb</DependentUpon>
+    <Compile Include="Forms\frmSchema.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\frmSchema.Designer.vb">
+      <DependentUpon>frmSchema.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Toolboxes\frmAutoComplete.Designer.vb">
+      <DependentUpon>frmAutoComplete.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Toolboxes\frmAutoComplete.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Toolboxes\frmToolboxORMReadingEditor.designer.vb">
+      <DependentUpon>frmToolboxORMReadingEditor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Toolboxes\frmToolboxORMReadingEditor.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModulesPublic\MyMethodExtensions.vb" />
     <Compile Include="ModulesPublic\publicConstants.vb" />
     <Compile Include="ModulesPublic\publicVariables.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -190,11 +232,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Classes\Controls\DateTimePicker.resx">
+      <DependentUpon>DateTimePicker.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Classes\Controls\tPGSProperty.resx">
       <DependentUpon>tPGSProperty.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Classes\Controls\tPGSRelationship.resx">
       <DependentUpon>tPGSRelationship.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Classes\Controls\tRichtextEditingControl.resx">
+      <DependentUpon>tRichtextEditingControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CRUD\frmCRUD-AddEditProperty.resx">
       <DependentUpon>frmCRUD-AddEditProperty.vb</DependentUpon>
@@ -204,6 +252,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSchema.resx">
+      <DependentUpon>frmSchema.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Toolboxes\frmAutoComplete.resx">
+      <DependentUpon>frmAutoComplete.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Toolboxes\frmToolboxORMReadingEditor.resx">
+      <DependentUpon>frmToolboxORMReadingEditor.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
