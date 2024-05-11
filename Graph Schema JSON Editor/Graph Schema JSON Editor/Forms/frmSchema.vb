@@ -1,5 +1,7 @@
 ﻿Imports FactEngineForServices
 Imports System.Text.RegularExpressions
+Imports System.IO
+Imports Newtonsoft.Json
 Imports System.Reflection
 
 Public Class frmSchema
@@ -204,19 +206,68 @@ Public Class frmSchema
     ''' </summary>
     Private Sub AddRelationshipToTreeView(ByRef arRDSRelationship As RDS.Relation)
 
-        Dim loTreeNode As TreeNode = Me.TreeView.Nodes(0).Nodes(1)
+        Try
+            Dim loTreeNode As TreeNode = Me.TreeView.Nodes(0).Nodes(1)
 
-        Dim lrModel As FBM.Model = loTreeNode.Parent.Tag.Model
+            Dim lrModel As FBM.Model = loTreeNode.Parent.Tag.Model
 
 
-        Dim lsFromModelElementName = arRDSRelationship.OriginTable.Name
-        Dim lsToModelElementName = arRDSRelationship.DestinationTable.Name
-        Dim lsGraphLabel = "HAS"
+            Dim lsFromModelElementName = arRDSRelationship.OriginTable.Name
+            Dim lsToModelElementName = arRDSRelationship.DestinationTable.Name
+            Dim lsGraphLabel = arRDSRelationship.ResponsibleFactType.GraphLabel(0).Label
 
-        Dim loRelationshipTreeNode As New TreeNode($"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})", 2, 2)
-        loRelationshipTreeNode.Tag = arRDSRelationship
+            Dim loRelationshipTreeNode As New TreeNode($"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})", 2, 2)
+            loRelationshipTreeNode.Tag = arRDSRelationship
 
-        loTreeNode.Nodes.Add(loRelationshipTreeNode)
+            loTreeNode.Nodes.Add(loRelationshipTreeNode)
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+    ''' <summary>
+    ''' Add Relationship to Schema
+    ''' </summary>
+    Private Sub AddRelationshipToTreeView(ByRef arFBMFactType As FBM.FactType)
+
+        Try
+            Dim lrFBMFactType As FBM.FactType = arFBMFactType
+
+            Dim loTreeNode As TreeNode = Me.TreeView.Nodes(0).Nodes(1)
+
+            Dim lrModel As FBM.Model = loTreeNode.Parent.Tag.Model
+
+            For Each lrGraphLabel In arFBMFactType.GraphLabel
+
+                Dim larRelationshipRole = (From Role In lrFBMFactType.RoleGroup.FindAll(Function(x) x.JoinsValueType Is Nothing)
+                                           Select Role).ToList
+
+                Dim lsFromModelElementName = larRelationshipRole(0).JoinedORMObject.Id
+                Dim lsToModelElementName = larRelationshipRole(1).JoinedORMObject.Id
+                Dim lsGraphLabel = lrGraphLabel.Label
+
+                Dim loRelationshipTreeNode As New TreeNode($"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})", 2, 2)
+                loRelationshipTreeNode.Tag = arFBMFactType
+
+                loTreeNode.Nodes.Add(loRelationshipTreeNode)
+
+            Next
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
 
     End Sub
 
@@ -429,9 +480,10 @@ Public Class frmSchema
                     Me.mrFBMModel.TargetDatabaseType = pcenumDatabaseType.SQLite
                     Me.mrFBMModel.TargetDatabaseConnectionString = lsConnectionString
 
-                    Me.mrFBMModel.DatabaseManager.establishConnection(Me.mrFBMModel.TargetDatabaseType, Me.mrFBMModel.TargetDatabaseType)
+                    Me.mrFBMModel.DatabaseManager.establishConnection(Me.mrFBMModel.TargetDatabaseType, Me.mrFBMModel.TargetDatabaseConnectionString)
 
                     Call Me.mrFBMModel.connectToDatabase()
+                    Call Me.mrFBMModel.DatabaseConnection.getDatabaseDataTypes()
 
                     Dim lrBackgroundWorker As New System.ComponentModel.BackgroundWorker()
                     lrBackgroundWorker.WorkerReportsProgress = True
@@ -443,12 +495,18 @@ Public Class frmSchema
                     Call lrReverseEngineerTool.ReverseEngineerDatabase(lsErrorMessage)
 
 
-                    For Each lrRDSTable In Me.mrFBMModel.RDS.Table
+                    For Each lrRDSTable In Me.mrFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
                         Call Me.AddNodeToTreeView(lrRDSTable)
                     Next
 
-                    For Each lrRDSRelationship In Me.mrFBMModel.RDS.Relation
+                    For Each lrRDSRelationship In Me.mrFBMModel.RDS.Relation.FindAll(Function(x) Not x.ResponsibleFactType.IsLinkFactType Or Not (x.ResponsibleFactType.IsLinkFactType AndAlso x.ResponsibleFactType.LinkFactTypeRole.FactType.IsCandidatePGSRelationshipNode))
                         Call Me.AddRelationshipToTreeView(lrRDSRelationship)
+                    Next
+
+                    For Each lrPGSRelationshipNodeFactType In Me.mrFBMModel.FactType.FindAll(Function(x) x.IsCandidatePGSRelationshipNode)
+
+                        Call Me.AddRelationshipToTreeView(lrPGSRelationshipNodeFactType)
+
                     Next
 
                 End If
@@ -524,7 +582,53 @@ Public Class frmSchema
 
     Private Sub AsJSONGraphSchemaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AsJSONGraphSchemaToolStripMenuItem.Click
 
+        Dim lsFolderLocation As String = ""
+        Dim lsFileName As String = ""
+        'Dim loStreamWriter As StreamWriter ' Create file by FileStream class
+        'Dim loXMLSerialiser As XmlSerializer ' Create binary object
+        Dim lrModel As FBM.Model
+        Dim lrGraphSchemaRepresentation As New GSJ.GraphSchemaRepresentation
+
         Try
+            '-----------------------------------------
+            'Get the Model from the selected TreeNode
+            '-----------------------------------------
+            lrModel = Me.TreeView.SelectedNode.Tag.Model
+            'If Not lrModel.Loaded Then
+            '    Call Me.DoModelLoading(lrModel)
+            '    Call Me.SetWorkingEnvironmentForObject(Me.TreeView.SelectedNode.Tag)
+            'End If
+
+
+            If Not lrGraphSchemaRepresentation.MapFromFBMModel(lrModel) Then
+                MsgBox("Fix the model errors, then try again.")
+                Exit Sub
+            End If
+
+            Dim lsFileLocationName As String = ""
+
+
+            Dim lrSaveFileDialog As New SaveFileDialog()
+
+            lsFileName = lrModel.Name & ".json"
+            lsFileLocationName = lsFileName
+
+            lrSaveFileDialog.Filter = "Graph Schema JSON file (*.json)|*.json"
+            lrSaveFileDialog.FilterIndex = 0
+            lrSaveFileDialog.RestoreDirectory = True
+            lrSaveFileDialog.FileName = lsFileLocationName
+
+            If lrSaveFileDialog.ShowDialog() = DialogResult.OK Then
+                lsFileLocationName = lrSaveFileDialog.FileName
+            Else
+                Exit Sub
+            End If
+
+            Dim json As String = JsonConvert.SerializeObject(lrGraphSchemaRepresentation, Formatting.Indented)
+            File.WriteAllText(lsFileLocationName, json)
+
+            Console.WriteLine("Object serialized successfully.")
+
 
         Catch ex As Exception
             Dim lsMessage As String

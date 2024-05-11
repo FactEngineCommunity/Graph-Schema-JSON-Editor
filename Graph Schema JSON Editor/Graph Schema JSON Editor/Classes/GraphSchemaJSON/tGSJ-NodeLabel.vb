@@ -19,8 +19,14 @@ Namespace GSJ
         Public Sub New()
         End Sub
 
-        Public Sub New(ByVal asToken As String)
+        ''' <summary>
+        ''' Constructor
+        ''' </summary>
+        ''' <param name="asToken"></param>
+        ''' <param name="asId">Use the GUID of the FBMModelElement of the RDS.Table responsible for this NodeLabel.</param>
+        Public Sub New(ByVal asToken As String, ByVal asId As String)
 
+            Me.id = asId
             Me.token = asToken
 
         End Sub

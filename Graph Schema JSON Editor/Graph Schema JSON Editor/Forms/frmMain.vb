@@ -97,4 +97,21 @@ Public Class frmMain
         End Try
 
     End Sub
+
+    Private Sub SchemaViewerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SchemaViewerToolStripMenuItem.Click
+
+        Dim lfrmSchemaViewer = New frmSchema
+
+        lfrmSchemaViewer.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockLeft)
+
+    End Sub
+
+    Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
+
+        Me.Hide()
+        Me.Close()
+        Me.Dispose()
+
+    End Sub
+
 End Class

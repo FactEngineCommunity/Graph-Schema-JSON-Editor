@@ -23,8 +23,19 @@ Namespace GSJ
         Public Sub New()
         End Sub
 
-        Public Sub New(ByVal asPropertyName As String, ByVal abIsNullable As Boolean, ByVal arGSJDatatype As GSJ.DataType)
+        ''' <summary>
+        ''' 
+        ''' </summary>
+        ''' <param name="asPropertyName"></param>
+        ''' <param name="asId">Use the Id of the RDS.Column responsible for this Property.</param>
+        ''' <param name="abIsNullable"></param>
+        ''' <param name="arGSJDatatype"></param>
+        Public Sub New(ByVal asPropertyName As String,
+                       ByVal asId As String,
+                       ByVal abIsNullable As Boolean,
+                       ByVal arGSJDatatype As GSJ.DataType)
 
+            Me.id = asId
             Me.token = asPropertyName
             Me.nullable = abIsNullable
             Me.type = arGSJDatatype

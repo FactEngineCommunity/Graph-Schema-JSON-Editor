@@ -29,6 +29,8 @@ Partial Class frmMain
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FactTypeReadingEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PropertiesGridToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SchemaViewerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -64,7 +66,7 @@ Partial Class frmMain
         '
         'ViewToolStripMenuItem
         '
-        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FactTypeReadingEditorToolStripMenuItem, Me.PropertiesGridToolStripMenuItem})
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SchemaViewerToolStripMenuItem, Me.ToolStripSeparator1, Me.FactTypeReadingEditorToolStripMenuItem, Me.PropertiesGridToolStripMenuItem})
         Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
         Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.ViewToolStripMenuItem.Text = "&View"
@@ -80,6 +82,17 @@ Partial Class frmMain
         Me.PropertiesGridToolStripMenuItem.Name = "PropertiesGridToolStripMenuItem"
         Me.PropertiesGridToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.PropertiesGridToolStripMenuItem.Text = "&Properties Grid"
+        '
+        'SchemaViewerToolStripMenuItem
+        '
+        Me.SchemaViewerToolStripMenuItem.Name = "SchemaViewerToolStripMenuItem"
+        Me.SchemaViewerToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.SchemaViewerToolStripMenuItem.Text = "&Schema Viewer"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(200, 6)
         '
         'frmMain
         '
@@ -108,4 +121,6 @@ Partial Class frmMain
     Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents FactTypeReadingEditorToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents PropertiesGridToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SchemaViewerToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
 End Class

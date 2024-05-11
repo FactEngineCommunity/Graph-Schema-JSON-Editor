@@ -108,15 +108,69 @@ JSON Graph Schema Editor
  Parameterless Constructor
  </summary>
 </member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.NodeLabel.#ctor(System.String,System.String)">
+ <summary>
+ Constructor
+ </summary>
+ <param name="asToken"></param>
+ <param name="asId">Use the GUID of the FBMModelElement of the RDS.Table responsible for this NodeLabel.</param>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.NodeObjectType.#ctor">
+ <summary>
+ Parameterless Constructor
+ </summary>
+</member>
 <member name="M:JSON_Graph_Schema_Editor.GSJ.Property.#ctor">
  <summary>
  Parameterless Constructor
  </summary>
 </member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.Property.#ctor(System.String,System.String,System.Boolean,JSON_Graph_Schema_Editor.GSJ.DataType)">
+ <summary>
+ 
+ </summary>
+ <param name="asPropertyName"></param>
+ <param name="asId">Use the Id of the RDS.Column responsible for this Property.</param>
+ <param name="abIsNullable"></param>
+ <param name="arGSJDatatype"></param>
+</member>
 <member name="M:JSON_Graph_Schema_Editor.GSJ.DataType.#ctor">
  <summary>
  Parameterless Constructor
  </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.RefType.#ctor">
+ <summary>
+ Parameterless Constructor
+ </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.RelationshipObjectType.#ctor">
+ <summary>
+ Parameterless Constructor
+ </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.RelationshipType.#ctor">
+ <summary>
+ Parameterless Constructor
+ </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.RelationshipType.#ctor(System.String,System.String)">
+ <summary>
+ 
+ </summary>
+ <param name="asToken"></param>
+ <param name="asId">Use the GUID of the FBM.FactType responsible for this RelationshipType.</param>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.Label.#ctor">
+ <summary>
+ Parameterless Constructor.
+ </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.Label.#ctor(System.String)">
+ <summary>
+ 
+ </summary>
+ <param name="asRef">Use the GraphLabel from the FBM Model Element responsible for the base NodeType, OR the actual GUID of the FBM Model Element if is responsible for the base NodeType</param>
 </member>
 <member name="T:JSON_Graph_Schema_Editor.tSchemaTreeMenuType">
  <summary>
@@ -156,6 +210,11 @@ JSON Graph Schema Editor
  <param name="e"></param>
 </member>
 <member name="M:JSON_Graph_Schema_Editor.frmSchema.AddRelationshipToTreeView(FactEngineForServices.RDS.Relation@)">
+ <summary>
+ Add Relationship to Schema
+ </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddRelationshipToTreeView(FactEngineForServices.FBM.FactType@)">
  <summary>
  Add Relationship to Schema
  </summary>

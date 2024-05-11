@@ -4,9 +4,6 @@ Imports System.Reflection
 
 Namespace GSJ
 
-    'See Reference/Test Schemas at: https://github.com/neo4j/graph-schema-json-js-utils/tree/main/packages/graph-schema-utils/test/validation/test-schemas
-    'GitHub Repository: https://github.com/neo4j/graph-schema-json-js-utils
-
     'GraphSchema nested within GraphSchemaRepresentation.
     Public Class GraphSchema
         <JsonProperty("nodeLabels")>
