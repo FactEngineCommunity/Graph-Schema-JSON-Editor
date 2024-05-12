@@ -8,13 +8,13 @@ Namespace GSJ
         Public Property id As String
 
         <JsonProperty("type")>
-        Public Property type As New RefType
+        Public Property type As New RefType("RELATES_TO")
 
         <JsonProperty("from")>
-        Public Property from As New RefType
+        Public Property from As New RefType("Node Type 1")
 
         <JsonProperty("to")>
-        Public Property [to] As New RefType
+        Public Property [to] As New RefType("Node Type 2")
 
         ''' <summary>
         ''' Parameterless Constructor

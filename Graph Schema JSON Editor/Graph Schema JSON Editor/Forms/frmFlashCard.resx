@@ -117,62 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="AddAttribute16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\AddAttribute16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Attribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\Attribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Attribute_PrimaryKey" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\Attribute-PrimaryKey.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Database16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\Database16x16.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="delete16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\delete16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="email16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\email16x16.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Export16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\Export16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Export_JSON16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\Export-JSON16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Import16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\Import16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Index" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\Index.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="JSONFile16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\JSONFile16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="PGS16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\PGS16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="PGSNode" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\PGSNode.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="PGSNodes16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\PGSNodes16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="PGSNode_Add16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\PGSNode-Add16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Relationships16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\Relationships16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Relationship_Add16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\Relationship-Add16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Save16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\Save16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="tick_button" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MenuImages\tick-button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
+  <metadata name="Timer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

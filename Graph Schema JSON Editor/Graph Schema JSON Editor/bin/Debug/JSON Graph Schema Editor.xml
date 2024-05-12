@@ -37,12 +37,22 @@ JSON Graph Schema Editor
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Database16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.delete16x16">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.email16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Export_JSON16x16">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
@@ -62,12 +72,37 @@ JSON Graph Schema Editor
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.JSONFile16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.PGS16x16">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.PGSNode">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.PGSNode_Add16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.PGSNodes16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Relationship_Add16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Relationships16x16">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
@@ -258,6 +293,14 @@ JSON Graph Schema Editor
      ''' </summary>
  <param name="aoRichTextBox"></param>
  <remarks></remarks>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.publicFunctions.ShowFlashCard(System.String,System.Nullable{System.Drawing.Color},System.Int32,System.Single)">
+ <summary>
+ Displays a FlashCard on the screen.
+ </summary>
+ <param name="asText">Text to display.</param>
+ <param name="aoColor">The color of the FlashCard</param>
+ <param name="aiInterval">The interval, in milliseconds, to display the FlashCard for.</param>
 </member>
 </members>
 </doc>

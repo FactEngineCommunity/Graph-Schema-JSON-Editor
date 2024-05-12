@@ -27,10 +27,12 @@ Partial Class frmMain
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.FactTypeReadingEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PropertiesGridToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SchemaViewerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.FactTypeReadingEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PropertiesGridToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -44,7 +46,7 @@ Partial Class frmMain
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ViewToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ViewToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(800, 24)
@@ -61,7 +63,7 @@ Partial Class frmMain
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(93, 22)
         Me.ExitToolStripMenuItem.Text = "E&xit"
         '
         'ViewToolStripMenuItem
@@ -70,6 +72,17 @@ Partial Class frmMain
         Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
         Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.ViewToolStripMenuItem.Text = "&View"
+        '
+        'SchemaViewerToolStripMenuItem
+        '
+        Me.SchemaViewerToolStripMenuItem.Name = "SchemaViewerToolStripMenuItem"
+        Me.SchemaViewerToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
+        Me.SchemaViewerToolStripMenuItem.Text = "&Schema Viewer"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(200, 6)
         '
         'FactTypeReadingEditorToolStripMenuItem
         '
@@ -83,16 +96,18 @@ Partial Class frmMain
         Me.PropertiesGridToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.PropertiesGridToolStripMenuItem.Text = "&Properties Grid"
         '
-        'SchemaViewerToolStripMenuItem
+        'HelpToolStripMenuItem
         '
-        Me.SchemaViewerToolStripMenuItem.Name = "SchemaViewerToolStripMenuItem"
-        Me.SchemaViewerToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.SchemaViewerToolStripMenuItem.Text = "&Schema Viewer"
+        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem})
+        Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
+        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.HelpToolStripMenuItem.Text = "&Help"
         '
-        'ToolStripSeparator1
+        'AboutToolStripMenuItem
         '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(200, 6)
+        Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AboutToolStripMenuItem.Text = "&About"
         '
         'frmMain
         '
@@ -123,4 +138,6 @@ Partial Class frmMain
     Friend WithEvents PropertiesGridToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SchemaViewerToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
 End Class

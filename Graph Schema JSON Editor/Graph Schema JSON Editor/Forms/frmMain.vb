@@ -24,6 +24,9 @@ Public Class frmMain
             Dim lfrmSchema As New frmSchema
             lfrmSchema.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockLeft)
 
+            Dim lfrmPropertiesGrid As New frmToolboxProperties
+            lfrmPropertiesGrid.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockRight)
+
         Catch ex As Exception
             Dim lsMessage As String
             Dim mb As MethodBase = MethodInfo.GetCurrentMethod()

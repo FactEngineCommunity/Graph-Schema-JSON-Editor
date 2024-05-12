@@ -19,7 +19,17 @@
 
     Private Sub SetupForm()
 
-        Me.TPGSRelationship1.GSJRelationship = Me.mrPGSRelationship
+        '========================================================================================
+        'Populate the ComboBox items for the candidate joined Node Types (RDS.Table) of the Relationship
+        For Each lrRDSTable In Me.mrRDSModel.Table
+
+            Dim lrNewComboBoxItem = New tComboboxItem(lrRDSTable.Name, lrRDSTable.Name, lrRDSTable)
+            Me.TPGSRelationship1.ComboBoxNodeType1.Items.Add(lrNewComboBoxItem)
+
+            lrNewComboBoxItem = New tComboboxItem(lrRDSTable.Name, lrRDSTable.Name, lrRDSTable)
+            Me.TPGSRelationship1.ComboBoxNodeType2.Items.Add(lrNewComboBoxItem)
+
+        Next
 
     End Sub
 
@@ -28,6 +38,14 @@
         Me.DialogResult = DialogResult.OK
         Me.Hide()
         Me.Close()
+
+    End Sub
+
+    Private Sub TPGSRelationship1_GSJRelationshipSet() Handles TPGSRelationship1.GSJRelationshipSet
+
+        'Must be in Edit mode.
+        Me.TPGSRelationship1.ComboBoxNodeType1.Enabled = False
+        Me.TPGSRelationship1.ComboBoxNodeType2.Enabled = False
 
     End Sub
 

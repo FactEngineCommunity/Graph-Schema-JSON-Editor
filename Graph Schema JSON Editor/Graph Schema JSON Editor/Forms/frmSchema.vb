@@ -271,15 +271,6 @@ Public Class frmSchema
 
     End Sub
 
-
-    Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
-
-        Me.Hide()
-        Me.Close()
-        Me.Dispose()
-
-    End Sub
-
     Private Sub DrawCustomText(graphics As Graphics, text As String, font As Font, startAt As Point, patterns As Dictionary(Of String, Color))
         Dim currentPosition As Integer = 0
         Dim drawPositionX As Integer = startAt.X
@@ -458,68 +449,12 @@ Public Class frmSchema
 
     End Sub
 
-    Private Sub SQLiteConnectToToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SQLiteConnectToToolStripMenuItem.Click
-
-        Try
-            Dim lrOpenFileDialog As New OpenFileDialog
-
-            lrOpenFileDialog.Filter = "SQLite database file (*.db)|*.db"
-            lrOpenFileDialog.FilterIndex = 0
-            lrOpenFileDialog.RestoreDirectory = True
-
-            Dim lsConnectionString As String = ""
-
-            If (lrOpenFileDialog.ShowDialog() = DialogResult.OK) Then
-                If System.IO.File.Exists(lrOpenFileDialog.FileName()) Then
-                    lsConnectionString = "Data Source=" & lrOpenFileDialog.FileName & ";Version=3;"
-                    Me.ToolStripLabelDatabaseName.Text = lrOpenFileDialog.FileName
-                    Me.ToolStripLabelPromptSourceDatabase.Visible = True
-                    Me.ToolStripLabelDatabaseName.Visible = True
-
-                    Me.mrFBMModel.DatabaseConnectionString = lsConnectionString
-                    Me.mrFBMModel.TargetDatabaseType = pcenumDatabaseType.SQLite
-                    Me.mrFBMModel.TargetDatabaseConnectionString = lsConnectionString
-
-                    Me.mrFBMModel.DatabaseManager.establishConnection(Me.mrFBMModel.TargetDatabaseType, Me.mrFBMModel.TargetDatabaseConnectionString)
-
-                    Call Me.mrFBMModel.connectToDatabase()
-                    Call Me.mrFBMModel.DatabaseConnection.getDatabaseDataTypes()
-
-                    Dim lrBackgroundWorker As New System.ComponentModel.BackgroundWorker()
-                    lrBackgroundWorker.WorkerReportsProgress = True
-                    Dim lrReverseEngineerTool As New ODBCDatabaseReverseEngineer(Me.mrFBMModel, lsConnectionString, False, lrBackgroundWorker)
-
-                    pbReverseEngineeringKeepDatabaseColumnNames = True
-
-                    Dim lsErrorMessage As String = ""
-                    Call lrReverseEngineerTool.ReverseEngineerDatabase(lsErrorMessage)
-
-
-                    For Each lrRDSTable In Me.mrFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
-                        Call Me.AddNodeToTreeView(lrRDSTable)
-                    Next
-
-                    For Each lrRDSRelationship In Me.mrFBMModel.RDS.Relation.FindAll(Function(x) Not x.ResponsibleFactType.IsLinkFactType Or Not (x.ResponsibleFactType.IsLinkFactType AndAlso x.ResponsibleFactType.LinkFactTypeRole.FactType.IsCandidatePGSRelationshipNode))
-                        Call Me.AddRelationshipToTreeView(lrRDSRelationship)
-                    Next
-
-                    For Each lrPGSRelationshipNodeFactType In Me.mrFBMModel.FactType.FindAll(Function(x) x.IsCandidatePGSRelationshipNode)
-
-                        Call Me.AddRelationshipToTreeView(lrPGSRelationshipNodeFactType)
-
-                    Next
-
-                End If
-            End If
-
-        Catch ex As Exception
-
-        End Try
-    End Sub
-
     Private Sub TreeView_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles TreeView.AfterSelect
 
         Try
+            'CodeSafe
+            If Me.TreeView.SelectedNode.Tag Is Nothing Then Exit Sub
+
             Select Case Me.TreeView.SelectedNode.Tag.GetType
                 Case Is = GetType(RDS.Relation)
 
@@ -555,7 +490,7 @@ Public Class frmSchema
                                                           Nothing,
                                                           lrRDSRelation.DestinationMultiplicity,
                                                           False,
-                                                          lrRDSRelation.ResponsibleFactType.getCorrespondingRDSTable
+                                                          lrRDSRelation.OriginTable
                                                           )
                     lrERDRelation.RDSRelation = lrRDSRelation
 
@@ -638,6 +573,174 @@ Public Class frmSchema
             lsMessage &= vbCrLf & vbCrLf & ex.Message
             prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
         End Try
+
+    End Sub
+
+    Private Sub TreeView_NodeMouseDoubleClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles TreeView.NodeMouseDoubleClick
+
+        Try
+            Select Case Me.TreeView.SelectedNode.Tag.GetType
+                Case Is = GetType(RDS.Relation)
+#Region "Relationship"
+
+                    Dim lrRDSRelation As RDS.Relation = Me.TreeView.SelectedNode.Tag
+
+                    '=============================================================
+                    'Properties Grid
+#Region "Properties Grid - Do first"
+                    Dim lrERDRelation As New ERDRelationship(lrRDSRelation.Model.Model,
+                                                          Nothing,
+                                                          lrRDSRelation.Id, Nothing,
+                                                          lrRDSRelation.OriginMultiplicity,
+                                                          lrRDSRelation.OriginColumns(0).IsMandatory,
+                                                          lrRDSRelation.OriginColumns(0).isPartOfPrimaryKey,
+                                                          Nothing,
+                                                          lrRDSRelation.DestinationMultiplicity,
+                                                          False,
+                                                          lrRDSRelation.OriginTable
+                                                          )
+                    lrERDRelation.RDSRelation = lrRDSRelation
+
+                    Dim lfrmPropertiesGrid As New frmToolboxProperties
+                    lfrmPropertiesGrid = frmMain.GetToolboxForm(lfrmPropertiesGrid.Name)
+
+                    If lfrmPropertiesGrid IsNot Nothing Then
+                        lfrmPropertiesGrid.SetSelectedObject(lrERDRelation)
+                    End If
+#End Region
+
+#Region "FactTypeReading Editor"
+                    Dim lfrmFactTypeReadingEditor As New frmToolboxORMReadingEditor
+
+                    lfrmFactTypeReadingEditor = frmMain.ToolboxForms.Find(AddressOf lfrmFactTypeReadingEditor.EqualsByName)
+
+                    '=============================================================
+                    'FactType Reading Editor
+                    If lfrmFactTypeReadingEditor IsNot Nothing Then
+
+                        lfrmFactTypeReadingEditor.zrFactType = lrRDSRelation.ResponsibleFactType
+
+                        Dim lrFactTypeInstance = New FBM.FactTypeInstance
+                        lrFactTypeInstance.FactType = lrRDSRelation.ResponsibleFactType
+                        lrFactTypeInstance.Model = lrRDSRelation.Model.Model
+                        lfrmFactTypeReadingEditor.zrFactTypeInstance = lrFactTypeInstance
+
+                        Call lfrmFactTypeReadingEditor.SetupForm()
+
+                    End If
+#End Region
+
+                    Dim lrModel As FBM.Model = Me.TreeView.SelectedNode.Parent.Parent.Tag.Model
+
+                    Dim lfrmCRUDAddEditPGSRelationship As New frmCRUDAddEditRelationship
+                    lfrmCRUDAddEditPGSRelationship.mrRDSModel = lrModel.RDS
+
+                    Dim lrPGSRelationship = New GSJ.RelationshipObjectType
+                    lrPGSRelationship.from.ref = lrRDSRelation.OriginTable.Name
+                    lrPGSRelationship.type.ref = lrRDSRelation.ResponsibleFactType.PropertyGraphLabel
+                    lrPGSRelationship.to.ref = lrRDSRelation.DestinationTable.Name
+
+                    lfrmCRUDAddEditPGSRelationship.mrPGSRelationship = lrPGSRelationship
+
+                    If lfrmCRUDAddEditPGSRelationship.ShowDialog() = DialogResult.OK Then
+
+                        Dim lsFromModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.from.ref
+                        Dim lsToModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.to.ref
+                        Dim lsGraphLabel = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.type.ref
+
+                        Me.TreeView.SelectedNode.Text = $"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})"
+
+                        If Not lrRDSRelation.ResponsibleFactType.PropertyGraphLabel = lsGraphLabel Then
+                            lrRDSRelation.ResponsibleFactType.GraphLabel.RemoveAt(0)
+                            lrRDSRelation.ResponsibleFactType.GraphLabel.Add(New RDS.GraphLabel(lrRDSRelation.ResponsibleFactType, lsGraphLabel))
+                        End If
+
+                    End If
+#End Region
+
+            End Select
+
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+    Private Sub SourceDatabaseSQLiteConnectTo()
+
+        Try
+            Dim lrOpenFileDialog As New OpenFileDialog
+
+            lrOpenFileDialog.Filter = "SQLite database file (*.db)|*.db"
+            lrOpenFileDialog.FilterIndex = 0
+            lrOpenFileDialog.RestoreDirectory = True
+
+            Dim lsConnectionString As String = ""
+
+            If (lrOpenFileDialog.ShowDialog() = DialogResult.OK) Then
+                If System.IO.File.Exists(lrOpenFileDialog.FileName()) Then
+                    lsConnectionString = "Data Source=" & lrOpenFileDialog.FileName & ";Version=3;"
+                    Me.ToolStripLabelDatabaseName.Text = lrOpenFileDialog.FileName
+                    Me.ToolStripLabelPromptSourceDatabase.Visible = True
+                    Me.ToolStripLabelDatabaseName.Visible = True
+
+                    Me.mrFBMModel.DatabaseConnectionString = lsConnectionString
+                    Me.mrFBMModel.TargetDatabaseType = pcenumDatabaseType.SQLite
+                    Me.mrFBMModel.TargetDatabaseConnectionString = lsConnectionString
+
+                    Me.mrFBMModel.DatabaseManager.establishConnection(Me.mrFBMModel.TargetDatabaseType, Me.mrFBMModel.TargetDatabaseConnectionString)
+
+                    Call Me.mrFBMModel.connectToDatabase()
+                    Call Me.mrFBMModel.DatabaseConnection.getDatabaseDataTypes()
+
+                    Dim lrBackgroundWorker As New System.ComponentModel.BackgroundWorker()
+                    lrBackgroundWorker.WorkerReportsProgress = True
+                    Dim lrReverseEngineerTool As New ODBCDatabaseReverseEngineer(Me.mrFBMModel, lsConnectionString, False, lrBackgroundWorker)
+
+                    pbReverseEngineeringKeepDatabaseColumnNames = True
+
+                    Dim lsErrorMessage As String = ""
+                    Call lrReverseEngineerTool.ReverseEngineerDatabase(lsErrorMessage)
+
+
+                    For Each lrRDSTable In Me.mrFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
+                        Call Me.AddNodeToTreeView(lrRDSTable)
+                    Next
+
+                    For Each lrRDSRelationship In Me.mrFBMModel.RDS.Relation.FindAll(Function(x) Not x.ResponsibleFactType.IsLinkFactType Or Not (x.ResponsibleFactType.IsLinkFactType AndAlso x.ResponsibleFactType.LinkFactTypeRole.FactType.IsCandidatePGSRelationshipNode))
+                        Call Me.AddRelationshipToTreeView(lrRDSRelationship)
+                    Next
+
+                    For Each lrPGSRelationshipNodeFactType In Me.mrFBMModel.FactType.FindAll(Function(x) x.IsCandidatePGSRelationshipNode)
+
+                        Call Me.AddRelationshipToTreeView(lrPGSRelationshipNodeFactType)
+
+                    Next
+
+                End If
+            End If
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+
+    End Sub
+
+    Private Sub SQLiteConnectToToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles SQLiteConnectToToolStripMenuItem1.Click
+
+        Call Me.SourceDatabaseSQLiteConnectTo()
 
     End Sub
 

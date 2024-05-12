@@ -1,9 +1,26 @@
 ﻿Public Class tPGSRelationship
 
-    Public GSJRelationship As New GSJ.RelationshipObjectType
+    Private WithEvents _GSJRelationship As New GSJ.RelationshipObjectType
+
+    Public Property GSJRelationship As GSJ.RelationshipObjectType
+        Get
+            Return Me._GSJRelationship
+        End Get
+        Set(value As GSJ.RelationshipObjectType)
+            Me._GSJRelationship = value
+
+            'NB Not the actual values that are exported when the Schema is serialised/exported. See tGSJ-GraphSchemaRepresentation.MapFromFBMModel.
+            Me.ComboBoxNodeType1.Text = Me._GSJRelationship.from.ref
+            Me.ComboBoxNodeType2.Text = Me._GSJRelationship.to.ref
+            Me.TextBoxRelationshipType.Text = Me._GSJRelationship.type.ref
+
+            RaiseEvent GSJRelationshipSet()
+        End Set
+    End Property
 
     Public Event OkayClicked()
     Public Event CancelClicked()
+    Public Event GSJRelationshipSet()
 
     Private Sub tPGSRelationship_Load(sender As Object, e As EventArgs) Handles Me.Load
 

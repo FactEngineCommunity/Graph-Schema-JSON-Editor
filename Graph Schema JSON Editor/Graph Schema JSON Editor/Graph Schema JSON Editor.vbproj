@@ -192,6 +192,12 @@
     <Compile Include="Forms\CRUD\frmCRUD-AddEditRelationship.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\frmFlashCard.Designer.vb">
+      <DependentUpon>frmFlashCard.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmFlashCard.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmMain.Designer.vb">
       <DependentUpon>frmMain.vb</DependentUpon>
     </Compile>
@@ -268,6 +274,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CRUD\frmCRUD-AddEditRelationship.resx">
       <DependentUpon>frmCRUD-AddEditRelationship.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmFlashCard.resx">
+      <DependentUpon>frmFlashCard.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
@@ -346,6 +355,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Classes\GraphSchemaJSON\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\Database16x16.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\PGSNode-Add16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\Relationship-Add16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\Export-JSON16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\JSONFile16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\PGSNodes16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\Relationships16x16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
