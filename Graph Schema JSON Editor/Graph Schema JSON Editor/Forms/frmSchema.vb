@@ -2,6 +2,7 @@
 Imports System.Text.RegularExpressions
 Imports System.IO
 Imports Newtonsoft.Json
+Imports System.Xml.Serialization
 Imports System.Reflection
 
 Public Class frmSchema
@@ -12,6 +13,7 @@ Public Class frmSchema
 
         Me.mrFBMModel.AddCore()
         Me.mrFBMModel.RDSCreated = True
+        Me.mrFBMModel.StoreAsXML = True
 
         Call Me.SetupForm()
 
@@ -52,7 +54,11 @@ Public Class frmSchema
 
                     '=====================================================================
                     'Allocate the appropriate ContextMenuStrip to the TreeView/TreeNode.
-                    If TreeView.SelectedNode.Name = "Schema" Then
+                    If TreeView.SelectedNode.Name = "Schemas" Then
+
+                        ContextMenuStripSchemas.Show(TreeView, e.Location)
+
+                    ElseIf TreeView.SelectedNode.Name = "Schema" Then
 
                         ContextMenuStripSchema.Show(TreeView, e.Location)
 
@@ -143,7 +149,7 @@ Public Class frmSchema
 
         Dim loTreeNode As TreeNode = Me.TreeView.Nodes(0).Nodes(0)
 
-        Dim loNewNodeTreeNode = New TreeNode(arRDSTable.Name, 1, 1)
+        Dim loNewNodeTreeNode = New TreeNode("(" & arRDSTable.Name & ")", 1, 1)
         loTreeNode.Nodes.Add(loNewNodeTreeNode)
         loNewNodeTreeNode.Tag = arRDSTable
         loTreeNode.Expand()
@@ -579,6 +585,9 @@ Public Class frmSchema
     Private Sub TreeView_NodeMouseDoubleClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles TreeView.NodeMouseDoubleClick
 
         Try
+            'CodeSafe
+            If Me.TreeView.SelectedNode Is Nothing OrElse Me.TreeView.SelectedNode.Tag Is Nothing Then Exit Sub
+
             Select Case Me.TreeView.SelectedNode.Tag.GetType
                 Case Is = GetType(RDS.Relation)
 #Region "Relationship"
@@ -744,5 +753,426 @@ Public Class frmSchema
 
     End Sub
 
+    Private Sub TreeView_AfterLabelEdit(sender As Object, e As NodeLabelEditEventArgs) Handles TreeView.AfterLabelEdit
+
+        Dim lsMessage As String
+
+        Try
+            Dim lrTreeNode As TreeNode = e.Node
+
+            'CodeSafe
+            If e.Label = "" Then
+                Exit Sub
+            End If
+
+            Dim lsNewModelElementName As String = FEStrings.MakeCapCamelCase(e.Label.Trim, True)
+
+            Select Case lrTreeNode.Tag.GetType
+
+                Case Is = GetType(RDS.Table)
+
+                    Dim lrRDsTable As RDS.Table = lrTreeNode.Tag
+
+                    Dim lrFBMModelElement = Me.mrFBMModel.GetModelObjectByName(lsNewModelElementName)
+
+                    If lrFBMModelElement Is Nothing Then
+
+                        Call lrRDsTable.FBMModelElement.setName(lsNewModelElementName, False)
+                        e.CancelEdit = True
+                        lrTreeNode.Text = "(" & lsNewModelElementName & ")"
+
+                    ElseIf lrFBMModelElement.Id = lrRDsTable.FBMModelElement.Id Then
+                        lsMessage = "The model element, " & lrTreeNode.Text.Trim & ", already exists in the Model"
+                        ShowFlashCard(lsMessage, Color.Salmon)
+                        e.CancelEdit = True
+                        Exit Sub
+                    Else
+                        'Changed to self. Nothing to do here.
+                    End If
+            End Select
+
+
+
+        Catch ex As Exception
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+    Private Sub TreeView_BeforeLabelEdit(sender As Object, e As NodeLabelEditEventArgs) Handles TreeView.BeforeLabelEdit
+
+        Try
+            Dim lrTreeNode As TreeNode = e.Node
+
+            'CodeSafe
+            If lrTreeNode.Tag Is Nothing Then
+                e.CancelEdit = True
+                Exit Sub
+            End If
+
+            Select Case lrTreeNode.Tag.GetType
+                Case Is = GetType(RDS.Table)
+                    Dim lrRDSTable As RDS.Table = lrTreeNode.Tag
+                    lrTreeNode.Text = lrRDSTable.Name
+                Case Else
+                    e.CancelEdit = True
+            End Select
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,)
+        End Try
+    End Sub
+
+    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
+
+        Try
+            Dim lrTreeNode As TreeNode = Me.TreeView.SelectedNode
+
+            Dim lrRDSTable As RDS.Table = lrTreeNode.Tag
+
+            lrTreeNode.Text = lrRDSTable.Name.Trim
+            Call lrTreeNode.BeginEdit()
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+    Private Sub DeleteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeleteToolStripMenuItem.Click
+
+        Dim lsMessage As String
+
+        Try
+            Dim lrFBMModel As FBM.Model = Me.TreeView.SelectedNode.Tag
+
+            lsMessage = "Are you sure you want to delete the Schema, " & lrFBMModel.Name & "?"
+
+            If MsgBox(lsMessage, MsgBoxStyle.YesNoCancel) = MsgBoxResult.Yes Then
+
+                'Delete the Fact-Based Model (representing the Graph Schema) from the database.
+                TableModel.DeleteModel(lrFBMModel)
+
+                Me.TreeView.Nodes.Remove(Me.TreeView.SelectedNode)
+
+            End If
+
+        Catch ex As Exception
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,,)
+        End Try
+    End Sub
+
+    Private Sub FactBasedModelfbmToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FactBasedModelfbmToolStripMenuItem.Click
+
+        Dim lsMessage As String
+
+        Try
+
+            Dim loDialogOpenFile = New OpenFileDialog
+
+            loDialogOpenFile.DefaultExt = "xml"
+            loDialogOpenFile.Filter = "FBM Files (*.fbm)|*.fbm"
+            loDialogOpenFile.Filter &= "|XML Files (*.xml)|*.xml"
+
+            If loDialogOpenFile.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+
+                Try
+                    With New WaitCursor
+                        '=====================================================================================================
+                        'Find the version of the XML's XSD                        
+                        Call Me.loadFBMXMLFile2(loDialogOpenFile.FileName)
+                    End With
+
+                Catch ex As Exception
+                    Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+                    frmMain.Cursor = Cursors.Default
+
+                    lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+                    lsMessage &= vbCrLf & vbCrLf & ex.Message
+                    prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,,,,, ex)
+                End Try
+
+            End If
+
+        Catch ex As Exception
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+
+
+    Public Sub loadFBMXMLFile2(ByVal asFileName As String)
+
+        Try
+            Dim xml As XDocument = Nothing
+            Dim lsXSDVersionNr As String = ""
+            Dim lrModel As New FBM.Model
+            Dim lsMessage As String
+
+            If asFileName = "" Then
+                Exit Sub
+            End If
+
+            'Deserialize text file to a new object.
+            Dim objStreamReader As New StreamReader(asFileName)
+
+            xml = XDocument.Load(asFileName)
+
+            'WriteToStatusBar("Loading model.", True)
+
+            lsXSDVersionNr = xml.<Model>.@XSDVersionNr
+            '=====================================================================================================
+            Dim lrSerializer As XmlSerializer = Nothing
+            Select Case lsXSDVersionNr
+                Case Is = "0.81"
+                    lrSerializer = New XmlSerializer(GetType(XMLModelv081.Model))
+                    Dim lrXMLModel As New XMLModelv081.Model
+                    lrXMLModel = lrSerializer.Deserialize(objStreamReader)
+                    objStreamReader.Close()
+                    lrModel = lrXMLModel.MapToFBMModel
+                Case Is = "1"
+                    lrSerializer = New XmlSerializer(GetType(XMLModel1.Model))
+                    Dim lrXMLModel As New XMLModel1.Model
+                    lrXMLModel = lrSerializer.Deserialize(objStreamReader)
+                    objStreamReader.Close()
+                    lrModel = lrXMLModel.MapToFBMModel
+                Case Is = "1.1"
+                    lrSerializer = New XmlSerializer(GetType(XMLModel11.Model))
+                    Dim lrXMLModel As New XMLModel11.Model
+                    lrXMLModel = lrSerializer.Deserialize(objStreamReader)
+                    objStreamReader.Close()
+                    lrModel = lrXMLModel.MapToFBMModel
+                Case Is = "1.2"
+                    lrSerializer = New XmlSerializer(GetType(XMLModel12.Model))
+                    Dim lrXMLModel As New XMLModel12.Model
+                    lrXMLModel = lrSerializer.Deserialize(objStreamReader)
+                    objStreamReader.Close()
+                    lrModel = lrXMLModel.MapToFBMModel
+                Case Is = "1.3"
+                    lrSerializer = New XmlSerializer(GetType(XMLModel13.Model))
+                    Dim lrXMLModel As New XMLModel13.Model
+                    lrXMLModel = lrSerializer.Deserialize(objStreamReader)
+                    objStreamReader.Close()
+
+                    lrModel = lrXMLModel.MapToFBMModel
+                Case Is = "1.4"
+                    lrSerializer = New XmlSerializer(GetType(XMLModel14.Model))
+                    Dim lrXMLModel As New XMLModel14.Model
+                    lrXMLModel = lrSerializer.Deserialize(objStreamReader)
+                    objStreamReader.Close()
+                    lrModel = lrXMLModel.MapToFBMModel
+                Case Is = "1.5"
+                    lrSerializer = New XmlSerializer(GetType(XMLModel15.Model))
+                    Dim lrXMLModel As New XMLModel15.Model
+                    lrXMLModel = lrSerializer.Deserialize(objStreamReader)
+                    objStreamReader.Close()
+                    lrModel = lrXMLModel.MapToFBMModel
+                Case Is = "1.6"
+                    lrSerializer = New XmlSerializer(GetType(XMLModel16.Model))
+                    Dim lrXMLModel As New XMLModel16.Model
+                    lrXMLModel = lrSerializer.Deserialize(objStreamReader)
+                    objStreamReader.Close()
+                    lrModel = lrXMLModel.MapToFBMModel
+                Case Is = "1.7"
+                    lrSerializer = New XmlSerializer(GetType(XMLModel.Model))
+                    Dim lrXMLModel As New XMLModel.Model
+                    lrXMLModel = lrSerializer.Deserialize(objStreamReader)
+                    objStreamReader.Close()
+                    lrModel = lrXMLModel.MapToFBMModel
+            End Select
+
+            If TableModel.ExistsModelById(lrModel.ModelId) Then
+                lsMessage = "A Model with the Id: " & lrModel.ModelId
+                lsMessage &= vbCrLf & "already exists in the database."
+                lsMessage &= vbCrLf & vbCrLf
+                lsMessage &= "The Model that you are loading will be given a new Id. All Pages within the Model will also be given a new Id."
+                lsMessage &= vbCrLf & "NB The name of the Model ('" & lrModel.Name & "') will stay the same if there is no other Model in the database with the same name."
+                lrModel.ModelId = System.Guid.NewGuid.ToString
+                '---------------------------------------------------------------------------------------------
+                'All of the Page.Ids must be updated as well, as each PageId is unique in the database.
+                '  i.e. If the Model is not unique, there's a very good chance that neither are the PageIds.
+                '---------------------------------------------------------------------------------------------
+                Dim lrPage As FBM.Page
+                For Each lrPage In lrModel.Page
+                    lrPage.PageId = System.Guid.NewGuid.ToString
+                Next
+
+                lrModel.MakeDirty(False, True)
+
+                'MsgBox(lsMessage)
+            End If
+
+            If TableModel.ExistsModelByName(lrModel.Name) Then
+                lsMessage = "A Model with the Name: " & lrModel.Name
+                lsMessage &= vbCrLf & "already exists in the database."
+                lsMessage &= vbCrLf & vbCrLf
+                lrModel.Name = lrModel.CreateUniqueModelName(lrModel.Name, 0)
+                lsMessage &= "The Model that you are loading will be given the new Name: " & lrModel.Name
+                'MsgBox(lsMessage)
+            End If
+
+            '-----------------------------------------
+            'Update the TreeView
+            '-----------------------------------------
+            Dim lrNewTreeNode = Me.AddFBMModelAsSchemaToTree(lrModel)
+
+            lrNewTreeNode.Expand()
+            Me.TreeView.Nodes(0).Nodes(Me.TreeView.Nodes(0).Nodes.Count - 1).EnsureVisible()
+
+            Dim lfrmFlashCard As New frmFlashCard
+
+            '================================================================================================================
+            'RDS
+            If (lrModel.ModelId <> "Core") And lrModel.HasCoreModel Then
+                Call lrModel.performCoreManagement(False)
+                Call lrModel.PopulateAllCoreStructuresFromCoreMDAElements()
+                lrModel.RDSCreated = True
+            ElseIf (lrModel.ModelId <> "Core") Then
+                Call lrModel.performCoreManagement(False)
+                Call lrModel.createEntityRelationshipArtifacts()
+                Call lrModel.PopulateAllCoreStructuresFromCoreMDAElements()
+                lrModel.RDSCreated = True
+            End If
+
+            frmMain.Cursor = Cursors.Default
+
+            'Baloon Tooltip
+            lsMessage = "Loaded"
+
+            '----------------------------------------------------------------------------------------------------------------
+            'Saving the Model
+            Dim lrCustomMessageBox As New frmCustomMessageBox
+
+            lsMessage = "Your Model has been successfully loaded into Boston." & vbCrLf & vbCrLf
+            lsMessage &= "Save the model now? (Recommended)"
+
+            lrCustomMessageBox.Message = lsMessage
+            lrCustomMessageBox.ButtonText.Add("No")
+            lrCustomMessageBox.ButtonText.Add("Save to database")
+            lrCustomMessageBox.ButtonText.Add("Store as XML")
+
+            lfrmFlashCard = New frmFlashCard
+            lfrmFlashCard.ziIntervalMilliseconds = 3500
+            lfrmFlashCard.zsText = "Saving model."
+
+            Select Case lrCustomMessageBox.ShowDialog
+                Case Is = "Store as XML"
+                    lrModel.StoreAsXML = True
+                    'WriteToStatusBar("Saving Model: " & lrModel.Name)
+                    Call lrModel.Save(True, False)
+                    'WriteToStatusBar("Model Saved")
+                Case Is = "Save to database"
+                    With New WaitCursor
+                        'WriteToStatusBar("Saving Model: " & lrModel.Name)
+                        lfrmFlashCard.Show(Me)
+                        lrModel.StoreAsXML = False
+                        For Each lrPage In lrModel.Page
+                            Call lrPage.LoadFromXMLConceptInstances()
+                        Next
+                        Call lrModel.Save(True, True)
+                        'WriteToStatusBar("Model Saved")
+                    End With
+            End Select
+
+        Catch ex As Exception
+            Dim lsMessage1 As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            frmMain.Cursor = Cursors.Default
+
+            lsMessage1 = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage1 &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage1, pcenumErrorType.Critical, ex.StackTrace,,,,,, ex)
+        End Try
+
+    End Sub
+
+    Private Function AddFBMModelAsSchemaToTree(ByRef arFRMModel As FBM.Model) As TreeNode
+
+        Try
+            Dim lrNewTreeNode = New TreeNode("Schema: " & arFRMModel.Name)
+
+            Me.TreeView.Nodes(0).Nodes.Add(lrNewTreeNode)
+
+            Return lrNewTreeNode
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,,,,, ex)
+
+            Return Nothing
+        End Try
+
+    End Function
+
+    Private Sub GraphSchemaJSONToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GraphSchemaJSONToolStripMenuItem.Click
+
+        Dim lsMessage As String
+
+        Try
+            Dim loDialogOpenFile = New OpenFileDialog
+
+            loDialogOpenFile.DefaultExt = "json"
+            loDialogOpenFile.Filter = "JSON Files (*.json)|*.json"
+
+            If loDialogOpenFile.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+
+                Try
+                    With New WaitCursor
+                        '=====================================================================================================
+                        'Load the appropriate version of the Graph Schema JSON based on its json schema/POCO class structure.                        
+                        '  NB Converts the Graph Schema JSON into a Fact-Based Model, as used by this software.
+                        'See for reference: Call Me.loadFBMXMLFile2(loDialogOpenFile.FileName)
+                    End With
+
+                Catch ex As Exception
+                    Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+                    frmMain.Cursor = Cursors.Default
+
+                    lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+                    lsMessage &= vbCrLf & vbCrLf & ex.Message
+                    prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,,,,, ex)
+                End Try
+
+            End If
+
+        Catch ex As Exception
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
 
 End Class
