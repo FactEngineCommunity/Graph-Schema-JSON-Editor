@@ -7,13 +7,8 @@ Imports System.Reflection
 
 Public Class frmSchema
 
-    Private mrFBMModel As New FBM.Model("MyJSONGraphSchema", System.Guid.NewGuid.ToString)
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
-
-        Me.mrFBMModel.AddCore()
-        Me.mrFBMModel.RDSCreated = True
-        Me.mrFBMModel.StoreAsXML = True
 
         Call Me.SetupForm()
 
@@ -25,14 +20,14 @@ Public Class frmSchema
         Me.TreeView.ExpandAll()
 
         'Create a new FBM (FactBasedModel) to store the ObjectTypes and Relationships (FactTypes) for the Nodes/Relationships of the Model.
-        Dim lrFBMModel = Me.mrFBMModel
+        'Dim lrFBMModel = Me.mrFBMModel
 
         'Create a new RDS (RelationalDataStructure) Model to store Nodes/Table in.
-        Me.mrFBMModel.RDS = New FactEngineForServices.RDS.Model(lrFBMModel)
-        Dim lrRDSModel = Me.mrFBMModel.RDS
+        'Me.mrFBMModel.RDS = New FactEngineForServices.RDS.Model(lrFBMModel)
+        'Dim lrRDSModel = Me.mrFBMModel.RDS
 
         'Store the RDS Model against the "Schema" TreeNode, so we can add Nodes/Tables to it.
-        Me.TreeView.Nodes(0).Tag = lrRDSModel
+        'Me.TreeView.Nodes(0).Tag = lrRDSModel
 
     End Sub
 
@@ -58,10 +53,6 @@ Public Class frmSchema
 
                         ContextMenuStripSchemas.Show(TreeView, e.Location)
 
-                    ElseIf TreeView.SelectedNode.Name = "Schema" Then
-
-                        ContextMenuStripSchema.Show(TreeView, e.Location)
-
                     ElseIf TreeView.SelectedNode.Name = "Nodes" Then
 
                         ContextMenuStripNodes.Show(TreeView, e.Location)
@@ -72,6 +63,11 @@ Public Class frmSchema
 
                     Else
                         Select Case TreeView.SelectedNode.Tag.GetType
+
+                            Case Is = GetType(RDS.Model)
+
+                                ContextMenuStripSchema.Show(TreeView, e.Location)
+
                             Case Is = GetType(RDS.Table)
 
                                 ContextMenuStripNode.Show(TreeView, e.Location)
@@ -145,9 +141,9 @@ Public Class frmSchema
     ''' <summary>
     ''' Add Node to Schema
     ''' </summary>
-    Private Sub AddNodeToTreeView(ByRef arRDSTable As RDS.Table)
+    Private Sub AddNodeToTreeView(ByRef arSchemaTreeNode As TreeNode, ByRef arRDSTable As RDS.Table)
 
-        Dim loTreeNode As TreeNode = Me.TreeView.Nodes(0).Nodes(0)
+        Dim loTreeNode As TreeNode = arSchemaTreeNode.Nodes(0)
 
         Dim loNewNodeTreeNode = New TreeNode("(" & arRDSTable.Name & ")", 1, 1)
         loTreeNode.Nodes.Add(loNewNodeTreeNode)
@@ -210,10 +206,11 @@ Public Class frmSchema
     ''' <summary>
     ''' Add Relationship to Schema
     ''' </summary>
-    Private Sub AddRelationshipToTreeView(ByRef arRDSRelationship As RDS.Relation)
+    Private Sub AddRelationshipToTreeView(ByRef arSchemaTreeNode As TreeNode, ByRef arRDSRelationship As RDS.Relation)
 
         Try
-            Dim loTreeNode As TreeNode = Me.TreeView.Nodes(0).Nodes(1)
+
+            Dim loTreeNode As TreeNode = arSchemaTreeNode.Nodes(1)
 
             Dim lrModel As FBM.Model = loTreeNode.Parent.Tag.Model
 
@@ -241,12 +238,12 @@ Public Class frmSchema
     ''' <summary>
     ''' Add Relationship to Schema
     ''' </summary>
-    Private Sub AddRelationshipToTreeView(ByRef arFBMFactType As FBM.FactType)
+    Private Sub AddRelationshipToTreeView(ByRef arSchemaTreeNode As TreeNode, ByRef arFBMFactType As FBM.FactType)
 
         Try
             Dim lrFBMFactType As FBM.FactType = arFBMFactType
 
-            Dim loTreeNode As TreeNode = Me.TreeView.Nodes(0).Nodes(1)
+            Dim loTreeNode As TreeNode = arSchemaTreeNode.Nodes(1)
 
             Dim lrModel As FBM.Model = loTreeNode.Parent.Tag.Model
 
@@ -699,36 +696,50 @@ Public Class frmSchema
                     Me.ToolStripLabelPromptSourceDatabase.Visible = True
                     Me.ToolStripLabelDatabaseName.Visible = True
 
-                    Me.mrFBMModel.DatabaseConnectionString = lsConnectionString
-                    Me.mrFBMModel.TargetDatabaseType = pcenumDatabaseType.SQLite
-                    Me.mrFBMModel.TargetDatabaseConnectionString = lsConnectionString
+                    Dim lrFBMModel As New FBM.Model(Path.GetFileName(lrOpenFileDialog.FileName), System.Guid.NewGuid.ToString)
 
-                    Me.mrFBMModel.DatabaseManager.establishConnection(Me.mrFBMModel.TargetDatabaseType, Me.mrFBMModel.TargetDatabaseConnectionString)
+                    lrFBMModel.AddCore()
+                    lrFBMModel.RDSCreated = True
+                    lrFBMModel.StoreAsXML = True
 
-                    Call Me.mrFBMModel.connectToDatabase()
-                    Call Me.mrFBMModel.DatabaseConnection.getDatabaseDataTypes()
+
+                    lrFBMModel.DatabaseConnectionString = lsConnectionString
+                    lrFBMModel.TargetDatabaseType = pcenumDatabaseType.SQLite
+                    lrFBMModel.TargetDatabaseConnectionString = lsConnectionString
+
+                    lrFBMModel.DatabaseManager.establishConnection(lrFBMModel.TargetDatabaseType, lrFBMModel.TargetDatabaseConnectionString)
+
+                    lrFBMModel.connectToDatabase()
+                    lrFBMModel.DatabaseConnection.getDatabaseDataTypes()
 
                     Dim lrBackgroundWorker As New System.ComponentModel.BackgroundWorker()
                     lrBackgroundWorker.WorkerReportsProgress = True
-                    Dim lrReverseEngineerTool As New ODBCDatabaseReverseEngineer(Me.mrFBMModel, lsConnectionString, False, lrBackgroundWorker)
+                    Dim lrReverseEngineerTool As New ODBCDatabaseReverseEngineer(lrFBMModel, lsConnectionString, False, lrBackgroundWorker)
 
                     pbReverseEngineeringKeepDatabaseColumnNames = True
 
                     Dim lsErrorMessage As String = ""
                     Call lrReverseEngineerTool.ReverseEngineerDatabase(lsErrorMessage)
 
+                    Dim loSchemaTreeNode = New TreeNode(Path.GetFileName(lrOpenFileDialog.FileName))
 
-                    For Each lrRDSTable In Me.mrFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
-                        Call Me.AddNodeToTreeView(lrRDSTable)
+                    loSchemaTreeNode.Tag = lrFBMModel.RDS
+
+                    Me.TreeView.Nodes(0).Nodes.Add(loSchemaTreeNode)
+                    loSchemaTreeNode.Nodes.Add(New TreeNode("Node Types", 1, 1))
+                    loSchemaTreeNode.Nodes.Add(New TreeNode("Relationships", 2, 2))
+
+                    For Each lrRDSTable In lrFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
+                        Call Me.AddNodeToTreeView(loSchemaTreeNode, lrRDSTable)
                     Next
 
-                    For Each lrRDSRelationship In Me.mrFBMModel.RDS.Relation.FindAll(Function(x) Not x.ResponsibleFactType.IsLinkFactType Or Not (x.ResponsibleFactType.IsLinkFactType AndAlso x.ResponsibleFactType.LinkFactTypeRole.FactType.IsCandidatePGSRelationshipNode))
-                        Call Me.AddRelationshipToTreeView(lrRDSRelationship)
+                    For Each lrRDSRelationship In lrFBMModel.RDS.Relation.FindAll(Function(x) Not x.ResponsibleFactType.IsLinkFactType Or Not (x.ResponsibleFactType.IsLinkFactType AndAlso x.ResponsibleFactType.LinkFactTypeRole.FactType.IsCandidatePGSRelationshipNode))
+                        Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrRDSRelationship)
                     Next
 
-                    For Each lrPGSRelationshipNodeFactType In Me.mrFBMModel.FactType.FindAll(Function(x) x.IsCandidatePGSRelationshipNode)
+                    For Each lrPGSRelationshipNodeFactType In lrFBMModel.FactType.FindAll(Function(x) x.IsCandidatePGSRelationshipNode)
 
-                        Call Me.AddRelationshipToTreeView(lrPGSRelationshipNodeFactType)
+                        Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrPGSRelationshipNodeFactType)
 
                     Next
 
@@ -773,7 +784,9 @@ Public Class frmSchema
 
                     Dim lrRDsTable As RDS.Table = lrTreeNode.Tag
 
-                    Dim lrFBMModelElement = Me.mrFBMModel.GetModelObjectByName(lsNewModelElementName)
+                    Dim lrFBMModel As FBM.Model = lrRDsTable.Model.Model
+
+                    Dim lrFBMModelElement = lrFBMModel.GetModelObjectByName(lsNewModelElementName)
 
                     If lrFBMModelElement Is Nothing Then
 
@@ -1151,6 +1164,10 @@ Public Class frmSchema
                         'Load the appropriate version of the Graph Schema JSON based on its json schema/POCO class structure.                        
                         '  NB Converts the Graph Schema JSON into a Fact-Based Model, as used by this software.
                         'See for reference: Call Me.loadFBMXMLFile2(loDialogOpenFile.FileName)
+                        Dim filePath As String = loDialogOpenFile.FileName
+                        Dim jsonData As String = File.ReadAllText(filePath)
+                        Dim person As GSJ.GraphSchemaRepresentation = JsonConvert.DeserializeObject(Of GSJ.GraphSchemaRepresentation)(jsonData)
+                        Debugger.Break()
                     End With
 
                 Catch ex As Exception

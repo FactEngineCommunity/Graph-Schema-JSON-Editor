@@ -38,18 +38,20 @@ Namespace GSJ
 
 #Region "NodeLabel for each Property Graph Label"
 
-                    For Each lrGraphLabel In lrRDSTable.FBMModelElement.GraphLabel
-                        lrGSJNodeLabel = New GSJ.NodeLabel(lrGraphLabel.Label, lrGraphLabel.Label)
-                        Me.graphSchema.nodeLabels.Add(lrGSJNodeLabel)
+                    If Not lrRDSTable.FBMModelElement.GetType = GetType(FBM.FactType) Then
+                        For Each lrGraphLabel In lrRDSTable.FBMModelElement.GraphLabel
+                            lrGSJNodeLabel = New GSJ.NodeLabel(lrGraphLabel.Label, lrGraphLabel.Label)
+                            Me.graphSchema.nodeLabels.Add(lrGSJNodeLabel)
 
-                        For Each lrRDSColumn In lrRDSTable.Column
+                            For Each lrRDSColumn In lrRDSTable.Column
 
-                            Dim lrGSJDataType = New GSJ.DataType(lrRDSColumn.DBDataType)
-                            Dim lrGSJProperty As New GSJ.Property(lrRDSColumn.Name, lrRDSColumn.Id, Not lrRDSColumn.IsMandatory, lrGSJDataType)
-                            lrGSJNodeLabel.properties.Add(lrGSJProperty)
+                                Dim lrGSJDataType = New GSJ.DataType(lrRDSColumn.DBDataType)
+                                Dim lrGSJProperty As New GSJ.Property(lrRDSColumn.Name, lrRDSColumn.Id, Not lrRDSColumn.IsMandatory, lrGSJDataType)
+                                lrGSJNodeLabel.properties.Add(lrGSJProperty)
 
+                            Next
                         Next
-                    Next
+                    End If
 #End Region
 
                 Next

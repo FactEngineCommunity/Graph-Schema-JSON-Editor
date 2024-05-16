@@ -232,7 +232,7 @@ JSON Graph Schema Editor
  <param name="sender"></param>
  <param name="e"></param>
 </member>
-<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddNodeToTreeView(FactEngineForServices.RDS.Table@)">
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddNodeToTreeView(System.Windows.Forms.TreeNode@,FactEngineForServices.RDS.Table@)">
  <summary>
  Add Node to Schema
  </summary>
@@ -244,12 +244,12 @@ JSON Graph Schema Editor
  <param name="sender"></param>
  <param name="e"></param>
 </member>
-<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddRelationshipToTreeView(FactEngineForServices.RDS.Relation@)">
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddRelationshipToTreeView(System.Windows.Forms.TreeNode@,FactEngineForServices.RDS.Relation@)">
  <summary>
  Add Relationship to Schema
  </summary>
 </member>
-<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddRelationshipToTreeView(FactEngineForServices.FBM.FactType@)">
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddRelationshipToTreeView(System.Windows.Forms.TreeNode@,FactEngineForServices.FBM.FactType@)">
  <summary>
  Add Relationship to Schema
  </summary>
