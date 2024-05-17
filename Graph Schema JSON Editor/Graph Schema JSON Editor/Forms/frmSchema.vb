@@ -563,7 +563,9 @@ Public Class frmSchema
                 Exit Sub
             End If
 
-            Dim json As String = JsonConvert.SerializeObject(lrGraphSchemaRepresentation, Formatting.Indented)
+            Dim lrGraphSchemaRepresentationExport As New GSJ.GraphSchemaRepresentationExport(lrGraphSchemaRepresentation)
+
+            Dim json As String = JsonConvert.SerializeObject(lrGraphSchemaRepresentationExport, Formatting.Indented)
             File.WriteAllText(lsFileLocationName, json)
 
             Console.WriteLine("Object serialized successfully.")
@@ -749,8 +751,14 @@ Public Class frmSchema
             loSchemaTreeNode.Tag = arFBMModel.RDS
 
             Me.TreeView.Nodes(0).Nodes.Add(loSchemaTreeNode)
-            loSchemaTreeNode.Nodes.Add(New TreeNode("Node Types", 1, 1))
-            loSchemaTreeNode.Nodes.Add(New TreeNode("Relationships", 2, 2))
+
+            Dim loTreeNode As TreeNode = New TreeNode("Node Types", 1, 1)
+            loTreeNode.Tag = pcenumSchemaTreeMenuType.None
+            loSchemaTreeNode.Nodes.Add(loTreeNode)
+
+            loTreeNode = New TreeNode("Relationships", 2, 2)
+            loTreeNode.Tag = pcenumSchemaTreeMenuType.None
+            loSchemaTreeNode.Nodes.Add(loTreeNode)
 
             For Each lrRDSTable In arFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
                 Call Me.AddNodeToTreeView(loSchemaTreeNode, lrRDSTable)
@@ -1191,12 +1199,10 @@ Public Class frmSchema
 
                         Dim settings As New JsonSerializerSettings()
                         settings.NullValueHandling = NullValueHandling.Ignore
-                        Dim lrGraphSchemaRepresentation As GSJ.GraphSchemaRepresentation = JsonConvert.DeserializeObject(Of GSJ.GraphSchemaRepresentation)(jsonString, settings)
+                        Dim lrGraphSchemaRepresentationExport As GSJ.GraphSchemaRepresentationExport = JsonConvert.DeserializeObject(Of GSJ.GraphSchemaRepresentationExport)(jsonString, settings)
                         Debugger.Break()
 
-                        Dim lrFBMModel As New FBM.Model("New Schema", System.Guid.NewGuid.ToString)
-
-                        lrFBMModel = lrGraphSchemaRepresentation.MapToFBMModel()
+                        Dim lrFBMModel = lrGraphSchemaRepresentationExport.graphSchemaRepresentation.MapToFBMModel()
 
                         Call Me.AddSchemaByFBMModel(lrFBMModel)
 

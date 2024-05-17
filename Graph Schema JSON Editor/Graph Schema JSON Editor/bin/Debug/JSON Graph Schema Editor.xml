@@ -138,6 +138,11 @@ JSON Graph Schema Editor
  Parameterless Constructor
  </summary>
 </member>
+<member name="M:JSON_Graph_Schema_Editor.GSJ.GraphSchemaRepresentationExport.#ctor">
+ <summary>
+ Parameterless Constructor
+ </summary>
+</member>
 <member name="M:JSON_Graph_Schema_Editor.GSJ.NodeLabel.#ctor">
  <summary>
  Parameterless Constructor

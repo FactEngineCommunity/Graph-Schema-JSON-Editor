@@ -4,6 +4,21 @@ Imports System.Reflection
 
 Namespace GSJ
 
+    Public Class GraphSchemaRepresentationExport
+
+        Public Property graphSchemaRepresentation As GraphSchemaRepresentation
+
+        ''' <summary>
+        ''' Parameterless Constructor
+        ''' </summary>
+        Public Sub New()
+        End Sub
+
+        Public Sub New(ByRef arGraphSchemaRepresentation As GSJ.GraphSchemaRepresentation)
+            Me.graphSchemaRepresentation = arGraphSchemaRepresentation
+        End Sub
+
+    End Class
 
     'See Reference/Test Schemas at: https://github.com/neo4j/graph-schema-json-js-utils/tree/main/packages/graph-schema-utils/test/validation/test-schemas
     'GitHub Repository: https://github.com/neo4j/graph-schema-json-js-utils
@@ -137,6 +152,9 @@ Namespace GSJ
             Dim lrFBMModel As New FBM.Model
 
             Try
+                lrFBMModel.AddCore()
+                lrFBMModel.RDSCreated = True
+                lrFBMModel.StoreAsXML = True
 
 #Region "Entity Types"
                 For Each lrNodeLabel In Me.graphSchema.nodeLabels
@@ -159,11 +177,11 @@ Namespace GSJ
 
                         Dim lsFBMFactTypeName = lrFBMEntityType.Id & "Has" & lrFoundFBMValueType.Id
                         Dim lrFBMFactType = lrFBMModel.CreateFactType(lsFBMFactTypeName, larFBMModelElement, False, True, False, Nothing, False, Nothing, True, False)
+                        lrFBMModel.AddFactType(lrFBMFactType, True, False, Nothing)
 
                         'Create FBM InternalUniquenessConstraint, which creates the Property/Column within the RDS.Model for the appropriate RDS.Table (Node Type in our Property Graph Schema)
                         lrFBMFactType.CreateInternalUniquenessConstraint({lrFBMFactType.RoleGroup(0)}.ToList, False, True, True, False, Nothing, False, False)
 
-                        lrFBMModel.AddFactType(lrFBMFactType, True, False, Nothing)
                     Next
 
                 Next
