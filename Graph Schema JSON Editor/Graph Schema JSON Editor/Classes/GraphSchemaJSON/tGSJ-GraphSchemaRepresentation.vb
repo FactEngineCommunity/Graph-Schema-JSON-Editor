@@ -139,7 +139,34 @@ Namespace GSJ
             Try
 
 #Region "Entity Types"
+                For Each lrNodeLabel In Me.graphSchema.nodeLabels
 
+                    Dim lrFBMEntityType As New FBM.EntityType(lrFBMModel, pcenumLanguage.ORMModel, lrNodeLabel.token, Nothing, True)
+                    lrFBMModel.AddEntityType(lrFBMEntityType, True, False, Nothing, True, False)
+
+                    For Each lrGSJProperty In lrNodeLabel.properties
+
+                        Dim lrFBMValueType = New FBM.ValueType(lrFBMModel, pcenumLanguage.ORMModel, lrGSJProperty.token, True, pcenumORMDataType.DataTypeNotSet)
+
+                        Dim lrFoundFBMValueType = lrFBMModel.GetModelObjectByName(lrFBMValueType.Id)
+
+                        If lrFoundFBMValueType Is Nothing Then
+                            lrFBMModel.AddValueType(lrFBMValueType, True, False, Nothing, True)
+                            lrFoundFBMValueType = lrFBMValueType
+                        End If
+
+                        Dim larFBMModelElement As List(Of FBM.ModelObject) = {lrFBMEntityType, lrFoundFBMValueType}.ToList
+
+                        Dim lsFBMFactTypeName = lrFBMEntityType.Id & "Has" & lrFoundFBMValueType.Id
+                        Dim lrFBMFactType = lrFBMModel.CreateFactType(lsFBMFactTypeName, larFBMModelElement, False, True, False, Nothing, False, Nothing, True, False)
+
+                        'Create FBM InternalUniquenessConstraint, which creates the Property/Column within the RDS.Model for the appropriate RDS.Table (Node Type in our Property Graph Schema)
+                        lrFBMFactType.CreateInternalUniquenessConstraint({lrFBMFactType.RoleGroup(0)}.ToList, False, True, True, False, Nothing, False, False)
+
+                        lrFBMModel.AddFactType(lrFBMFactType, True, False, Nothing)
+                    Next
+
+                Next
 #End Region
 
 #Region "Fact Types"

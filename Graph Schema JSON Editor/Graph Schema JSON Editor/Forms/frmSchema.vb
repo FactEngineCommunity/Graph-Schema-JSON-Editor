@@ -2,6 +2,7 @@
 Imports System.Text.RegularExpressions
 Imports System.IO
 Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Linq
 Imports System.Xml.Serialization
 Imports System.Reflection
 
@@ -712,6 +713,8 @@ Public Class frmSchema
                     lrFBMModel.connectToDatabase()
                     lrFBMModel.DatabaseConnection.getDatabaseDataTypes()
 
+                    '===================================================================
+                    'Reverse Engineer the Database to a Fact-Based Model.
                     Dim lrBackgroundWorker As New System.ComponentModel.BackgroundWorker()
                     lrBackgroundWorker.WorkerReportsProgress = True
                     Dim lrReverseEngineerTool As New ODBCDatabaseReverseEngineer(lrFBMModel, lsConnectionString, False, lrBackgroundWorker)
@@ -721,27 +724,7 @@ Public Class frmSchema
                     Dim lsErrorMessage As String = ""
                     Call lrReverseEngineerTool.ReverseEngineerDatabase(lsErrorMessage)
 
-                    Dim loSchemaTreeNode = New TreeNode(Path.GetFileName(lrOpenFileDialog.FileName))
-
-                    loSchemaTreeNode.Tag = lrFBMModel.RDS
-
-                    Me.TreeView.Nodes(0).Nodes.Add(loSchemaTreeNode)
-                    loSchemaTreeNode.Nodes.Add(New TreeNode("Node Types", 1, 1))
-                    loSchemaTreeNode.Nodes.Add(New TreeNode("Relationships", 2, 2))
-
-                    For Each lrRDSTable In lrFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
-                        Call Me.AddNodeToTreeView(loSchemaTreeNode, lrRDSTable)
-                    Next
-
-                    For Each lrRDSRelationship In lrFBMModel.RDS.Relation.FindAll(Function(x) Not x.ResponsibleFactType.IsLinkFactType Or Not (x.ResponsibleFactType.IsLinkFactType AndAlso x.ResponsibleFactType.LinkFactTypeRole.FactType.IsCandidatePGSRelationshipNode))
-                        Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrRDSRelationship)
-                    Next
-
-                    For Each lrPGSRelationshipNodeFactType In lrFBMModel.FactType.FindAll(Function(x) x.IsCandidatePGSRelationshipNode)
-
-                        Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrPGSRelationshipNodeFactType)
-
-                    Next
+                    Call Me.AddSchemaByFBMModel(lrFBMModel)
 
                 End If
             End If
@@ -755,6 +738,42 @@ Public Class frmSchema
             prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
         End Try
 
+
+    End Sub
+
+    Private Sub AddSchemaByFBMModel(ByRef arFBMModel As FBM.Model)
+
+        Try
+            Dim loSchemaTreeNode = New TreeNode(arFBMModel.Name)
+
+            loSchemaTreeNode.Tag = arFBMModel.RDS
+
+            Me.TreeView.Nodes(0).Nodes.Add(loSchemaTreeNode)
+            loSchemaTreeNode.Nodes.Add(New TreeNode("Node Types", 1, 1))
+            loSchemaTreeNode.Nodes.Add(New TreeNode("Relationships", 2, 2))
+
+            For Each lrRDSTable In arFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
+                Call Me.AddNodeToTreeView(loSchemaTreeNode, lrRDSTable)
+            Next
+
+            For Each lrRDSRelationship In arFBMModel.RDS.Relation.FindAll(Function(x) Not x.ResponsibleFactType.IsLinkFactType Or Not (x.ResponsibleFactType.IsLinkFactType AndAlso x.ResponsibleFactType.LinkFactTypeRole.FactType.IsCandidatePGSRelationshipNode))
+                Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrRDSRelationship)
+            Next
+
+            For Each lrPGSRelationshipNodeFactType In arFBMModel.FactType.FindAll(Function(x) x.IsCandidatePGSRelationshipNode)
+
+                Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrPGSRelationshipNodeFactType)
+
+            Next
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,,,,, ex)
+        End Try
 
     End Sub
 
@@ -1165,9 +1184,22 @@ Public Class frmSchema
                         '  NB Converts the Graph Schema JSON into a Fact-Based Model, as used by this software.
                         'See for reference: Call Me.loadFBMXMLFile2(loDialogOpenFile.FileName)
                         Dim filePath As String = loDialogOpenFile.FileName
-                        Dim jsonData As String = File.ReadAllText(filePath)
-                        Dim person As GSJ.GraphSchemaRepresentation = JsonConvert.DeserializeObject(Of GSJ.GraphSchemaRepresentation)(jsonData)
+                        Dim jsonString As String = File.ReadAllText(filePath)
+
+                        'For testing
+                        Dim loJSONObject = jObject.Parse(jsonString)
+
+                        Dim settings As New JsonSerializerSettings()
+                        settings.NullValueHandling = NullValueHandling.Ignore
+                        Dim lrGraphSchemaRepresentation As GSJ.GraphSchemaRepresentation = JsonConvert.DeserializeObject(Of GSJ.GraphSchemaRepresentation)(jsonString, settings)
                         Debugger.Break()
+
+                        Dim lrFBMModel As New FBM.Model("New Schema", System.Guid.NewGuid.ToString)
+
+                        lrFBMModel = lrGraphSchemaRepresentation.MapToFBMModel()
+
+                        Call Me.AddSchemaByFBMModel(lrFBMModel)
+
                     End With
 
                 Catch ex As Exception
@@ -1177,7 +1209,7 @@ Public Class frmSchema
 
                     lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
                     lsMessage &= vbCrLf & vbCrLf & ex.Message
-                    prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,,,,, ex)
+                    prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
                 End Try
 
             End If
