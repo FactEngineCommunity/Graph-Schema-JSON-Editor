@@ -188,7 +188,29 @@ Namespace GSJ
 #End Region
 
 #Region "Fact Types"
+                For Each lrRelationshipObjectType In Me.graphSchema.RelationshipObjectTypes
 
+                    Dim lrFBMModelElement1 = lrFBMModel.GetModelObjectByName(lrRelationshipObjectType.from.ref.TrimStart("#"c))
+                    Dim lrFBMModelElement2 = lrFBMModel.GetModelObjectByName(lrRelationshipObjectType.to.ref.TrimStart("#"c))
+
+                    Dim lrGSJRelationshipType = Me.graphSchema.relationshipTypes.Find(Function(x) x.id = lrRelationshipObjectType.type.ref.TrimStart("#"c))
+
+                    Dim lsFBMFactTypeName = lrFBMModelElement1.Id & "Has" & lrFBMModelElement2.Id
+                    Dim lrFBMFactType = lrFBMModel.CreateFactType(lsFBMFactTypeName, {lrFBMModelElement1, lrFBMModelElement2}.ToList, False, True, False, Nothing, False, Nothing, True, False)
+                    lrFBMModel.AddFactType(lrFBMFactType, True, False, Nothing)
+
+                    'Create FBM InternalUniquenessConstraint, which creates the Property/Column within the RDS.Model for the appropriate RDS.Table (Node Type in our Property Graph Schema)
+                    lrFBMFactType.CreateInternalUniquenessConstraint(lrFBMFactType.RoleGroup.ToList, False, True, True, False, Nothing, False, False)
+
+                    lrFBMFactType.Objectify(True, True, Nothing, True)
+
+                    lrFBMFactType.GraphLabel.Add(New RDS.GraphLabel(lrFBMFactType, lrGSJRelationshipType.token))
+
+                    Dim lrRDSTable As RDS.Table = lrFBMFactType.getCorrespondingRDSTable
+                    lrRDSTable.setIsPGSRelation(True)
+
+
+                Next
 #End Region
 
 

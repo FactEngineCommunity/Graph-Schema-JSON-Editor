@@ -1221,7 +1221,6 @@ Public Class frmSchema
                                                 .NullValueHandling = NullValueHandling.Include
                                             }
                         Dim lrGraphSchemaRepresentationExport As GSJ.GraphSchemaRepresentationExport = JsonConvert.DeserializeObject(Of GSJ.GraphSchemaRepresentationExport)(jsonString, settings)
-                        Debugger.Break()
 
                         Dim lrFBMModel = lrGraphSchemaRepresentationExport.graphSchemaRepresentation.MapToFBMModel()
                         lrFBMModel.Name = Path.GetFileName(filePath)
