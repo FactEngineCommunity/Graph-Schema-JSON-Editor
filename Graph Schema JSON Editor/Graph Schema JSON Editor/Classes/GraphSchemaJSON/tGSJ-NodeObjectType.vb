@@ -16,9 +16,13 @@ Namespace GSJ
         Public Sub New()
         End Sub
 
-        Public Sub New(ByVal asId As String)
+        Public Sub New(ByVal asId As String, Optional asLabel As String = Nothing)
 
             Me.id = asId
+
+            If asLabel IsNot Nothing Then
+                Me.labels.Add(New GSJ.Label(asLabel))
+            End If
         End Sub
 
 

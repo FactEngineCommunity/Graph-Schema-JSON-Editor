@@ -24,8 +24,8 @@
 
     Private Sub tPGSRelationship_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        Me.GSJRelationship.From = New GSJ.RefType
-        Me.GSJRelationship.From.Ref = GSJRelationship.From.Ref
+        Me.GSJRelationship.from = New GSJ.RefType
+        Me.GSJRelationship.from.ref = GSJRelationship.from.ref
 
         Me.GSJRelationship.Type = New GSJ.RefType
         Me.GSJRelationship.Type.Ref = GSJRelationship.Type.Ref
@@ -41,7 +41,7 @@
 
     Private Sub ComboBoxNodeType1_TextChanged(sender As Object, e As EventArgs) Handles ComboBoxNodeType1.TextChanged
 
-        Me.GSJRelationship.From.Ref = Me.ComboBoxNodeType1.Text
+        Me.GSJRelationship.from = Me.ComboBoxNodeType1.SelectedItem.ItemData
 
     End Sub
 

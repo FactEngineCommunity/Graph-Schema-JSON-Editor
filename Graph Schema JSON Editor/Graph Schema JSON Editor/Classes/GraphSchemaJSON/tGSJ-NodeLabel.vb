@@ -1,17 +1,24 @@
-﻿Imports Newtonsoft.Json
+﻿Imports System.Runtime.Serialization
+Imports Newtonsoft.Json
 
 Namespace GSJ
 
     ' NodeLabel class used in an array of nodeLabels.
     Public Class NodeLabel
+
         <JsonProperty("$id")>
-        Public Property id As String = System.Guid.NewGuid.ToString
+        Public Property id As String
 
         <JsonProperty("token")>
         Public Property token As String
 
         <JsonProperty("properties")>
         Public Property properties As New List(Of GSJ.Property)
+
+        <OnDeserialized>
+        Private Sub OnDeserializedMethod(context As StreamingContext)
+            Debug.WriteLine($"Deserialized NodeLabel with Id: {properties}")
+        End Sub
 
         ''' <summary>
         ''' Parameterless Constructor

@@ -62,6 +62,11 @@ JSON Graph Schema Editor
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Import_JSON16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Import16x16">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.

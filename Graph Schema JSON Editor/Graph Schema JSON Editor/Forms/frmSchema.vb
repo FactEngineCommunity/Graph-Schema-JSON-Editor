@@ -183,14 +183,14 @@ Public Class frmSchema
         Dim lfrmCRUDAddEditPGSRelationship As New frmCRUDAddEditRelationship
         lfrmCRUDAddEditPGSRelationship.mrRDSModel = lrModel.RDS
         Dim lrPGSRelationship = New GSJ.RelationshipObjectType
-        lrPGSRelationship.From.Ref = "Node Type 1"
+        lrPGSRelationship.from.ref = "Node Type 1"
         lrPGSRelationship.Type.Ref = "RELATES_TO"
         lrPGSRelationship.To.Ref = "Node Type 2"
         lfrmCRUDAddEditPGSRelationship.mrPGSRelationship = lrPGSRelationship
 
         If lfrmCRUDAddEditPGSRelationship.ShowDialog() = DialogResult.OK Then
 
-            Dim lsFromModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.From.Ref
+            Dim lsFromModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.from.ref
             Dim lsToModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.To.Ref
             Dim lsGraphLabel = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.Type.Ref
 
@@ -898,7 +898,7 @@ Public Class frmSchema
         Dim lsMessage As String
 
         Try
-            Dim lrFBMModel As FBM.Model = Me.TreeView.SelectedNode.Tag
+            Dim lrFBMModel As FBM.Model = Me.TreeView.SelectedNode.Tag.Model
 
             lsMessage = "Are you sure you want to delete the Schema, " & lrFBMModel.Name & "?"
 
@@ -916,7 +916,7 @@ Public Class frmSchema
 
             lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
             lsMessage &= vbCrLf & vbCrLf & ex.Message
-            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,,)
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
         End Try
     End Sub
 
@@ -1178,6 +1178,23 @@ Public Class frmSchema
         Dim lsMessage As String
 
         Try
+            Call Me.ImportGraphSchemaJSONFile()
+
+        Catch ex As Exception
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+    Private Sub ImportGraphSchemaJSONFile()
+
+        Dim lsMessage As String
+
+        Try
             Dim loDialogOpenFile = New OpenFileDialog
 
             loDialogOpenFile.DefaultExt = "json"
@@ -1195,14 +1212,19 @@ Public Class frmSchema
                         Dim jsonString As String = File.ReadAllText(filePath)
 
                         'For testing
-                        Dim loJSONObject = jObject.Parse(jsonString)
+                        Dim loJSONObject = JObject.Parse(jsonString)
 
-                        Dim settings As New JsonSerializerSettings()
-                        settings.NullValueHandling = NullValueHandling.Ignore
+                        Dim settings As New JsonSerializerSettings() With {
+                                                .PreserveReferencesHandling = PreserveReferencesHandling.All,
+                                                .MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
+                                                .Formatting = Formatting.Indented,
+                                                .NullValueHandling = NullValueHandling.Include
+                                            }
                         Dim lrGraphSchemaRepresentationExport As GSJ.GraphSchemaRepresentationExport = JsonConvert.DeserializeObject(Of GSJ.GraphSchemaRepresentationExport)(jsonString, settings)
                         Debugger.Break()
 
                         Dim lrFBMModel = lrGraphSchemaRepresentationExport.graphSchemaRepresentation.MapToFBMModel()
+                        lrFBMModel.Name = Path.GetFileName(filePath)
 
                         Call Me.AddSchemaByFBMModel(lrFBMModel)
 
@@ -1220,6 +1242,7 @@ Public Class frmSchema
 
             End If
 
+
         Catch ex As Exception
             Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
 
@@ -1227,6 +1250,12 @@ Public Class frmSchema
             lsMessage &= vbCrLf & vbCrLf & ex.Message
             prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
         End Try
+
+    End Sub
+
+    Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+
+        Call Me.ImportGraphSchemaJSONFile()
 
     End Sub
 

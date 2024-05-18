@@ -386,6 +386,9 @@
   <ItemGroup>
     <None Include="Images\MenuImages\Relationships16x16.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\Import-JSON16x16.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
