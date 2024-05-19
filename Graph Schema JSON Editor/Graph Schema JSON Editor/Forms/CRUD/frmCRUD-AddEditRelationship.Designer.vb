@@ -22,6 +22,10 @@ Partial Class frmCRUDAddEditRelationship
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim RelationshipObjectType1 As JSON_Graph_Schema_Editor.GSJ.RelationshipObjectType = New JSON_Graph_Schema_Editor.GSJ.RelationshipObjectType()
+        Dim RefType1 As JSON_Graph_Schema_Editor.GSJ.RefType = New JSON_Graph_Schema_Editor.GSJ.RefType()
+        Dim RefType2 As JSON_Graph_Schema_Editor.GSJ.RefType = New JSON_Graph_Schema_Editor.GSJ.RefType()
+        Dim RefType3 As JSON_Graph_Schema_Editor.GSJ.RefType = New JSON_Graph_Schema_Editor.GSJ.RefType()
         Me.TPGSRelationship1 = New JSON_Graph_Schema_Editor.tPGSRelationship()
         Me.SuspendLayout()
         '
@@ -29,10 +33,18 @@ Partial Class frmCRUDAddEditRelationship
         '
         Me.TPGSRelationship1.AutoSize = True
         Me.TPGSRelationship1.Dock = System.Windows.Forms.DockStyle.Fill
+        RefType1.ref = Nothing
+        RelationshipObjectType1.from = RefType1
+        RelationshipObjectType1.id = Nothing
+        RefType2.ref = Nothing
+        RelationshipObjectType1.to = RefType2
+        RefType3.ref = Nothing
+        RelationshipObjectType1.type = RefType3
+        Me.TPGSRelationship1.GSJRelationship = RelationshipObjectType1
         Me.TPGSRelationship1.Location = New System.Drawing.Point(0, 0)
         Me.TPGSRelationship1.Name = "TPGSRelationship1"
         Me.TPGSRelationship1.Size = New System.Drawing.Size(509, 127)
-        Me.TPGSRelationship1.TabIndex = 0
+        Me.TPGSRelationship1.TabIndex = 2
         '
         'frmCRUDAddEditRelationship
         '

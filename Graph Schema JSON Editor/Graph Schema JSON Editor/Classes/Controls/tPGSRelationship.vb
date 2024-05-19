@@ -41,7 +41,9 @@
 
     Private Sub ComboBoxNodeType1_TextChanged(sender As Object, e As EventArgs) Handles ComboBoxNodeType1.TextChanged
 
-        Me.GSJRelationship.from = Me.ComboBoxNodeType1.SelectedItem.ItemData
+        If Me.ComboBoxNodeType1.SelectedItem IsNot Nothing Then
+            Me.GSJRelationship.from = Me.ComboBoxNodeType1.SelectedItem.ItemData
+        End If
 
     End Sub
 

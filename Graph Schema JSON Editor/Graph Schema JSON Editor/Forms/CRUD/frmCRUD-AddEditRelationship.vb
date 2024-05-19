@@ -13,6 +13,8 @@
 
     Private Sub frmCRUDAddEditRelationship_Load(sender As Object, e As EventArgs) Handles Me.Load
 
+        Me.TPGSRelationship1.GSJRelationship = Me.mrPGSRelationship
+
         Call Me.SetupForm
 
     End Sub
