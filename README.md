@@ -8,6 +8,7 @@ GUI Editor to create JSON Graph Schema for Graph Databases and Relational Knowle
 ![Alt text](./Images/Screenshot-GraphSchemaEditor.png)
 
 - Treats every database as if it is a Relational Knowledge Graph.
+(**NB** This visualisation for example purposes only. Not part of application).
 
 ![Alt text](./Images/Morphin-PGS-ERD-CinemaBookings-Advanced.gif)
 
