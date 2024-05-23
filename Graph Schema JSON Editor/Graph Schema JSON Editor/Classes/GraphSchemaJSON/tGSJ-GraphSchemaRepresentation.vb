@@ -38,7 +38,7 @@ Namespace GSJ
 
 #Region "RDS (Tables)-> PGS (Nodes/Properties)"
 
-                For Each lrRDSTable In arFBMModel.RDS.Table.FindAll(Function(x) Not x.isPGSRelation)
+                For Each lrRDSTable In arFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
 
                     Dim lrGSJNodeLabel As New GSJ.NodeLabel(lrRDSTable.Name, lrRDSTable.FBMModelElement.GUID)
                     Me.graphSchema.nodeLabels.Add(lrGSJNodeLabel)
@@ -74,7 +74,7 @@ Namespace GSJ
 
 #Region "RDS (Relationships)-> PGS (RelationshipTypes)"
 
-                    For Each lrRDSRelationship In arFBMModel.RDS.Relation
+                For Each lrRDSRelationship In arFBMModel.RDS.Relation.FindAll(Function(x) Not x.ResponsibleFactType.IsLinkFactType Or Not (x.ResponsibleFactType.IsLinkFactType AndAlso x.ResponsibleFactType.LinkFactTypeRole.FactType.IsCandidatePGSRelationshipNode))
 
                     Dim lrGSJRelationshipType = New GSJ.RelationshipType(lrRDSRelationship.ResponsibleFactType.PropertyGraphLabel, lrRDSRelationship.ResponsibleFactType.GUID)
                     Me.graphSchema.relationshipTypes.Add(lrGSJRelationshipType)
@@ -94,10 +94,30 @@ Namespace GSJ
 
 #End Region
 
+#Region "RDS (Table Relationships)-> PGS (RelationshipTypes)"
+
+                For Each lrRDSTable In arFBMModel.RDS.Table.FindAll(Function(x) x.FBMModelElement.IsCandidatePGSRelationshipNode)
+
+                    Dim lrGSJRelationshipType = New GSJ.RelationshipType(lrRDSTable.FBMModelElement.PropertyGraphLabel, lrRDSTable.FBMModelElement.GUID)
+                    Me.graphSchema.relationshipTypes.Add(lrGSJRelationshipType)
+
+                    For Each lrRDSColumn In lrRDSTable.Column.FindAll(Function(x) Not x.isPartOfPrimaryKey Or x.Role.JoinedORMObject.GetType = GetType(FBM.ValueType))
+                        Dim lrGSJDataType = New GSJ.DataType(lrRDSColumn.DBDataType)
+                        Dim lrGSJProperty As New GSJ.Property(lrRDSColumn.Name, lrRDSColumn.Id, Not lrRDSColumn.IsMandatory, lrGSJDataType)
+                        lrGSJRelationshipType.properties.Add(lrGSJProperty)
+
+                    Next
+
+
+
+                Next
+
+#End Region
+
 #Region "nodeObjectTypes"
 
 
-                For Each lrRDSTable In arFBMModel.RDS.Table
+                For Each lrRDSTable In arFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
 
                     Dim lrGSNodeObjectType = New GSJ.NodeObjectType(lrRDSTable.Name)
                     lrGSNodeObjectType.labels.Add(New GSJ.Label("#" & lrRDSTable.Name))
@@ -117,14 +137,33 @@ Namespace GSJ
 
 #End Region
 
-#Region "relationshipObjectTypes"
+#Region "relationshipObjectTypes - From RDS Relationships - I.e. Foreign Key Relationships"
 
-                For Each lrRDSRelationship In arFBMModel.RDS.Relation
+                For Each lrRDSRelationship In arFBMModel.RDS.Relation.FindAll(Function(x) Not x.ResponsibleFactType.IsLinkFactType Or Not (x.ResponsibleFactType.IsLinkFactType AndAlso x.ResponsibleFactType.LinkFactTypeRole.FactType.IsCandidatePGSRelationshipNode))
 
                     Dim lrGSJRelationshipObjectType = New GSJ.RelationshipObjectType(lrRDSRelationship.Id,
                                                                                      "#" & lrRDSRelationship.ResponsibleFactType.GUID,
                                                                                      "#" & lrRDSRelationship.OriginTable.Name,
                                                                                      "#" & lrRDSRelationship.DestinationTable.Name)
+
+                    Me.graphSchema.RelationshipObjectTypes.Add(lrGSJRelationshipObjectType)
+
+                Next
+
+#End Region
+
+#Region "relationshipObjectTypes - From RDS Tables - I.e. Many-to-Many Tables - PGS Relationships"
+
+                For Each lrRDSTable In arFBMModel.RDS.Table.FindAll(Function(x) x.FBMModelElement.IsCandidatePGSRelationshipNode)
+
+                    Dim larLinkedTables = From Column In lrRDSTable.getPrimaryKeyColumns
+                                          From Relation In Column.Relation
+                                          Select Relation.DestinationTable
+
+                    Dim lrGSJRelationshipObjectType = New GSJ.RelationshipObjectType("R" & lrRDSTable.Name,
+                                                                                     "#" & lrRDSTable.FBMModelElement.GUID,
+                                                                                     "#" & larLinkedTables(0).FBMModelElement.GUID,
+                                                                                     "#" & larLinkedTables(1).FBMModelElement.GUID)
 
                     Me.graphSchema.RelationshipObjectTypes.Add(lrGSJRelationshipObjectType)
 
@@ -150,6 +189,7 @@ Namespace GSJ
         Public Function MapToFBMModel() As FBM.Model
 
             Dim lrFBMModel As New FBM.Model
+            Dim lrFBMFactType As FBM.FactType
 
             Try
                 lrFBMModel.AddCore()
@@ -160,6 +200,7 @@ Namespace GSJ
                 For Each lrNodeLabel In Me.graphSchema.nodeLabels
 
                     Dim lrFBMEntityType As New FBM.EntityType(lrFBMModel, pcenumLanguage.ORMModel, lrNodeLabel.token, Nothing, True)
+                    lrFBMEntityType.GUID = lrNodeLabel.id
                     lrFBMModel.AddEntityType(lrFBMEntityType, True, False, Nothing, True, False)
 
                     For Each lrGSJProperty In lrNodeLabel.properties
@@ -176,7 +217,7 @@ Namespace GSJ
                         Dim larFBMModelElement As List(Of FBM.ModelObject) = {lrFBMEntityType, lrFoundFBMValueType}.ToList
 
                         Dim lsFBMFactTypeName = lrFBMEntityType.Id & "Has" & lrFoundFBMValueType.Id
-                        Dim lrFBMFactType = lrFBMModel.CreateFactType(lsFBMFactTypeName, larFBMModelElement, False, True, False, Nothing, False, Nothing, True, False)
+                        lrFBMFactType = lrFBMModel.CreateFactType(lsFBMFactTypeName, larFBMModelElement, False, True, False, Nothing, False, Nothing, True, False)
                         lrFBMModel.AddFactType(lrFBMFactType, True, False, Nothing)
 
                         'Create FBM InternalUniquenessConstraint, which creates the Property/Column within the RDS.Model for the appropriate RDS.Table (Node Type in our Property Graph Schema)
@@ -190,13 +231,19 @@ Namespace GSJ
 #Region "Fact Types"
                 For Each lrRelationshipObjectType In Me.graphSchema.RelationshipObjectTypes
 
-                    Dim lrFBMModelElement1 = lrFBMModel.GetModelObjectByName(lrRelationshipObjectType.from.ref.TrimStart("#"c))
-                    Dim lrFBMModelElement2 = lrFBMModel.GetModelObjectByName(lrRelationshipObjectType.to.ref.TrimStart("#"c))
+                    Dim lrFBMModelElement1 = (From ModelElement In lrFBMModel.ModelElements
+                                              Where ModelElement.GUID = lrRelationshipObjectType.from.ref.TrimStart("#"c)
+                                              Select ModelElement).First
+
+                    Dim lrFBMModelElement2 = (From ModelElement In lrFBMModel.ModelElements
+                                              Where ModelElement.GUID = lrRelationshipObjectType.to.ref.TrimStart("#"c)
+                                              Select ModelElement).First
 
                     Dim lrGSJRelationshipType = Me.graphSchema.relationshipTypes.Find(Function(x) x.id = lrRelationshipObjectType.type.ref.TrimStart("#"c))
 
                     Dim lsFBMFactTypeName = lrFBMModelElement1.Id & "Has" & lrFBMModelElement2.Id
-                    Dim lrFBMFactType = lrFBMModel.CreateFactType(lsFBMFactTypeName, {lrFBMModelElement1, lrFBMModelElement2}.ToList, False, True, False, Nothing, False, Nothing, True, False)
+
+                    lrFBMFactType = lrFBMModel.CreateFactType(lsFBMFactTypeName, {lrFBMModelElement1, lrFBMModelElement2}.ToList, False, True, False, Nothing, False, Nothing, True, False)
                     lrFBMModel.AddFactType(lrFBMFactType, True, False, Nothing)
 
                     'Create FBM InternalUniquenessConstraint, which creates the Property/Column within the RDS.Model for the appropriate RDS.Table (Node Type in our Property Graph Schema)
@@ -209,6 +256,30 @@ Namespace GSJ
                     Dim lrRDSTable As RDS.Table = lrFBMFactType.getCorrespondingRDSTable
                     lrRDSTable.setIsPGSRelation(True)
 
+                    For Each loProperty In lrGSJRelationshipType.properties
+
+                        Dim lsValueTypeName = loProperty.token
+
+                        Dim larFBMValueType = From ValueType In lrFBMModel.ValueType
+                                              Where ValueType.Id = lsValueTypeName
+                                              Select ValueType
+
+                        Dim lrFBMValueType As FBM.ValueType = Nothing
+                        If larFBMValueType.Count > 0 Then
+                            lrFBMValueType = larFBMValueType.First
+                        Else
+                            lrFBMValueType = lrFBMModel.CreateValueType(lsValueTypeName, True)
+                        End If
+
+                        Dim lsPropertyFBMFactTypeName = lrFBMFactType.Id & "Has" & lsValueTypeName
+                        lsPropertyFBMFactTypeName = lrFBMModel.CreateUniqueFactTypeName(lsPropertyFBMFactTypeName, 0)
+                        Dim lrPropertyFBMFactType = lrFBMModel.CreateFactType(lsPropertyFBMFactTypeName, New List(Of FBM.ModelObject) From {lrFBMFactType, lrFBMValueType}, False, True, False, Nothing, False, Nothing, True, False)
+                        lrFBMModel.AddFactType(lrPropertyFBMFactType, True, False, Nothing)
+
+                        'Create FBM InternalUniquenessConstraint, which creates the Property/Column within the RDS.Model for the appropriate RDS.Table (Node Type in our Property Graph Schema)
+                        lrFBMFactType.CreateInternalUniquenessConstraint({lrPropertyFBMFactType.RoleGroup(0)}.ToList, False, True, True, False, Nothing, False, False)
+
+                    Next
 
                 Next
 #End Region

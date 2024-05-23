@@ -82,6 +82,11 @@ JSON Graph Schema Editor
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.PGS_Add16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.PGS16x16">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -262,6 +267,11 @@ JSON Graph Schema Editor
 <member name="M:JSON_Graph_Schema_Editor.frmSchema.AddRelationshipToTreeView(System.Windows.Forms.TreeNode@,FactEngineForServices.FBM.FactType@)">
  <summary>
  Add Relationship to Schema
+ </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddNewSchema">
+ <summary>
+ Adds a new Schema to the TreeView
  </summary>
 </member>
 <member name="M:JSON_Graph_Schema_Editor.frmToolboxORMReadingEditor.Button3_Click(System.Object,System.EventArgs)">

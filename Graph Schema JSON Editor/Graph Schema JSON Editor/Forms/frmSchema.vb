@@ -262,6 +262,23 @@ Public Class frmSchema
 
                 loTreeNode.Nodes.Add(loRelationshipTreeNode)
 
+                '==========================================================
+                'Properties
+                Dim loPropertiesTreeNode As New TreeNode("Properties")
+                loPropertiesTreeNode.Tag = pcenumSchemaTreeMenuType.Properties
+                loRelationshipTreeNode.Nodes.Add(loPropertiesTreeNode)
+
+                Dim lrRDSTable As RDS.Table = arFBMFactType.getCorrespondingRDSTable
+
+                For Each lrRDSColumn In lrRDSTable.Column
+
+                    Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & If(lrRDSColumn.DataType Is Nothing, "string", lrRDSColumn.DataType.DataType) & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
+
+                    Dim lrNewPropertyTreeNode = New TreeNode(lsPropertyEmbellishment, 4, 4)
+                    lrNewPropertyTreeNode.Tag = lrRDSColumn
+                    loPropertiesTreeNode.Nodes.Add(lrNewPropertyTreeNode)
+                Next
+
             Next
 
         Catch ex As Exception
@@ -533,12 +550,9 @@ Public Class frmSchema
             'Get the Model from the selected TreeNode
             '-----------------------------------------
             lrModel = Me.TreeView.SelectedNode.Tag.Model
-            'If Not lrModel.Loaded Then
-            '    Call Me.DoModelLoading(lrModel)
-            '    Call Me.SetWorkingEnvironmentForObject(Me.TreeView.SelectedNode.Tag)
-            'End If
 
-
+            '====================================================================
+            'Map the Graph Schema from the Fact-Based Model.
             If Not lrGraphSchemaRepresentation.MapFromFBMModel(lrModel) Then
                 MsgBox("Fix the model errors, then try again.")
                 Exit Sub
@@ -666,7 +680,79 @@ Public Class frmSchema
 
                     End If
 #End Region
+                Case Is = GetType(FBM.FactType)
+#Region "FactType"
 
+                    Dim lrFBMFactType As FBM.FactType = Me.TreeView.SelectedNode.Tag
+
+#Region "FactTypeReading Editor"
+                    Dim lfrmFactTypeReadingEditor As New frmToolboxORMReadingEditor
+
+                    lfrmFactTypeReadingEditor = frmMain.ToolboxForms.Find(AddressOf lfrmFactTypeReadingEditor.EqualsByName)
+
+                    '=============================================================
+                    'FactType Reading Editor
+                    If lfrmFactTypeReadingEditor IsNot Nothing Then
+
+                        lfrmFactTypeReadingEditor.zrFactType = lrFBMFactType
+
+                        Dim lrFactTypeInstance = New FBM.FactTypeInstance
+                        lrFactTypeInstance.FactType = lrFBMFactType
+                        lrFactTypeInstance.Model = lrFBMFactType.Model
+                        lfrmFactTypeReadingEditor.zrFactTypeInstance = lrFactTypeInstance
+
+                        Call lfrmFactTypeReadingEditor.SetupForm()
+
+                    End If
+#End Region
+
+                    Dim lrModel As FBM.Model = Me.TreeView.SelectedNode.Parent.Parent.Tag.Model
+
+                    Dim lfrmCRUDAddEditPGSRelationship As New frmCRUDAddEditRelationship
+                    lfrmCRUDAddEditPGSRelationship.mrRDSModel = lrModel.RDS
+
+                    Dim larModelElement = From Role In lrFBMFactType.RoleGroup
+                                          Where Role.JoinsValueType Is Nothing
+                                          Select Role.JoinedORMObject
+
+                    Dim lrOriginTable = larModelElement(0).getCorrespondingRDSTable
+                    Dim lrDestinationTable = larModelElement(1).getCorrespondingRDSTable
+
+                    Dim lrRDSRelation As New RDS.Relation(System.Guid.NewGuid.ToString,
+                                                           lrOriginTable,
+                                                           pcenumCMMLMultiplicity.Many,
+                                                           False,
+                                                           False,
+                                                           "Relates To",
+                                                           lrDestinationTable,
+                                                           pcenumCMMLMultiplicity.Many,
+                                                           False,
+                                                           "Relates To",
+                                                           lrFBMFactType
+                                                           )
+
+                    Dim lrPGSRelationship = New GSJ.RelationshipObjectType
+                    lrPGSRelationship.from.ref = lrRDSRelation.OriginTable.Name
+                    lrPGSRelationship.type.ref = lrRDSRelation.ResponsibleFactType.PropertyGraphLabel
+                    lrPGSRelationship.to.ref = lrRDSRelation.DestinationTable.Name
+
+                    lfrmCRUDAddEditPGSRelationship.mrPGSRelationship = lrPGSRelationship
+
+                    If lfrmCRUDAddEditPGSRelationship.ShowDialog() = DialogResult.OK Then
+
+                        Dim lsFromModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.from.ref
+                        Dim lsToModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.to.ref
+                        Dim lsGraphLabel = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.type.ref
+
+                        Me.TreeView.SelectedNode.Text = $"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})"
+
+                        If Not lrRDSRelation.ResponsibleFactType.PropertyGraphLabel = lsGraphLabel Then
+                            lrRDSRelation.ResponsibleFactType.GraphLabel.RemoveAt(0)
+                            lrRDSRelation.ResponsibleFactType.GraphLabel.Add(New RDS.GraphLabel(lrRDSRelation.ResponsibleFactType, lsGraphLabel))
+                        End If
+
+                    End If
+#End Region
             End Select
 
 
@@ -773,6 +859,9 @@ Public Class frmSchema
                 Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrPGSRelationshipNodeFactType)
 
             Next
+
+            loSchemaTreeNode.Expand()
+            loSchemaTreeNode.EnsureVisible()
 
         Catch ex As Exception
             Dim lsMessage As String
@@ -1222,6 +1311,8 @@ Public Class frmSchema
                                             }
                         Dim lrGraphSchemaRepresentationExport As GSJ.GraphSchemaRepresentationExport = JsonConvert.DeserializeObject(Of GSJ.GraphSchemaRepresentationExport)(jsonString, settings)
 
+                        '================================================
+                        'Map to Fact-Based Model.
                         Dim lrFBMModel = lrGraphSchemaRepresentationExport.graphSchemaRepresentation.MapToFBMModel()
                         lrFBMModel.Name = Path.GetFileName(filePath)
 
@@ -1255,6 +1346,45 @@ Public Class frmSchema
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 
         Call Me.ImportGraphSchemaJSONFile()
+
+    End Sub
+
+    Private Sub FromSQLiteToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FromSQLiteToolStripMenuItem.Click
+
+        Call Me.SourceDatabaseSQLiteConnectTo()
+
+    End Sub
+
+    Private Sub AddSchemaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddSchemaToolStripMenuItem.Click
+
+        Call Me.AddNewSchema()
+
+    End Sub
+
+    ''' <summary>
+    ''' Adds a new Schema to the TreeView
+    ''' </summary>
+    Private Sub AddNewSchema()
+
+        Try
+            Dim lrFBMModel As New FBM.Model(pcenumLanguage.ORMModel, "New Schema", System.Guid.NewGuid.ToString)
+
+            Call Me.AddSchemaByFBMModel(lrFBMModel)
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+    Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
+
+        Call Me.AddNewSchema()
 
     End Sub
 

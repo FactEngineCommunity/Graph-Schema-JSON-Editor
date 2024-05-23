@@ -198,6 +198,12 @@
     <Compile Include="Forms\CustomMessageBox\frmCustomMessageBox.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\frmAbout.designer.vb">
+      <DependentUpon>frmAbout.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmAbout.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmFlashCard.Designer.vb">
       <DependentUpon>frmFlashCard.vb</DependentUpon>
     </Compile>
@@ -283,6 +289,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CustomMessageBox\frmCustomMessageBox.resx">
       <DependentUpon>frmCustomMessageBox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmAbout.resx">
+      <DependentUpon>frmAbout.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmFlashCard.resx">
       <DependentUpon>frmFlashCard.vb</DependentUpon>
@@ -388,6 +397,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\MenuImages\Import-JSON16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\PGS-Add16x16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
