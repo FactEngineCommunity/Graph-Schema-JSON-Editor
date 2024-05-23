@@ -5,7 +5,7 @@ Imports System.Reflection
 
 Public Class frmStartup
 
-    Private WithEvents zrWebBrowser As New WebBrowser
+    Private WithEvents zrWebBrowser As WebBrowser
 
     <ComVisible(True)>
     Public Class ScriptingHelper
@@ -25,13 +25,18 @@ Public Class frmStartup
         Try
             Dim lsApplicationPath As String = MyPath()
 
-            Me.WebBrowser.Navigate("file:\\" & lsApplicationPath & "\startup\index.html")
+            Me.zrWebBrowser = Me.WebBrowser
 
+            Me.WebBrowser.Navigate("file:\\" & lsApplicationPath & "\startup\index.html")
 
             Me.zrWebBrowser = Me.WebBrowser
 
             Dim loHelper As New ScriptingHelper
             Me.zrWebBrowser.ObjectForScripting = loHelper
+
+            WebBrowser.ScriptErrorsSuppressed = True
+            WebBrowser.ObjectForScripting = True
+
 
         Catch ex As Exception
             Dim lsMessage As String
@@ -59,7 +64,7 @@ Public Class frmStartup
     End Sub
 
 
-    Private Sub zrWebBrowser_Navigating(ByVal sender As Object, ByVal e As System.Windows.Forms.WebBrowserNavigatingEventArgs) Handles zrWebBrowser.Navigating
+    Private Sub zrWebBrowsers_Navigating(ByVal sender As Object, ByVal e As System.Windows.Forms.WebBrowserNavigatingEventArgs) Handles WebBrowser.Navigating
 
         Me.Cursor = Cursors.WaitCursor
 
@@ -91,20 +96,17 @@ Public Class frmStartup
                     Dim urlPart As String = e.Url.ToString.Substring(liIndex + "NavigateTo:".Length)
                     Call Me.zrWebBrowser.ObjectForScripting.navigateTo(urlPart)
                 Case Is = "AddNewModel"
-                    'If frmMain.zfrmModelExplorer IsNot Nothing Then
-                    '    Me.Cursor = Cursors.WaitCursor
-                    '    Call frmMain.zfrmModelExplorer.addNewModelToBoston()
-                    '    Me.Cursor = Cursors.Default
-                    'Else
-                    '    MsgBox("Load the Model Explorer first. Select the [View]->[Model Explorer] menu option.")
-                    'End If
+                    If frmMain.mfrmSchemaManager IsNot Nothing Then
+                        With New WaitCursor
+                            Call frmMain.mfrmSchemaManager.AddNewSchema()
+                        End With
+                    Else
+                        MsgBox("Load the Schema Manager first. Select the [View]->[Schema Manager] menu option.")
+                    End If
             End Select
 
 
         End If
-
-        'e.Cancel = True
-
 
     End Sub
 
@@ -114,4 +116,11 @@ Public Class frmStartup
 
     End Sub
 
+    Private Sub zrWebBrowser_Navigating(sender As Object, e As WebBrowserNavigatingEventArgs) Handles zrWebBrowser.Navigating
+
+    End Sub
+
+    Private Sub WebBrowser_Navigated(sender As Object, e As WebBrowserNavigatedEventArgs) Handles WebBrowser.Navigated
+
+    End Sub
 End Class

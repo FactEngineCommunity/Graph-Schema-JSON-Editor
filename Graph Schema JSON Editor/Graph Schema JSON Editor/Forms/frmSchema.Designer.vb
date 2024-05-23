@@ -23,7 +23,7 @@ Partial Class frmSchema
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Schemas")
+        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Schemas")
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmSchema))
         Me.GroupBoxMain = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
@@ -56,6 +56,7 @@ Partial Class frmSchema
         Me.ContextMenuStripProperties = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AddPropertyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripButtonSave = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripDropDownButton1 = New System.Windows.Forms.ToolStripDropDownButton()
         Me.SourceDatabaseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -71,7 +72,6 @@ Partial Class frmSchema
         Me.AddNodeToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.AddRelationshipToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItemRelationshipAddProperty = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
         Me.GroupBoxMain.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.ToolStripMain.SuspendLayout()
@@ -119,9 +119,9 @@ Partial Class frmSchema
         Me.TreeView.LabelEdit = True
         Me.TreeView.Location = New System.Drawing.Point(3, 33)
         Me.TreeView.Name = "TreeView"
-        TreeNode2.Name = "Schemas"
-        TreeNode2.Text = "Schemas"
-        Me.TreeView.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode2})
+        TreeNode1.Name = "Schemas"
+        TreeNode1.Text = "Schemas"
+        Me.TreeView.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1})
         Me.TreeView.SelectedImageIndex = 0
         Me.TreeView.Size = New System.Drawing.Size(955, 445)
         Me.TreeView.TabIndex = 0
@@ -137,6 +137,8 @@ Partial Class frmSchema
         Me.ImageListMain.Images.SetKeyName(4, "Attribute.png")
         Me.ImageListMain.Images.SetKeyName(5, "Attribute-PrimaryKey.png")
         Me.ImageListMain.Images.SetKeyName(6, "Index.png")
+        Me.ImageListMain.Images.SetKeyName(7, "PGSNodes16x16.png")
+        Me.ImageListMain.Images.SetKeyName(8, "Relationships16x16.png")
         '
         'ToolStripMain
         '
@@ -167,10 +169,12 @@ Partial Class frmSchema
         Me.ContextMenuStripSchemas.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.ContextMenuStripSchemas.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddSchemaToolStripMenuItem, Me.ImportToolStripMenuItem})
         Me.ContextMenuStripSchemas.Name = "ContextMenuStripSchemas"
-        Me.ContextMenuStripSchemas.Size = New System.Drawing.Size(142, 48)
+        Me.ContextMenuStripSchemas.Size = New System.Drawing.Size(181, 70)
         '
         'AddSchemaToolStripMenuItem
         '
+        Me.AddSchemaToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.PGS_Add16x16
+        Me.AddSchemaToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.AddSchemaToolStripMenuItem.Name = "AddSchemaToolStripMenuItem"
         Me.AddSchemaToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.AddSchemaToolStripMenuItem.Text = "&Add Schema"
@@ -178,6 +182,8 @@ Partial Class frmSchema
         'ImportToolStripMenuItem
         '
         Me.ImportToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GraphSchemaJSONToolStripMenuItem, Me.FactBasedModelfbmToolStripMenuItem, Me.DatabaseSchemaToolStripMenuItem})
+        Me.ImportToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.Import16x16
+        Me.ImportToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem"
         Me.ImportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ImportToolStripMenuItem.Text = "&Import"
@@ -198,7 +204,7 @@ Partial Class frmSchema
         'FromSQLiteToolStripMenuItem
         '
         Me.FromSQLiteToolStripMenuItem.Name = "FromSQLiteToolStripMenuItem"
-        Me.FromSQLiteToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.FromSQLiteToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
         Me.FromSQLiteToolStripMenuItem.Text = "...from SQLite"
         '
         'ContextMenuStripSchema
@@ -318,6 +324,17 @@ Partial Class frmSchema
         Me.ToolStripButtonSave.Size = New System.Drawing.Size(23, 22)
         Me.ToolStripButtonSave.Text = "ToolStripButton1"
         '
+        'ToolStripButton2
+        '
+        Me.ToolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton2.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.PGS_Add16x16
+        Me.ToolStripButton2.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton2.Name = "ToolStripButton2"
+        Me.ToolStripButton2.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton2.Text = "ToolStripButton2"
+        Me.ToolStripButton2.ToolTipText = "New Schema"
+        '
         'ToolStripButton1
         '
         Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
@@ -327,6 +344,7 @@ Partial Class frmSchema
         Me.ToolStripButton1.Name = "ToolStripButton1"
         Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
         Me.ToolStripButton1.Text = "ToolStripButton1"
+        Me.ToolStripButton1.ToolTipText = "Import Graph Schema JSON schema"
         '
         'ToolStripDropDownButton1
         '
@@ -342,15 +360,19 @@ Partial Class frmSchema
         'SourceDatabaseToolStripMenuItem
         '
         Me.SourceDatabaseToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SQLiteConnectToToolStripMenuItem1})
+        Me.SourceDatabaseToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.DatabaseSchemaImport16x16
+        Me.SourceDatabaseToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.SourceDatabaseToolStripMenuItem.Name = "SourceDatabaseToolStripMenuItem"
-        Me.SourceDatabaseToolStripMenuItem.Size = New System.Drawing.Size(161, 22)
-        Me.SourceDatabaseToolStripMenuItem.Text = "&Source Database"
+        Me.SourceDatabaseToolStripMenuItem.Size = New System.Drawing.Size(190, 22)
+        Me.SourceDatabaseToolStripMenuItem.Text = "&Shema from Database"
         '
         'SQLiteConnectToToolStripMenuItem1
         '
+        Me.SQLiteConnectToToolStripMenuItem1.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.SQLiteLogo
+        Me.SQLiteConnectToToolStripMenuItem1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.SQLiteConnectToToolStripMenuItem1.Name = "SQLiteConnectToToolStripMenuItem1"
-        Me.SQLiteConnectToToolStripMenuItem1.Size = New System.Drawing.Size(179, 22)
-        Me.SQLiteConnectToToolStripMenuItem1.Text = "SQLite (Connect To)"
+        Me.SQLiteConnectToToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
+        Me.SQLiteConnectToToolStripMenuItem1.Text = "SQLite"
         '
         'GraphSchemaJSONToolStripMenuItem
         '
@@ -440,16 +462,6 @@ Partial Class frmSchema
         Me.ToolStripMenuItemRelationshipAddProperty.Name = "ToolStripMenuItemRelationshipAddProperty"
         Me.ToolStripMenuItemRelationshipAddProperty.Size = New System.Drawing.Size(148, 26)
         Me.ToolStripMenuItemRelationshipAddProperty.Text = "&Add Property"
-        '
-        'ToolStripButton2
-        '
-        Me.ToolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton2.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.PGS_Add16x16
-        Me.ToolStripButton2.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton2.Text = "ToolStripButton2"
         '
         'frmSchema
         '

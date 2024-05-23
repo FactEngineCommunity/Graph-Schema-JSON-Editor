@@ -401,6 +401,12 @@
   <ItemGroup>
     <None Include="Images\MenuImages\PGS-Add16x16.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\DatabaseLogos\SQLiteLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\MenuImages\DatabaseSchemaImport16x16.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

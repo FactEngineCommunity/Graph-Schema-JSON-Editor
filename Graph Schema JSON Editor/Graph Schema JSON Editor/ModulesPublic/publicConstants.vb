@@ -3,7 +3,9 @@
     Public Enum pcenumSchemaTreeMenuType
 
         None
+        NodeTypes
         Properties
+        Relationships
 
     End Enum
 

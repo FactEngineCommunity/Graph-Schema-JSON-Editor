@@ -22,6 +22,7 @@ Partial Class frmMain
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.DockPanel = New WeifenLuo.WinFormsUI.Docking.DockPanel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -31,10 +32,10 @@ Partial Class frmMain
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.FactTypeReadingEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PropertiesGridToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ConfigurationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -79,7 +80,7 @@ Partial Class frmMain
         '
         Me.SchemaViewerToolStripMenuItem.Name = "SchemaViewerToolStripMenuItem"
         Me.SchemaViewerToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
-        Me.SchemaViewerToolStripMenuItem.Text = "&Schema Viewer"
+        Me.SchemaViewerToolStripMenuItem.Text = "&Schema Manager"
         '
         'ToolStripSeparator1
         '
@@ -98,19 +99,6 @@ Partial Class frmMain
         Me.PropertiesGridToolStripMenuItem.Size = New System.Drawing.Size(203, 22)
         Me.PropertiesGridToolStripMenuItem.Text = "&Properties Grid"
         '
-        'HelpToolStripMenuItem
-        '
-        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem})
-        Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
-        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
-        Me.HelpToolStripMenuItem.Text = "&Help"
-        '
-        'AboutToolStripMenuItem
-        '
-        Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.AboutToolStripMenuItem.Text = "&About"
-        '
         'OptionsToolStripMenuItem
         '
         Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ConfigurationToolStripMenuItem})
@@ -121,8 +109,21 @@ Partial Class frmMain
         'ConfigurationToolStripMenuItem
         '
         Me.ConfigurationToolStripMenuItem.Name = "ConfigurationToolStripMenuItem"
-        Me.ConfigurationToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ConfigurationToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ConfigurationToolStripMenuItem.Text = "&Configuration"
+        '
+        'HelpToolStripMenuItem
+        '
+        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem})
+        Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
+        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.HelpToolStripMenuItem.Text = "&Help"
+        '
+        'AboutToolStripMenuItem
+        '
+        Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(107, 22)
+        Me.AboutToolStripMenuItem.Text = "&About"
         '
         'frmMain
         '
@@ -131,6 +132,7 @@ Partial Class frmMain
         Me.ClientSize = New System.Drawing.Size(800, 450)
         Me.Controls.Add(Me.DockPanel)
         Me.Controls.Add(Me.MenuStrip1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.IsMdiContainer = True
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "frmMain"

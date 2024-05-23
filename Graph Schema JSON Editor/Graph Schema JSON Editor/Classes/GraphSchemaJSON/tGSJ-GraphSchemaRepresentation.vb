@@ -156,14 +156,14 @@ Namespace GSJ
 
                 For Each lrRDSTable In arFBMModel.RDS.Table.FindAll(Function(x) x.FBMModelElement.IsCandidatePGSRelationshipNode)
 
-                    Dim larLinkedTables = From Column In lrRDSTable.getPrimaryKeyColumns
-                                          From Relation In Column.Relation
-                                          Select Relation.DestinationTable
+                    Dim larLinkedTables = (From Column In lrRDSTable.getPrimaryKeyColumns
+                                           From Relation In Column.Relation
+                                           Select Relation.DestinationTable).Distinct
 
                     Dim lrGSJRelationshipObjectType = New GSJ.RelationshipObjectType("R" & lrRDSTable.Name,
                                                                                      "#" & lrRDSTable.FBMModelElement.GUID,
-                                                                                     "#" & larLinkedTables(0).FBMModelElement.GUID,
-                                                                                     "#" & larLinkedTables(1).FBMModelElement.GUID)
+                                                                                     "#" & larLinkedTables(0).FBMModelElement.Id,
+                                                                                     "#" & larLinkedTables(1).FBMModelElement.Id)
 
                     Me.graphSchema.RelationshipObjectTypes.Add(lrGSJRelationshipObjectType)
 
@@ -232,11 +232,11 @@ Namespace GSJ
                 For Each lrRelationshipObjectType In Me.graphSchema.RelationshipObjectTypes
 
                     Dim lrFBMModelElement1 = (From ModelElement In lrFBMModel.ModelElements
-                                              Where ModelElement.GUID = lrRelationshipObjectType.from.ref.TrimStart("#"c)
+                                              Where ModelElement.Id = lrRelationshipObjectType.from.ref.TrimStart("#"c)
                                               Select ModelElement).First
 
                     Dim lrFBMModelElement2 = (From ModelElement In lrFBMModel.ModelElements
-                                              Where ModelElement.GUID = lrRelationshipObjectType.to.ref.TrimStart("#"c)
+                                              Where ModelElement.Id = lrRelationshipObjectType.to.ref.TrimStart("#"c)
                                               Select ModelElement).First
 
                     Dim lrGSJRelationshipType = Me.graphSchema.relationshipTypes.Find(Function(x) x.id = lrRelationshipObjectType.type.ref.TrimStart("#"c))

@@ -42,6 +42,11 @@ JSON Graph Schema Editor
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.DatabaseSchemaImport16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.delete16x16">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -118,6 +123,11 @@ JSON Graph Schema Editor
 </summary>
 </member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Save16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.SQLiteLogo">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>

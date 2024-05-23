@@ -2,6 +2,7 @@
 
     Public mrRDSModel As FactEngineForServices.RDS.Model
     Public mrPGSRelationship As New GSJ.RelationshipObjectType
+    Public mbIsAdd As Boolean = False
 
     Private Sub TPGSRelationship1_CancelClicked() Handles TPGSRelationship1.CancelClicked
 
@@ -13,7 +14,14 @@
 
     Private Sub frmCRUDAddEditRelationship_Load(sender As Object, e As EventArgs) Handles Me.Load
 
+        'Automatically disables if GSJRelationship isnot Nothing
         Me.TPGSRelationship1.GSJRelationship = Me.mrPGSRelationship
+
+        If Me.mbIsAdd Then
+            Me.TPGSRelationship1.ComboBoxNodeType1.Enabled = True
+            Me.TPGSRelationship1.ComboBoxNodeType2.Enabled = True
+        End If
+
 
         Call Me.SetupForm
 
@@ -31,6 +39,11 @@
             lrNewComboBoxItem = New tComboboxItem(lrRDSTable.Name, lrRDSTable.Name, lrRDSTable)
             Me.TPGSRelationship1.ComboBoxNodeType2.Items.Add(lrNewComboBoxItem)
 
+            Me.TPGSRelationship1.ComboBoxNodeType1.DropDownStyle = ComboBoxStyle.DropDownList
+            Me.TPGSRelationship1.ComboBoxNodeType2.DropDownStyle = ComboBoxStyle.DropDownList
+
+            Me.TPGSRelationship1.ComboBoxNodeType1.SelectedIndex = 0
+            Me.TPGSRelationship1.ComboBoxNodeType2.SelectedIndex = 0
         Next
 
     End Sub

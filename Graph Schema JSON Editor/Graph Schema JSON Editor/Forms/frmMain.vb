@@ -7,6 +7,8 @@ Public Class frmMain
     Public ToolboxForms As New List(Of WeifenLuo.WinFormsUI.Docking.DockContent)
     Public RightToolboxForms As New List(Of WeifenLuo.WinFormsUI.Docking.DockContent)
 
+    Public mfrmSchemaManager As frmSchema = Nothing
+
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         Dim lsMessage As String
@@ -123,6 +125,7 @@ Public Class frmMain
 
             Dim lfrmSchema As New frmSchema
             lfrmSchema.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockLeft)
+            Me.mfrmSchemaManager = lfrmSchema
 
             Dim lfrmPropertiesGrid As New frmToolboxProperties
             lfrmPropertiesGrid.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockRight)
@@ -204,6 +207,8 @@ Public Class frmMain
     Private Sub SchemaViewerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SchemaViewerToolStripMenuItem.Click
 
         Dim lfrmSchemaViewer = New frmSchema
+
+        Me.mfrmSchemaManager = lfrmSchemaViewer
 
         lfrmSchemaViewer.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockLeft)
 
