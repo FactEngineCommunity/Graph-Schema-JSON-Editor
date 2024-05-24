@@ -29,7 +29,7 @@ Partial Class frmAbout
         Me.label_details = New System.Windows.Forms.Label()
         Me.LabelPromptLicenses = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.LabelCategory = New System.Windows.Forms.Label()
+        Me.LabelProjectPrompt = New System.Windows.Forms.Label()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -38,7 +38,7 @@ Partial Class frmAbout
         '
         Me.button_close.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.button_close.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.button_close.Location = New System.Drawing.Point(282, 197)
+        Me.button_close.Location = New System.Drawing.Point(286, 180)
         Me.button_close.Name = "button_close"
         Me.button_close.Size = New System.Drawing.Size(80, 23)
         Me.button_close.TabIndex = 0
@@ -47,13 +47,14 @@ Partial Class frmAbout
         '
         'labelprompt_rosters
         '
-        Me.labelprompt_rosters.Font = New System.Drawing.Font("Arial", 26.25!, System.Drawing.FontStyle.Bold)
+        Me.labelprompt_rosters.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.labelprompt_rosters.ForeColor = System.Drawing.Color.Black
         Me.labelprompt_rosters.Location = New System.Drawing.Point(12, 9)
         Me.labelprompt_rosters.Name = "labelprompt_rosters"
-        Me.labelprompt_rosters.Size = New System.Drawing.Size(275, 42)
+        Me.labelprompt_rosters.Size = New System.Drawing.Size(230, 57)
         Me.labelprompt_rosters.TabIndex = 3
-        Me.labelprompt_rosters.Text = "Boston"
+        Me.labelprompt_rosters.Text = "Graph Schema JSON Editor"
+        Me.labelprompt_rosters.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'label_versioning
         '
@@ -80,7 +81,7 @@ Partial Class frmAbout
         Me.LabelPromptLicenses.Cursor = System.Windows.Forms.Cursors.Hand
         Me.LabelPromptLicenses.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LabelPromptLicenses.ForeColor = System.Drawing.Color.Blue
-        Me.LabelPromptLicenses.Location = New System.Drawing.Point(12, 193)
+        Me.LabelPromptLicenses.Location = New System.Drawing.Point(12, 180)
         Me.LabelPromptLicenses.Name = "LabelPromptLicenses"
         Me.LabelPromptLicenses.Size = New System.Drawing.Size(49, 13)
         Me.LabelPromptLicenses.TabIndex = 9
@@ -92,26 +93,25 @@ Partial Class frmAbout
         Me.Label1.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.Blue
-        Me.Label1.Location = New System.Drawing.Point(12, 206)
+        Me.Label1.Location = New System.Drawing.Point(12, 217)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(114, 13)
+        Me.Label1.Size = New System.Drawing.Size(342, 13)
         Me.Label1.TabIndex = 10
-        Me.Label1.Text = "support@factengine.ai"
+        Me.Label1.Text = "https://github.com/FactEngineCommunity/Graph-Schema-JSON-Editor"
         '
-        'LabelCategory
+        'LabelProjectPrompt
         '
-        Me.LabelCategory.AutoSize = True
-        Me.LabelCategory.ForeColor = System.Drawing.Color.DimGray
-        Me.LabelCategory.Location = New System.Drawing.Point(143, 30)
-        Me.LabelCategory.Name = "LabelCategory"
-        Me.LabelCategory.Size = New System.Drawing.Size(75, 13)
-        Me.LabelCategory.TabIndex = 11
-        Me.LabelCategory.Text = "LabelCategory"
+        Me.LabelProjectPrompt.AutoSize = True
+        Me.LabelProjectPrompt.Location = New System.Drawing.Point(12, 204)
+        Me.LabelProjectPrompt.Name = "LabelProjectPrompt"
+        Me.LabelProjectPrompt.Size = New System.Drawing.Size(43, 13)
+        Me.LabelProjectPrompt.TabIndex = 12
+        Me.LabelProjectPrompt.Text = "Project:"
         '
         'PictureBox2
         '
         Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
-        Me.PictureBox2.Location = New System.Drawing.Point(237, 9)
+        Me.PictureBox2.Location = New System.Drawing.Point(248, 9)
         Me.PictureBox2.Name = "PictureBox2"
         Me.PictureBox2.Size = New System.Drawing.Size(118, 39)
         Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -125,7 +125,7 @@ Partial Class frmAbout
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(378, 239)
         Me.ControlBox = False
-        Me.Controls.Add(Me.LabelCategory)
+        Me.Controls.Add(Me.LabelProjectPrompt)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.LabelPromptLicenses)
         Me.Controls.Add(Me.PictureBox2)
@@ -148,5 +148,5 @@ Partial Class frmAbout
     Friend WithEvents PictureBox2 As System.Windows.Forms.PictureBox
     Friend WithEvents LabelPromptLicenses As System.Windows.Forms.Label
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents LabelCategory As Label
+    Friend WithEvents LabelProjectPrompt As Label
 End Class

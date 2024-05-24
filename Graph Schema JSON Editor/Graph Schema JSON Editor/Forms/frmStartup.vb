@@ -105,7 +105,6 @@ Public Class frmStartup
                     End If
             End Select
 
-
         End If
 
     End Sub

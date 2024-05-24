@@ -9,7 +9,6 @@ Imports System.ComponentModel
 
 Public Class frmSchema
 
-
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         Call Me.SetupForm()
@@ -21,15 +20,67 @@ Public Class frmSchema
         'Expand the TreeView
         Me.TreeView.ExpandAll()
 
-        'Create a new FBM (FactBasedModel) to store the ObjectTypes and Relationships (FactTypes) for the Nodes/Relationships of the Model.
-        'Dim lrFBMModel = Me.mrFBMModel
+    End Sub
 
-        'Create a new RDS (RelationalDataStructure) Model to store Nodes/Table in.
-        'Me.mrFBMModel.RDS = New FactEngineForServices.RDS.Model(lrFBMModel)
-        'Dim lrRDSModel = Me.mrFBMModel.RDS
+    ''' <summary>
+    ''' Adds a Node Type to the Schema of the Selected TreeNode, or the given TreeNode.
+    ''' </summary>
+    ''' <param name="arTreeNode">Only provide fo the Schema TreeNode.</param>
+    Private Sub AddNodeTypeToSelectedTreeNode(Optional ByRef arSchemaTreeNode As TreeNode = Nothing)
 
-        'Store the RDS Model against the "Schema" TreeNode, so we can add Nodes/Tables to it.
-        'Me.TreeView.Nodes(0).Tag = lrRDSModel
+        Try
+            Dim loTreeNode As TreeNode
+
+            'Get the RelationalDataStructure that stores the Schema.
+            '  NB GSJ Editor stores Schemas in the GraphRelational/RelationalKnowledgeGraph format in a Fact-Based Model with an associated Relational Data Structure.
+            '  I.e. Node Types are the same as RDS Tables under the RelationalKnowledgeGraph/Fact-Based Modelling Schema.
+            Dim lrRDSModel As RDS.Model
+
+            If arSchemaTreeNode Is Nothing Then
+                loTreeNode = Me.TreeView.SelectedNode
+                lrRDSModel = loTreeNode.Parent.Tag
+            Else
+                loTreeNode = arSchemaTreeNode.Nodes(0)
+                lrRDSModel = arSchemaTreeNode.Tag
+            End If
+
+            '--------------------------------------------------------------
+            'Create an EntityType/ObjectType for the FBM (FactBasedModel)
+            'I.e. Is the Node Type being created.
+            Dim lsEntityTypeName = "New Node Type"
+            'Create a unique NodeType Name.
+            lsEntityTypeName = lrRDSModel.Model.CreateUniqueEntityTypeName(lsEntityTypeName, 0, False)
+            Dim lrEntityType As New FBM.EntityType(lrRDSModel.Model, pcenumLanguage.ORMModel, lsEntityTypeName)
+
+            Dim loNewNodeTreeNode = New TreeNode($"({lsEntityTypeName})", 1, 1)
+            loTreeNode.Nodes.Add(loNewNodeTreeNode)
+
+#Region "RDS (RelationalDataStructure) management"
+            '---------------------------------------------------------
+            'Add the Node Table/Table to the RDS (RelationalDataStructure)
+            Dim lrRDSTable As New RDS.Table(lrRDSModel, lrEntityType.Name, lrEntityType)
+            'Add the RDS Table to the RDS Schema
+            lrRDSModel.addTable(lrRDSTable) 'NB Has no Properties (Columns) at this stage.
+            loNewNodeTreeNode.Tag = lrRDSTable
+#End Region
+
+#Region "Properties - Collection Placeholder TreeNode"
+            Dim loPropertiesTreeNode = New TreeNode("Properties", 4, 4)
+            loPropertiesTreeNode.Tag = New tSchemaTreeMenuType(pcenumSchemaTreeMenuType.Properties)
+            loNewNodeTreeNode.Nodes.Add(loPropertiesTreeNode)
+#End Region
+
+            loTreeNode.Expand()
+            loNewNodeTreeNode.Expand()
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
 
     End Sub
 
@@ -55,11 +106,11 @@ Public Class frmSchema
 
                         ContextMenuStripSchemas.Show(TreeView, e.Location)
 
-                    ElseIf TreeView.SelectedNode.Name = "Nodes" Then
+                    ElseIf TreeView.SelectedNode.Name = "Node Types" Then
 
                         ContextMenuStripNodes.Show(TreeView, e.Location)
 
-                    ElseIf TreeView.SelectedNode.Name = "Relationships" Then
+                    ElseIf TreeView.SelectedNode.Name = "Relationship Types" Then
 
                         ContextMenuStripRelationships.Show(TreeView, e.Location)
 
@@ -121,41 +172,7 @@ Public Class frmSchema
 
         Try
 
-            Dim loTreeNode As TreeNode = Me.TreeView.SelectedNode
-
-            'Get the RelationalDataStructure that stores the Schema.
-            '  NB GSJ Editor stores Schemas in the GraphRelational/RelationalKnowledgeGraph format in a Fact-Based Model with an associated Relational Data Structure.
-            '  I.e. Node Types are the same as RDS Tables under the RelationalKnowledgeGraph/Fact-Based Modelling Schema.
-            Dim lrRDSModel As RDS.Model = loTreeNode.Parent.Tag
-
-            '--------------------------------------------------------------
-            'Create an EntityType/ObjectType for the FBM (FactBasedModel)
-            'I.e. Is the Node Type being created.
-            Dim lsEntityTypeName = "New Node Type"
-            'Create a unique NodeType Name.
-            lsEntityTypeName = lrRDSModel.Model.CreateUniqueEntityTypeName(lsEntityTypeName, 0, False)
-            Dim lrEntityType As New FBM.EntityType(lrRDSModel.Model, pcenumLanguage.ORMModel, lsEntityTypeName)
-
-            Dim loNewNodeTreeNode = New TreeNode($"({lsEntityTypeName})", 1, 1)
-            loTreeNode.Nodes.Add(loNewNodeTreeNode)
-
-#Region "RDS (RelationalDataStructure) management"
-            '---------------------------------------------------------
-            'Add the Node Table/Table to the RDS (RelationalDataStructure)
-            Dim lrRDSTable As New RDS.Table(Me.TreeView.Nodes(0).Tag, lrEntityType.Name, lrEntityType)
-            'Add the RDS Table to the RDS Schema
-            lrRDSModel.addTable(lrRDSTable) 'NB Has no Properties (Columns) at this stage.
-            loNewNodeTreeNode.Tag = lrRDSTable
-#End Region
-
-#Region "Properties - Collection Placeholder TreeNode"
-            Dim loPropertiesTreeNode = New TreeNode("Properties", 4, 4)
-            loPropertiesTreeNode.Tag = New tSchemaTreeMenuType(pcenumSchemaTreeMenuType.Properties)
-            loNewNodeTreeNode.Nodes.Add(loPropertiesTreeNode)
-#End Region
-
-            loTreeNode.Expand()
-            loNewNodeTreeNode.Expand()
+            Call Me.AddNodeTypeToSelectedTreeNode
 
         Catch ex As Exception
             Dim lsMessage As String
@@ -167,6 +184,7 @@ Public Class frmSchema
         End Try
 
     End Sub
+
 
     ''' <summary>
     ''' Add Node to Schema
@@ -895,7 +913,7 @@ Public Class frmSchema
             loTreeNode.Tag = New tSchemaTreeMenuType(pcenumSchemaTreeMenuType.NodeTypes)
             loSchemaTreeNode.Nodes.Add(loTreeNode)
 
-            loTreeNode = New TreeNode("Relationships", 8, 8)
+            loTreeNode = New TreeNode("Relationship Types", 8, 8)
             loTreeNode.Tag = New tSchemaTreeMenuType(pcenumSchemaTreeMenuType.Relationships)
             loSchemaTreeNode.Nodes.Add(loTreeNode)
 
@@ -1454,5 +1472,12 @@ Public Class frmSchema
         frmMain.mfrmSchemaManager = Nothing
 
     End Sub
+
+    Private Sub AddNodeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddNodeToolStripMenuItem.Click
+
+        Call Me.AddNodeTypeToSelectedTreeNode(Me.TreeView.SelectedNode)
+
+    End Sub
+
 
 End Class

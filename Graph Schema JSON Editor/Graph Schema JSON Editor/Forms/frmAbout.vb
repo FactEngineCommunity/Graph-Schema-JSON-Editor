@@ -18,8 +18,6 @@ Public Class frmAbout
 
         label_versioning.Text = ls_message
 
-        Me.LabelCategory.Text = prApplication.SoftwareCategory.ToString
-
         ls_message = "Written by FactEngine and Victor Morgante."
 
         label_details.Text = ls_message
@@ -36,8 +34,7 @@ Public Class frmAbout
     Private Sub Label1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Label1.Click
 
         Try
-            'System.Diagnostics.Process.Start(String.Format("mailto:{0}?Subject=my report&Body={1}&Attachment={2}", "support@factengine.ai", lsText, "file://C:\Users\Viev\Desktop\Commands.txt"))
-            System.Diagnostics.Process.Start(String.Format("mailto:{0}", "support@factengine.ai"))
+            Process.Start(Label1.Text.Trim)
         Catch ex As Exception
             Dim lsMessage As String
             Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
@@ -53,9 +50,9 @@ Public Class frmAbout
 
     Private Sub LabelPromptLicenses_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles LabelPromptLicenses.Click
 
-        'Dim lrChildForm As New frmLicences
+        Dim lrChildForm As New frmLicences
 
-        'lrChildForm.Show(frmMain.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.Document)
+        lrChildForm.Show(frmMain.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.Document)
 
     End Sub
 

@@ -16,6 +16,7 @@ Public Class frmMain
         Try
             prApplication.DebugMode = pcenumDebugMode.DebugCriticalErrorsOnly
             prApplication.ThrowCriticalDebugMessagesToScreen = True
+            prApplication.ApplicationVersionNr = "0.9"
 
             Call Me.SetupForm()
 
@@ -102,9 +103,12 @@ Public Class frmMain
             My.Settings.Save()
 
             If prFactEngine.OpenBostonDatabase(My.Settings.DatabaseConnectionString) Then
-
+                'Great!
+            Else
+                Throw New Exception("Cannot open the Boston database.")
             End If
 
+            prApplication.DatabaseVersionNr = TableReferenceFieldValue.GetReferenceFieldValue(1, 1)
 #End Region
 
         Catch ex As Exception

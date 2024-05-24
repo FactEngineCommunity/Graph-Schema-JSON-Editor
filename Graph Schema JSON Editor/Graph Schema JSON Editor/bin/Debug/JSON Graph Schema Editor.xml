@@ -67,6 +67,16 @@ JSON Graph Schema Editor
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.FactBasedModeling16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.FactBasedModeling16x161">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Import_JSON16x16">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -242,6 +252,12 @@ JSON Graph Schema Editor
  Constructor. Identify the type of Menu for the Schema TreeView, TreeNode. I.e. e.g. ContextMenuStrip decision made on the type.
  </summary>
  <param name="aiSchemaTreeMenuType">The Type of the Tree Menu. E.g. Properties</param>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddNodeTypeToSelectedTreeNode(System.Windows.Forms.TreeNode@)">
+ <summary>
+ Adds a Node Type to the Schema of the Selected TreeNode, or the given TreeNode.
+ </summary>
+ <param name="arTreeNode">Only provide fo the Schema TreeNode.</param>
 </member>
 <member name="M:JSON_Graph_Schema_Editor.frmSchema.TreeView_MouseUp(System.Object,System.Windows.Forms.MouseEventArgs)">
  <summary>
