@@ -2,13 +2,28 @@
 Imports FactEngineForServices
 Imports System.Reflection
 
+''' <summary>
+''' PropertiesGrid Toolbox use only. See GSJ.RelationshipObjectType and GSJ.RelationshipType.
+'''   Also see (FEFS) RDS.Table (Node Types and Relationships when Many-to-Many table) and RDS.Relation (Foreign Keys).
+''' </summary>
 Public Class ERDRelationship
-    Inherits ERD.Relation
+    Inherits ERD.Relation 'From FactEngine for Services.
+
+    ''' <summary>
+    ''' Can be either an RDS.Relation (Foreign Key Reference) or a RDS.Table (E.g. A Many-to-Many table as a Property Graph Edge Type equivalent).
+    ''' </summary>
+    Public ModelElement As Object
 
     Public Shadows WithEvents RDSRelation As RDS.Relation
 
+    Public Shadows WithEvents RDSTable As RDS.Table
+
     Public Shadows _GraphLabel As New FEStrings.StringCollection
 
+    ''' <summary>
+    ''' The Graph Label for the Relationship/Edge Type. NB This may need to be changed to a single String member for Relationships/Edge Types.
+    ''' </summary>
+    ''' <returns></returns>
     <CategoryAttribute("Relation"),
     Browsable(True),
     [ReadOnly](False),
@@ -75,9 +90,10 @@ Public Class ERDRelationship
     ''' <param name="abOriginMandatory"></param>
     ''' <param name="abOriginContributesToPrimaryKey"></param>
     ''' <param name="arDestinationEntity"></param>
-    ''' <param name="aiDestinationMultiplicity"></param>
-    ''' <param name="abDestinationMandatory"></param>
-    ''' <param name="abCorrespondingTable">If the Relation is a PGSRelation, then has a corresponding Table.</param>
+    ''' <param name="aiDestinationMultiplicity">Destination Multiplicity. E.g. Many, One.</param>
+    ''' <param name="abDestinationMandatory">True if the Destination of the Relationship is mandatory.</param>
+    ''' <param name="arCorrespondingRDSTable">If the Relation is a (FEFS) PGSRelation, then has a corresponding Table.</param>
+    ''' <param name="arCorrespondingRDSRelation">If the Relationship is a RDS.Relation(ship) (Foreign Key), then the RDS.Relation.</param>
     Public Sub New(ByRef arModel As FBM.Model,
                        ByRef arPage As FBM.Page,
                        ByVal asRelationId As String,
@@ -88,7 +104,8 @@ Public Class ERDRelationship
                        ByRef arDestinationEntity As FBM.FactDataInstance,
                        ByVal aiDestinationMultiplicity As pcenumCMMLMultiplicity,
                        ByVal abDestinationMandatory As Boolean,
-                       Optional ByRef abCorrespondingTable As RDS.Table = Nothing)
+                       Optional ByRef arCorrespondingRDSTable As RDS.Table = Nothing,
+                       Optional ByRef arCorrespondingRDSRelation As RDS.Relation = Nothing)
 
         Me.Model = arModel
         Me.Page = arPage
@@ -102,6 +119,15 @@ Public Class ERDRelationship
         Me.DestinationEntity = arDestinationEntity
         Me.DestinationMultiplicity = aiDestinationMultiplicity
         Me.DestinationMandatory = abDestinationMandatory
+
+        If arCorrespondingRDSTable IsNot Nothing Then
+            Me.ModelElement = arCorrespondingRDSTable
+            Me.RDSTable = arCorrespondingRDSTable
+        Else
+            Me.ModelElement = arCorrespondingRDSRelation
+            Me.RDSRelation = arCorrespondingRDSRelation
+        End If
+
 
     End Sub
 
@@ -128,8 +154,15 @@ Public Class ERDRelationship
                         With New WaitCursor
                             Select Case asSelectedGridItemLabel
                                 Case Is = "GraphLabel"
+
                                     'GraphLabel processing.
-                                    Call Me.RDSRelation.ResponsibleFactType.ModifyGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
+                                    Select Case Me.ModelElement.GetType
+                                        Case Is = GetType(RDS.Relation)
+                                            Call Me.RDSRelation.ResponsibleFactType.ModifyGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
+                                        Case Is = GetType(RDS.Table)
+                                            Call Me.RDSTable.FBMModelElement.ModifyGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
+                                    End Select
+
                                 Case Else
                                     'No other collections at this stage.
                             End Select
@@ -144,7 +177,13 @@ Public Class ERDRelationship
             For Each lsGraphLabel In Me.RDSRelation.ResponsibleFactType.GraphLabel.Select(Function(x) x.Label).ToArray
                 If lsGraphLabel IsNot Nothing Then
                     If Not Me._GraphLabel.Contains(lsGraphLabel) Then
-                        Call Me.RDSRelation.ResponsibleFactType.GraphLabel.RemoveAll(Function(x) x.ModelElement.Id = Me.RDSRelation.ResponsibleFactType.Id And x.Label = lsGraphLabel)
+                        Select Case Me.ModelElement.GetType
+                            Case Is = GetType(RDS.Relation)
+                                Call Me.RDSRelation.ResponsibleFactType.GraphLabel.RemoveAll(Function(x) x.ModelElement.Id = Me.RDSRelation.ResponsibleFactType.Id And x.Label = lsGraphLabel)
+                            Case Is = GetType(RDS.Table)
+                                Call Me.RDSTable.FBMModelElement.GraphLabel.RemoveAll(Function(x) x.ModelElement.Id = Me.RDSRelation.ResponsibleFactType.Id And x.Label = lsGraphLabel)
+                        End Select
+
                     End If
                 End If
             Next
@@ -163,4 +202,9 @@ Public Class ERDRelationship
     Private Sub RDSRelation_GraphLabelAdded(asNewGraphLabel As String) Handles RDSRelation.GraphLabelAdded
         Me._GraphLabel.Add(asNewGraphLabel)
     End Sub
+
+    Private Sub RDSTable_GraphLabelAdded(asNewGraphLabel As String) Handles RDSTable.GraphLabelAdded
+        Me._GraphLabel.Add(asNewGraphLabel)
+    End Sub
+
 End Class

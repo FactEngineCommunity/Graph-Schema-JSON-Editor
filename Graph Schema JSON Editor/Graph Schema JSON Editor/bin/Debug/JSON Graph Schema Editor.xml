@@ -147,7 +147,24 @@ JSON Graph Schema Editor
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
-<member name="M:JSON_Graph_Schema_Editor.ERDRelationship.#ctor(FactEngineForServices.FBM.Model@,FactEngineForServices.FBM.Page@,System.String,FactEngineForServices.FBM.FactDataInstance@,FactEngineForServices.publicCMML.pcenumCMMLMultiplicity,System.Boolean,System.Boolean,FactEngineForServices.FBM.FactDataInstance@,FactEngineForServices.publicCMML.pcenumCMMLMultiplicity,System.Boolean,FactEngineForServices.RDS.Table@)">
+<member name="T:JSON_Graph_Schema_Editor.ERDRelationship">
+ <summary>
+ PropertiesGrid Toolbox use only. See GSJ.RelationshipObjectType and GSJ.RelationshipType.
+   Also see (FEFS) RDS.Table (Node Types and Relationships when Many-to-Many table) and RDS.Relation (Foreign Keys).
+ </summary>
+</member>
+<member name="F:JSON_Graph_Schema_Editor.ERDRelationship.ModelElement">
+ <summary>
+ Can be either an RDS.Relation (Foreign Key Reference) or a RDS.Table (E.g. A Many-to-Many table as a Property Graph Edge Type equivalent).
+ </summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.ERDRelationship.GraphLabel">
+ <summary>
+ The Graph Label for the Relationship/Edge Type. NB This may need to be changed to a single String member for Relationships/Edge Types.
+ </summary>
+ <returns></returns>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.ERDRelationship.#ctor(FactEngineForServices.FBM.Model@,FactEngineForServices.FBM.Page@,System.String,FactEngineForServices.FBM.FactDataInstance@,FactEngineForServices.publicCMML.pcenumCMMLMultiplicity,System.Boolean,System.Boolean,FactEngineForServices.FBM.FactDataInstance@,FactEngineForServices.publicCMML.pcenumCMMLMultiplicity,System.Boolean,FactEngineForServices.RDS.Table@,FactEngineForServices.RDS.Relation@)">
  <summary>
  Object constructor.
  </summary>
@@ -159,9 +176,10 @@ JSON Graph Schema Editor
  <param name="abOriginMandatory"></param>
  <param name="abOriginContributesToPrimaryKey"></param>
  <param name="arDestinationEntity"></param>
- <param name="aiDestinationMultiplicity"></param>
- <param name="abDestinationMandatory"></param>
- <param name="abCorrespondingTable">If the Relation is a PGSRelation, then has a corresponding Table.</param>
+ <param name="aiDestinationMultiplicity">Destination Multiplicity. E.g. Many, One.</param>
+ <param name="abDestinationMandatory">True if the Destination of the Relationship is mandatory.</param>
+ <param name="arCorrespondingRDSTable">If the Relation is a (FEFS) PGSRelation, then has a corresponding Table.</param>
+ <param name="arCorrespondingRDSRelation">If the Relationship is a RDS.Relation(ship) (Foreign Key), then the RDS.Relation.</param>
 </member>
 <member name="M:JSON_Graph_Schema_Editor.GSJ.GraphSchema.#ctor">
  <summary>
@@ -214,6 +232,12 @@ JSON Graph Schema Editor
  Parameterless Constructor
  </summary>
 </member>
+<member name="F:JSON_Graph_Schema_Editor.GSJ.RelationshipObjectType.ModelElement">
+ <summary>
+ GSJ Editor use only. Stores the RDS.Relation(ship) or the RDS.Table that represent the Relationship/EdgeType in the RDS Schema.
+   RDS.Relation(ships) are Foreign Keys. RDS.Tables are Many-to-Many RDS tables that represent Edge Types/Relationships.
+ </summary>
+</member>
 <member name="M:JSON_Graph_Schema_Editor.GSJ.RelationshipObjectType.#ctor">
  <summary>
  Parameterless Constructor
@@ -261,7 +285,7 @@ JSON Graph Schema Editor
 </member>
 <member name="M:JSON_Graph_Schema_Editor.frmSchema.TreeView_MouseUp(System.Object,System.Windows.Forms.MouseEventArgs)">
  <summary>
- ContextMenuStrip management.
+ ContextMenuStrip management. NB For setting the PropertiesGrid or the FactTypeReading/Preicate Editor, see TreeView.AfterSelect. Only ContextMenues set in this method.
  </summary>
  <param name="sender"></param>
  <param name="e"></param>

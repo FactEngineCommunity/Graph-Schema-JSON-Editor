@@ -85,11 +85,15 @@ Public Class frmSchema
     End Sub
 
     ''' <summary>
-    ''' ContextMenuStrip management.
+    ''' ContextMenuStrip management. NB For setting the PropertiesGrid or the FactTypeReading/Preicate Editor, see TreeView.AfterSelect. Only ContextMenues set in this method.
     ''' </summary>
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
     Private Sub TreeView_MouseUp(sender As Object, e As MouseEventArgs) Handles TreeView.MouseUp
+
+        '=============================================================================================================
+        'NB For setting the PropertiesGrid or the FactTypeReading/Preicate Editor, see TreeView.AfterSelect
+        '  Only ContextMenues set in this method.
 
         Try
             If e.Button = MouseButtons.Right Then
@@ -156,9 +160,12 @@ Public Class frmSchema
             End If
 
         Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
 
-
-
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
         End Try
 
     End Sub
@@ -236,28 +243,30 @@ Public Class frmSchema
             lfrmCRUDAddEditPGSRelationship.mrRDSModel = lrModel.RDS
 
             'Create a new Relationship Type.
-            Dim lrPGSRelationship = New GSJ.RelationshipObjectType
-            lrPGSRelationship.from.ref = "Node Type 1" 'Just use the Ref field as a place holder for the NodeType/Label name.
-            lrPGSRelationship.type.ref = "RELATES_TO"
-            lrPGSRelationship.to.ref = "Node Type 2" 'Just use the Ref field as a place holder for the NodeType/Label name.
+            Dim lrGSJRelationship = New GSJ.RelationshipObjectType
+            lrGSJRelationship.from.ref = "Node Type 1" 'Just use the Ref field as a place holder for the NodeType/Label name.
+            lrGSJRelationship.type.ref = "RELATES_TO"
+            lrGSJRelationship.to.ref = "Node Type 2" 'Just use the Ref field as a place holder for the NodeType/Label name.
 
             'Link the form to the new Relationship Type
-            lfrmCRUDAddEditPGSRelationship.mrPGSRelationship = lrPGSRelationship
+            lfrmCRUDAddEditPGSRelationship.mrGSJRelationship = lrGSJRelationship
             'Let the form know it is being used for Adding a new Relationship Type. Enables the dropdown CompboBoxes to select Node Types.
             lfrmCRUDAddEditPGSRelationship.mbIsAdd = True
 
+            '=====================================================================================
+            'Get the details from the user.
             If lfrmCRUDAddEditPGSRelationship.ShowDialog() = DialogResult.OK Then
 
                 'Get the ModelElement (Node Type Names/Labels)
-                Dim lsFromModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.from.ref 'E.g. Row
-                Dim lsToModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.to.ref 'E.g. Cinema
+                Dim lsFromModelElementName = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.from.ref 'E.g. Row
+                Dim lsToModelElementName = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.to.ref 'E.g. Cinema
                 'Get the Label/Type of the Relationship. E.g. IS_IN
-                Dim lsGraphLabel = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.type.ref
+                Dim lsGraphLabel = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.type.ref
 
                 'Create a new TreeNode
                 Dim loRelationshipTreeNode As New TreeNode($"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})", 2, 2)
-                'Set the tag to the PGSRelationship (Property Graph Schema, Relationship).
-                loRelationshipTreeNode.Tag = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship
+                'Set the tag to the GSJRelationship (Property Graph Schema, Relationship).
+                loRelationshipTreeNode.Tag = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship
 
                 loTreeNode.Nodes.Add(loRelationshipTreeNode)
                 loTreeNode.Expand()
@@ -548,50 +557,60 @@ Public Class frmSchema
             If Me.TreeView.SelectedNode.Tag Is Nothing Then Exit Sub
 
             Select Case Me.TreeView.SelectedNode.Tag.GetType
-                Case Is = GetType(RDS.Relation)
+                Case Is = GetType(GSJ.RelationshipObjectType)
 
                     Dim lfrmFactTypeReadingEditor As New frmToolboxORMReadingEditor
 
                     lfrmFactTypeReadingEditor = frmMain.ToolboxForms.Find(AddressOf lfrmFactTypeReadingEditor.EqualsByName)
 
-                    Dim lrRDSRelation As RDS.Relation = Me.TreeView.SelectedNode.Tag
+                    Dim lrRelationshipObjectType As GSJ.RelationshipObjectType = Me.TreeView.SelectedNode.Tag
 
-                    '=============================================================
-                    'FactType Reading Editor
-                    If lfrmFactTypeReadingEditor IsNot Nothing Then
+                    Select Case lrRelationshipObjectType.ModelElement.GetType
+                        Case Is = GetType(RDS.Relation)
 
-                        lfrmFactTypeReadingEditor.zrFactType = lrRDSRelation.ResponsibleFactType
+                            Dim lrRDSRelation As RDS.Relation = lrRelationshipObjectType.ModelElement
 
-                        Dim lrFactTypeInstance = New FBM.FactTypeInstance
-                        lrFactTypeInstance.FactType = lrRDSRelation.ResponsibleFactType
-                        lrFactTypeInstance.Model = lrRDSRelation.Model.Model
-                        lfrmFactTypeReadingEditor.zrFactTypeInstance = lrFactTypeInstance
+                            '=============================================================
+                            'FactType Reading Editor
+#Region "FactType Reading Editor" 'Object-Role Modeling View
+                            If lfrmFactTypeReadingEditor IsNot Nothing Then
 
-                        Call lfrmFactTypeReadingEditor.SetupForm()
+                                lfrmFactTypeReadingEditor.zrFactType = lrRDSRelation.ResponsibleFactType
 
-                    End If
+                                Dim lrFactTypeInstance = New FBM.FactTypeInstance
+                                lrFactTypeInstance.FactType = lrRDSRelation.ResponsibleFactType
+                                lrFactTypeInstance.Model = lrRDSRelation.Model.Model
+                                lfrmFactTypeReadingEditor.zrFactTypeInstance = lrFactTypeInstance
 
-                    '=============================================================
-                    'Properties Grid
-                    Dim lrERDRelation As New ERDRelationship(lrRDSRelation.Model.Model,
-                                                          Nothing,
-                                                          lrRDSRelation.Id, Nothing,
-                                                          lrRDSRelation.OriginMultiplicity,
-                                                          lrRDSRelation.OriginColumns(0).IsMandatory,
-                                                          lrRDSRelation.OriginColumns(0).isPartOfPrimaryKey,
-                                                          Nothing,
-                                                          lrRDSRelation.DestinationMultiplicity,
-                                                          False,
-                                                          lrRDSRelation.OriginTable
-                                                          )
-                    lrERDRelation.RDSRelation = lrRDSRelation
+                                Call lfrmFactTypeReadingEditor.SetupForm()
 
-                    Dim lfrmPropertiesGrid As New frmToolboxProperties
-                    lfrmPropertiesGrid = frmMain.GetToolboxForm(lfrmPropertiesGrid.Name)
+                            End If
+#End Region
 
-                    If lfrmPropertiesGrid IsNot Nothing Then
-                        lfrmPropertiesGrid.SetSelectedObject(lrERDRelation)
-                    End If
+                            '=============================================================
+                            'Properties Grid
+#Region "Properties Grid"
+                            Dim lrERDRelation As New ERDRelationship(lrRDSRelation.Model.Model,
+                                                                  Nothing,
+                                                                  lrRDSRelation.Id, Nothing,
+                                                                  lrRDSRelation.OriginMultiplicity,
+                                                                  lrRDSRelation.OriginColumns(0).IsMandatory,
+                                                                  lrRDSRelation.OriginColumns(0).isPartOfPrimaryKey,
+                                                                  Nothing,
+                                                                  lrRDSRelation.DestinationMultiplicity,
+                                                                  False,
+                                                                  lrRDSRelation.OriginTable
+                                                                  )
+                            lrERDRelation.RDSRelation = lrRDSRelation
+
+                            Dim lfrmPropertiesGrid As New frmToolboxProperties
+                            lfrmPropertiesGrid = frmMain.GetToolboxForm(lfrmPropertiesGrid.Name)
+
+                            If lfrmPropertiesGrid IsNot Nothing Then
+                                lfrmPropertiesGrid.SetSelectedObject(lrERDRelation)
+                            End If
+#End Region
+                    End Select
 
             End Select
 
@@ -734,13 +753,13 @@ Public Class frmSchema
                     lrPGSRelationship.type.ref = lrRDSRelation.ResponsibleFactType.PropertyGraphLabel
                     lrPGSRelationship.to.ref = lrRDSRelation.DestinationTable.Name
 
-                    lfrmCRUDAddEditPGSRelationship.mrPGSRelationship = lrPGSRelationship
+                    lfrmCRUDAddEditPGSRelationship.mrGSJRelationship = lrPGSRelationship
 
                     If lfrmCRUDAddEditPGSRelationship.ShowDialog() = DialogResult.OK Then
 
-                        Dim lsFromModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.from.ref
-                        Dim lsToModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.to.ref
-                        Dim lsGraphLabel = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.type.ref
+                        Dim lsFromModelElementName = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.from.ref
+                        Dim lsToModelElementName = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.to.ref
+                        Dim lsGraphLabel = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.type.ref
 
                         Me.TreeView.SelectedNode.Text = $"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})"
 
@@ -807,13 +826,13 @@ Public Class frmSchema
                     lrPGSRelationship.type.ref = lrRDSRelation.ResponsibleFactType.PropertyGraphLabel
                     lrPGSRelationship.to.ref = lrRDSRelation.DestinationTable.Name
 
-                    lfrmCRUDAddEditPGSRelationship.mrPGSRelationship = lrPGSRelationship
+                    lfrmCRUDAddEditPGSRelationship.mrGSJRelationship = lrPGSRelationship
 
                     If lfrmCRUDAddEditPGSRelationship.ShowDialog() = DialogResult.OK Then
 
-                        Dim lsFromModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.from.ref
-                        Dim lsToModelElementName = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.to.ref
-                        Dim lsGraphLabel = lfrmCRUDAddEditPGSRelationship.mrPGSRelationship.type.ref
+                        Dim lsFromModelElementName = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.from.ref
+                        Dim lsToModelElementName = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.to.ref
+                        Dim lsGraphLabel = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.type.ref
 
                         Me.TreeView.SelectedNode.Text = $"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})"
 
@@ -1479,5 +1498,7 @@ Public Class frmSchema
 
     End Sub
 
+    Private Sub AddRelationshipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddRelationshipToolStripMenuItem.Click
 
+    End Sub
 End Class

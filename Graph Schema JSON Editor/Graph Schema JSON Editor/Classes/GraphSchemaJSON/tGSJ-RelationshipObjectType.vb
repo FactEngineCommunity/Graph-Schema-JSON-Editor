@@ -17,6 +17,12 @@ Namespace GSJ
         Public Property [to] As New RefType("Node Type 2")
 
         ''' <summary>
+        ''' GSJ Editor use only. Stores the RDS.Relation(ship) or the RDS.Table that represent the Relationship/EdgeType in the RDS Schema.
+        '''   RDS.Relation(ships) are Foreign Keys. RDS.Tables are Many-to-Many RDS tables that represent Edge Types/Relationships.
+        ''' </summary>
+        Public ModelElement As Object = Nothing
+
+        ''' <summary>
         ''' Parameterless Constructor
         ''' </summary>
         Public Sub New()

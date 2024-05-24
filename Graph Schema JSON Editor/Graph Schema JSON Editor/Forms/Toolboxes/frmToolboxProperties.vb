@@ -5,7 +5,7 @@ Imports WeifenLuo.WinFormsUI.Docking
 Public Class frmToolboxProperties
     Inherits DockContent
 
-    Public zrSelectedObject As Object 'Used for ValueConstraints. There's a big and hard problem where the StringCollection editor
+    Public zrSelectedObject As Object 'Used for ValueConstraints. There's a hard problem where the StringCollection editor
     'somehow sets the ValueConstraint to the wrong selected object. PropertyGrid.SelectedObject somehow changes.
 
     Public Function EqualsByName(ByVal other As Form) As Boolean
@@ -142,8 +142,8 @@ Public Class frmToolboxProperties
 
     Private Sub PropertyGrid_SelectedGridItemChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.SelectedGridItemChangedEventArgs) Handles PropertyGrid.SelectedGridItemChanged
 
-        Select Case PropertyGrid.SelectedObject.ConceptType
-            Case Is = pcenumConceptType.Model
+        Select Case PropertyGrid.SelectedObject.GetType
+            Case Is = GetType(FBM.Model), GetType(RDS.Model)
                 '----------------
                 'Nothing to do
                 '----------------

@@ -128,10 +128,12 @@ Public Class frmMain
             lrChildForm.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.Document)
 
             Dim lfrmSchema As New frmSchema
+            Me.ToolboxForms.AddUnique(lfrmSchema)
             lfrmSchema.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockLeft)
             Me.mfrmSchemaManager = lfrmSchema
 
             Dim lfrmPropertiesGrid As New frmToolboxProperties
+            Me.RightToolboxForms.AddUnique(lfrmPropertiesGrid)
             lfrmPropertiesGrid.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockRight)
 
         Catch ex As Exception
