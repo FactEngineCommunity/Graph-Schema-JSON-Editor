@@ -9,7 +9,12 @@ Imports System.ComponentModel
 
 Public Class frmSchema
 
+    Public WithEvents Application As tApplication
+    Public WithEvents WorkingModel As FBM.Model = Nothing
+
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
+
+        If Me.Application Is Nothing Then Me.Application = prApplication
 
         Call Me.SetupForm()
 
@@ -19,6 +24,17 @@ Public Class frmSchema
 
         'Expand the TreeView
         Me.TreeView.ExpandAll()
+
+        'Load the Schemas/Models from the database
+        Dim larFBMModel = TableModel.GetModels.FindAll(Function(x) Not {"LanguageEnglish", "Core"}.Contains(x.Name))
+        For Each lrFBMModel In larFBMModel
+
+            lrFBMModel.RDS = New RDS.Model(lrFBMModel)
+            Call Me.AddFBMModelAsSchemaToTree(lrFBMModel)
+
+        Next
+
+        If larFBMModel.Count > 0 Then Me.TreeView.Nodes(0).Expand()
 
     End Sub
 
@@ -179,7 +195,7 @@ Public Class frmSchema
 
         Try
 
-            Call Me.AddNodeTypeToSelectedTreeNode
+            Call Me.AddNodeTypeToSelectedTreeNode()
 
         Catch ex As Exception
             Dim lsMessage As String
@@ -395,7 +411,7 @@ Public Class frmSchema
 
                 loSchemaTreeNode.Nodes(1).Nodes.Add(loRelationshipTreeNode)
                 loSchemaTreeNode.Expand()
-                loRelationshipTreeNode.EnsureVisible
+                loRelationshipTreeNode.EnsureVisible()
 
             End If
 
@@ -424,7 +440,7 @@ Public Class frmSchema
 
             Dim lsFromModelElementName = arRDSRelationship.OriginTable.Name
             Dim lsToModelElementName = arRDSRelationship.DestinationTable.Name
-            Dim lsGraphLabel = arRDSRelationship.ResponsibleFactType.GraphLabel(0).Label
+            Dim lsGraphLabel = arRDSRelationship.ResponsibleFactType.PropertyGraphLabel
 
             Dim loRelationshipTreeNode As New TreeNode($"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})", 2, 2)
             loRelationshipTreeNode.Tag = arRDSRelationship
@@ -688,6 +704,20 @@ Public Class frmSchema
             If Me.TreeView.SelectedNode.Tag Is Nothing Then Exit Sub
 
             Select Case Me.TreeView.SelectedNode.Tag.GetType
+                Case Is = GetType(RDS.Model)
+
+                    Dim lrRDSModel As RDS.Model = Me.TreeView.SelectedNode.Tag
+
+                    Call Me.Application.setWorkingModel(lrRDSModel.Model)
+
+                    If Not lrRDSModel.Model.Loaded Then
+
+                        With New WaitCursor
+                            Call lrRDSModel.Model.Load(False, False, Nothing, True)
+                            Call Me.AddSchemaByFBMModel(lrRDSModel.Model, Me.TreeView.SelectedNode)
+                        End With
+                    End If
+
                 Case Is = GetType(GSJ.RelationshipObjectType)
 #Region "Relationhip Type/ Edge Type"
                     Dim lfrmFactTypeReadingEditor As New frmToolboxORMReadingEditor
@@ -979,6 +1009,8 @@ Public Class frmSchema
 
                     Dim lrModel As FBM.Model = Me.TreeView.SelectedNode.Parent.Parent.Tag.Model
 
+                    Me.WorkingModel = lrModel
+
                     Dim lfrmCRUDAddEditPGSRelationship As New frmCRUDAddEditRelationship
                     lfrmCRUDAddEditPGSRelationship.mrRDSModel = lrModel.RDS
 
@@ -998,9 +1030,11 @@ Public Class frmSchema
                         Me.TreeView.SelectedNode.Text = $"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})"
 
                         If Not lrRDSRelation.ResponsibleFactType.PropertyGraphLabel = lsGraphLabel Then
-                            lrRDSRelation.ResponsibleFactType.GraphLabel.RemoveAt(0)
+                            lrRDSRelation.ResponsibleFactType.GraphLabel.Clear()
                             lrRDSRelation.ResponsibleFactType.GraphLabel.Add(New RDS.GraphLabel(lrRDSRelation.ResponsibleFactType, lsGraphLabel))
                         End If
+
+                        lrModel.MakeDirty(True, True)
 
                     End If
 #End Region
@@ -1153,14 +1187,18 @@ Public Class frmSchema
 
     End Sub
 
-    Private Sub AddSchemaByFBMModel(ByRef arFBMModel As FBM.Model)
+    Private Sub AddSchemaByFBMModel(ByRef arFBMModel As FBM.Model, Optional aoSchemaTreeNode As TreeNode = Nothing)
 
         Try
-            Dim loSchemaTreeNode = New TreeNode(arFBMModel.Name)
+            Dim loSchemaTreeNode As TreeNode
 
-            loSchemaTreeNode.Tag = arFBMModel.RDS
-
-            Me.TreeView.Nodes(0).Nodes.Add(loSchemaTreeNode)
+            If aoSchemaTreeNode Is Nothing Then
+                loSchemaTreeNode = New TreeNode(arFBMModel.Name)
+                loSchemaTreeNode.Tag = arFBMModel.RDS
+                Me.TreeView.Nodes(0).Nodes.Add(loSchemaTreeNode)
+            Else
+                loSchemaTreeNode = aoSchemaTreeNode
+            End If
 
             Dim loTreeNode As TreeNode = New TreeNode("Node Types", 7, 7)
             loTreeNode.Tag = New tSchemaTreeMenuType(pcenumSchemaTreeMenuType.NodeTypes)
@@ -1170,11 +1208,11 @@ Public Class frmSchema
             loTreeNode.Tag = New tSchemaTreeMenuType(pcenumSchemaTreeMenuType.Relationships)
             loSchemaTreeNode.Nodes.Add(loTreeNode)
 
-            For Each lrRDSTable In arFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
+            For Each lrRDSTable In arFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode).OrderBy(Function(x) x.Name)
                 Call Me.AddNodeToTreeView(loSchemaTreeNode, lrRDSTable)
             Next
 
-            For Each lrRDSRelationship In arFBMModel.RDS.Relation.FindAll(Function(x) Not x.ResponsibleFactType.IsLinkFactType Or Not (x.ResponsibleFactType.IsLinkFactType AndAlso x.ResponsibleFactType.LinkFactTypeRole.FactType.IsCandidatePGSRelationshipNode))
+            For Each lrRDSRelationship In arFBMModel.RDS.Relation.FindAll(Function(x) Not x.ResponsibleFactType.IsLinkFactType Or Not (x.ResponsibleFactType.IsLinkFactType AndAlso x.ResponsibleFactType.LinkFactTypeRole.FactType.IsCandidatePGSRelationshipNode)).OrderBy(Function(x) x.OriginTable.Name)
                 Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrRDSRelationship)
             Next
 
@@ -1193,7 +1231,7 @@ Public Class frmSchema
 
             lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
             lsMessage &= vbCrLf & vbCrLf & ex.Message
-            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,,,,, ex)
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
         End Try
 
     End Sub
@@ -1372,7 +1410,7 @@ Public Class frmSchema
 
                     lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
                     lsMessage &= vbCrLf & vbCrLf & ex.Message
-                    prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,,,,, ex)
+                    prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
                 End Try
 
             End If
@@ -1570,16 +1608,17 @@ Public Class frmSchema
 
             lsMessage1 = "Error: " & mb.ReflectedType.Name & "." & mb.Name
             lsMessage1 &= vbCrLf & vbCrLf & ex.Message
-            prApplication.ThrowErrorMessage(lsMessage1, pcenumErrorType.Critical, ex.StackTrace,,,,,, ex)
+            prApplication.ThrowErrorMessage(lsMessage1, pcenumErrorType.Critical, ex.StackTrace,,)
         End Try
 
     End Sub
 
-    Private Function AddFBMModelAsSchemaToTree(ByRef arFRMModel As FBM.Model) As TreeNode
+    Private Function AddFBMModelAsSchemaToTree(ByRef arFBMModel As FBM.Model) As TreeNode
 
         Try
-            Dim lrNewTreeNode = New TreeNode("Schema: " & arFRMModel.Name)
+            Dim lrNewTreeNode = New TreeNode("Schema: " & arFBMModel.Name)
 
+            lrNewTreeNode.Tag = arFBMModel.RDS
             Me.TreeView.Nodes(0).Nodes.Add(lrNewTreeNode)
 
             Return lrNewTreeNode
@@ -1590,7 +1629,7 @@ Public Class frmSchema
 
             lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
             lsMessage &= vbCrLf & vbCrLf & ex.Message
-            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,,,,, ex)
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
 
             Return Nothing
         End Try
@@ -1746,6 +1785,53 @@ Public Class frmSchema
     Private Sub AddRelationshipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddRelationshipToolStripMenuItem.Click
 
         Call Me.AddNewRelationshipToTreeNode(Me.TreeView.SelectedNode)
+
+    End Sub
+
+    Private Sub Application_WorkingModelChanged() Handles Application.WorkingModelChanged
+
+        Me.ToolStripButtonSave.Enabled = False
+
+        If Me.Application.WorkingModel IsNot Nothing AndAlso Me.Application.WorkingModel.IsDirty Then
+            Me.ToolStripButtonSave.Enabled = True
+        End If
+
+    End Sub
+
+    Private Sub ToolStripButtonSave_Click(sender As Object, e As EventArgs) Handles ToolStripButtonSave.Click
+
+        Try
+            If Me.Application.WorkingModel IsNot Nothing AndAlso Me.Application.WorkingModel.IsDirty Then
+                Call Me.Application.WorkingModel.Save(False, False, False, False)
+                Me.ToolStripButtonSave.Enabled = False
+            End If
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+    Private Sub WorkingModel_MadeDirty(abGlobalBroadcast As Boolean) Handles WorkingModel.MadeDirty
+
+        Try
+            'CodeSafe
+            If Me.WorkingModel Is Nothing Then Exit Sub
+
+            Me.ToolStripButtonSave.Enabled = True
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
 
     End Sub
 

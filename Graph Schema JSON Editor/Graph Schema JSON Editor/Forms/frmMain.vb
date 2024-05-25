@@ -1,5 +1,6 @@
 ﻿Imports System.IO
 Imports FactEngineForServices
+Imports System.Linq
 Imports System.Reflection
 
 Public Class frmMain
@@ -17,8 +18,6 @@ Public Class frmMain
             prApplication.DebugMode = pcenumDebugMode.DebugCriticalErrorsOnly
             prApplication.ThrowCriticalDebugMessagesToScreen = True
             prApplication.ApplicationVersionNr = "0.9"
-
-            Call Me.SetupForm()
 
 #Region "Database Location - For embedded Boston database."
             '-------------------------------------------------------------------------------------------------------------
@@ -111,6 +110,10 @@ Public Class frmMain
             prApplication.DatabaseVersionNr = TableReferenceFieldValue.GetReferenceFieldValue(1, 1)
 #End Region
 
+            Call Me.LoadCoreModel() 'The Core model is used to store the RDS (Relational Data Structure) within FBM (Fact-Based Modelling) Models.
+
+            Call Me.SetupForm()
+
         Catch ex As Exception
             Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
 
@@ -127,7 +130,10 @@ Public Class frmMain
             Dim lrChildForm As New frmStartup
             lrChildForm.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.Document)
 
+            '=============================================
+            'Schema Viewer
             Dim lfrmSchema As New frmSchema
+            lfrmSchema.Application = prApplication
             Me.ToolboxForms.AddUnique(lfrmSchema)
             lfrmSchema.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockLeft)
             Me.mfrmSchemaManager = lfrmSchema
@@ -135,6 +141,42 @@ Public Class frmMain
             Dim lfrmPropertiesGrid As New frmToolboxProperties
             Me.RightToolboxForms.AddUnique(lfrmPropertiesGrid)
             lfrmPropertiesGrid.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockRight)
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+    Private Sub LoadCoreModel()
+
+        Try
+            prApplication.CMML.Core = New FBM.Model(pcenumLanguage.ORMModel, pcenumCMMLCoreModel.Core.ToString, True)
+
+            'WriteToStatusBar("Loading the Core MetaMetaModel")
+            Call TableModel.GetModelDetails(prApplication.CMML.Core)
+            prApplication.CMML.Core.Load(True, False)
+
+            'Speed up loading of the Core Model.
+            If Not prApplication.CMML.Core.StoreAsXML Then
+                'CodeSafe - Make sure the Pages are loaded.
+                For Each lrPage In CType(prApplication.CMML.Core, FBM.Model).Page.Where(Function(page) Not page.Loaded).ToList()
+                    Call lrPage.Load(False)
+                Next
+
+                With New WaitCursor
+                    prApplication.CMML.Core.SetStoreAsXML(True, True)
+                End With
+            End If
+
+            If pbLogStartup Then
+                prApplication.ThrowErrorMessage("Successfully loaded the Core Model", pcenumErrorType.Information)
+            End If
 
         Catch ex As Exception
             Dim lsMessage As String
@@ -233,5 +275,6 @@ Public Class frmMain
         frmAbout.ShowDialog()
 
     End Sub
+
 
 End Class

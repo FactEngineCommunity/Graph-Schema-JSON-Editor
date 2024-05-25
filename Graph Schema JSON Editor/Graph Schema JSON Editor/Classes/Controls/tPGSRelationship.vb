@@ -39,7 +39,7 @@
     End Sub
 
 
-    Private Sub ComboBoxNodeType1_TextChanged(sender As Object, e As EventArgs) Handles ComboBoxNodeType1.TextChanged
+    Public Sub ComboBoxNodeType1_TextChanged(sender As Object, e As EventArgs) Handles ComboBoxNodeType1.TextChanged
 
         If Me.ComboBoxNodeType1.SelectedItem IsNot Nothing Then
             Me.GSJRelationship.from.ref = Me.ComboBoxNodeType1.SelectedItem.ItemData
@@ -47,9 +47,9 @@
 
     End Sub
 
-    Private Sub ComboxBoxNodeType2_TextChanged(sender As Object, e As EventArgs) Handles ComboBoxNodeType2.TextChanged
+    Public Sub ComboBoxNodeType2_TextChanged(sender As Object, e As EventArgs) Handles ComboBoxNodeType2.TextChanged
 
-        Me.GSJRelationship.To.Ref = Me.ComboBoxNodeType2.Text.Trim
+        Me.GSJRelationship.to.ref = Me.ComboBoxNodeType2.Text.Trim
 
     End Sub
 
