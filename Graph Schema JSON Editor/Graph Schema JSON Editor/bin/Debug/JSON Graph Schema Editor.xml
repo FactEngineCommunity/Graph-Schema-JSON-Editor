@@ -147,6 +147,36 @@ JSON Graph Schema Editor
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="T:JSON_Graph_Schema_Editor.ERDEntity">
+ <summary>
+ PropertiesGrid Toolbox use only. See GSJ.NodeObjectType and GSJ.NodeLabel.
+   Also see (FEFS) RDS.Table.
+ </summary>
+</member>
+<member name="F:JSON_Graph_Schema_Editor.ERDEntity.ModelElement">
+ <summary>
+ Can be either an RDS.Relation (Foreign Key Reference) or a RDS.Table (E.g. A Many-to-Many table as a Property Graph Edge Type equivalent).
+ </summary>
+</member>
+<member name="F:JSON_Graph_Schema_Editor.ERDEntity.TreeNode">
+ <summary>
+ The TreeNode within the Schema TreeView.
+ </summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.ERDEntity.GraphLabel">
+ <summary>
+ The Graph Label for the Relationship/Edge Type. NB This may need to be changed to a single String member for Relationships/Edge Types.
+ </summary>
+ <returns></returns>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.ERDEntity.#ctor(FactEngineForServices.FBM.Model@,FactEngineForServices.FBM.Page@,FactEngineForServices.RDS.Table@)">
+ <summary>
+ Object constructor.
+ </summary>
+ <param name="arModel"></param>
+ <param name="arPage"></param>
+ <param name="arCorrespondingRDSTable">If the Relation is a (FEFS) PGSRelation, then has a corresponding Table.</param>
+</member>
 <member name="T:JSON_Graph_Schema_Editor.ERDRelationship">
  <summary>
  PropertiesGrid Toolbox use only. See GSJ.RelationshipObjectType and GSJ.RelationshipType.
@@ -156,6 +186,11 @@ JSON Graph Schema Editor
 <member name="F:JSON_Graph_Schema_Editor.ERDRelationship.ModelElement">
  <summary>
  Can be either an RDS.Relation (Foreign Key Reference) or a RDS.Table (E.g. A Many-to-Many table as a Property Graph Edge Type equivalent).
+ </summary>
+</member>
+<member name="F:JSON_Graph_Schema_Editor.ERDRelationship.TreeNode">
+ <summary>
+ The TreeNode within the Schema TreeView.
  </summary>
 </member>
 <member name="P:JSON_Graph_Schema_Editor.ERDRelationship.GraphLabel">
@@ -318,6 +353,13 @@ JSON Graph Schema Editor
  <summary>
  Add Relationship to Schema
  </summary>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.TreeView_AfterSelect(System.Object,System.Windows.Forms.TreeViewEventArgs)">
+ <summary>
+ Properties Grid handling.
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
 </member>
 <member name="M:JSON_Graph_Schema_Editor.frmSchema.AddNewSchema">
  <summary>

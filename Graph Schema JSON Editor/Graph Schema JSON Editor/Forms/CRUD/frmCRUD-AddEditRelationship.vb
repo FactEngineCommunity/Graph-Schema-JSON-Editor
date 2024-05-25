@@ -4,6 +4,9 @@
     Public mrGSJRelationship As New GSJ.RelationshipObjectType
     Public mbIsAdd As Boolean = False
 
+    Public mbIsManyToOne As Boolean = False
+    Public mbIsManyToMany As Boolean = True
+
     Private Sub TPGSRelationship1_CancelClicked() Handles TPGSRelationship1.CancelClicked
 
         Me.Hide()
@@ -39,8 +42,8 @@
             lrNewComboBoxItem = New tComboboxItem(lrRDSTable.Name, lrRDSTable.Name, lrRDSTable)
             Me.TPGSRelationship1.ComboBoxNodeType2.Items.Add(lrNewComboBoxItem)
 
-            Me.TPGSRelationship1.ComboBoxNodeType1.DropDownStyle = ComboBoxStyle.DropDownList
-            Me.TPGSRelationship1.ComboBoxNodeType2.DropDownStyle = ComboBoxStyle.DropDownList
+            Me.TPGSRelationship1.ComboBoxNodeType1.DropDownStyle = ComboBoxStyle.DropDown
+            Me.TPGSRelationship1.ComboBoxNodeType2.DropDownStyle = ComboBoxStyle.DropDown
 
             Me.TPGSRelationship1.ComboBoxNodeType1.SelectedIndex = 0
             Me.TPGSRelationship1.ComboBoxNodeType2.SelectedIndex = 0
@@ -83,5 +86,17 @@
         End Try
 
     End Function
+
+    Private Sub RadioButtonIsManyToMany_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButtonIsManyToMany.CheckedChanged
+
+        Me.mbIsManyToMany = Me.RadioButtonIsManyToMany.Checked
+
+    End Sub
+
+    Private Sub RadioButtonIsManyToOne_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButtonIsManyToOne.CheckedChanged
+
+        Me.mbIsManyToOne = Me.RadioButtonIsManyToOne.Checked
+
+    End Sub
 
 End Class

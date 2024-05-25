@@ -21,11 +21,16 @@ Public Class ERDRelationship
     Public Shadows _GraphLabel As New FEStrings.StringCollection
 
     ''' <summary>
+    ''' The TreeNode within the Schema TreeView.
+    ''' </summary>
+    Public TreeNode As TreeNode
+
+    ''' <summary>
     ''' The Graph Label for the Relationship/Edge Type. NB This may need to be changed to a single String member for Relationships/Edge Types.
     ''' </summary>
     ''' <returns></returns>
     <CategoryAttribute("Relation"),
-    Browsable(True),
+    Browsable(False),
     [ReadOnly](False),
     DescriptionAttribute("The equivalent Graph label in the Graph View."),
     Editor(GetType(tStringCollectionEditor), GetType(System.Drawing.Design.UITypeEditor))>
@@ -75,6 +80,32 @@ Public Class ERDRelationship
                 End If
             Next
 
+        End Set
+    End Property
+
+    Private _RelationshipType As String = "HAS" 'Relationship Type as in Property Graph Schema RT...e.g. (Person)-[:LIKES]->(Film). HAS, IS_FOR, IS_IN etc
+
+    <Browsable(True),
+     Description("The type of relationship in the graph."),
+     Category("Relationship"),
+     DefaultValue("HAS"),
+     DisplayName("Relationship Type")>
+    Public Property RelationshipType As String
+        Get
+            'Code Safe
+            If Me._GraphLabel.Count = 0 Then
+                Me._GraphLabel.Add("HAS")
+            End If
+
+            Return Me._GraphLabel(0)
+        End Get
+        Set(value As String)
+            'Code Safe
+            If Me._GraphLabel.Count = 0 Then
+                Me._GraphLabel.Add(value)
+            Else
+                Me._GraphLabel(0) = value 'Relationship Types are singular in Property Graph Schemas, as opposed Node Types that can have multiple Labels.
+            End If
         End Set
     End Property
 
@@ -147,8 +178,15 @@ Public Class ERDRelationship
                     'Case Is = "EnforcesOnCascadeDelete"
                     '    Call Me.RDSRelation.SetEnforcesOnCascadeDelete(Me.EnforcesOnCascadeDelete)
 
-                    'Case Is = "EnforcesReferentialIntegrity"
-                    '    Call Me.RDSRelation.SetEnforcesReferentialIntegrity(Me.EnforcesReferentialIntegrity)
+                    Case Is = "RelationshipType"
+
+                        'GraphLabel processing.
+                        Select Case Me.ModelElement.GetType
+                            Case Is = GetType(RDS.Relation)
+                                Call Me.RDSRelation.ResponsibleFactType.ModifyGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
+                            Case Is = GetType(RDS.Table)
+                                Call Me.RDSTable.FBMModelElement.ModifyGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
+                        End Select
 
                     Case Is = "Value"
                         With New WaitCursor
@@ -174,19 +212,52 @@ Public Class ERDRelationship
             'Removing an item using the UITypeEditor does not trigger a return of aoChangedPropertyItem (As PropertyValueChangedEventArgs).
             '  So we must check each time (back here) whether there is an item to remove from the GraphLabels list for the [ModelElement]Instance.
             Dim lrDataStore As New DataStore.Store
-            For Each lsGraphLabel In Me.RDSRelation.ResponsibleFactType.GraphLabel.Select(Function(x) x.Label).ToArray
+            Dim lrResponsibleFactType As FBM.FactType = Nothing 'The FactType responsible for the EdgeType/Relationship.
+
+            Select Case Me.ModelElement.GetType
+                Case Is = GetType(RDS.Relation)
+                    lrResponsibleFactType = Me.RDSRelation.ResponsibleFactType
+                Case Is = GetType(RDS.Table)
+                    lrResponsibleFactType = Me.RDSTable.FBMModelElement
+            End Select
+
+            For Each lsGraphLabel In lrResponsibleFactType.GraphLabel.Select(Function(x) x.Label).ToArray
                 If lsGraphLabel IsNot Nothing Then
                     If Not Me._GraphLabel.Contains(lsGraphLabel) Then
                         Select Case Me.ModelElement.GetType
                             Case Is = GetType(RDS.Relation)
                                 Call Me.RDSRelation.ResponsibleFactType.GraphLabel.RemoveAll(Function(x) x.ModelElement.Id = Me.RDSRelation.ResponsibleFactType.Id And x.Label = lsGraphLabel)
                             Case Is = GetType(RDS.Table)
-                                Call Me.RDSTable.FBMModelElement.GraphLabel.RemoveAll(Function(x) x.ModelElement.Id = Me.RDSRelation.ResponsibleFactType.Id And x.Label = lsGraphLabel)
+                                Call Me.RDSTable.FBMModelElement.GraphLabel.RemoveAll(Function(x) x.ModelElement.Id = Me.RDSTable.FBMModelElement.Id And x.Label = lsGraphLabel)
                         End Select
 
                     End If
                 End If
             Next
+
+            '=======================================================================================
+            'Graphics
+            If Me.TreeNode IsNot Nothing Then
+
+                Dim lrOriginTable As RDS.Table = Nothing
+                Dim lrDestinationTable As RDS.Table = Nothing
+
+                Select Case Me.ModelElement.GetType
+                    Case Is = GetType(RDS.Relation)
+                        lrOriginTable = Me.RDSRelation.OriginTable
+                        lrDestinationTable = Me.RDSRelation.DestinationTable
+                    Case Is = GetType(RDS.Table)
+                        Dim larRDSTable = From Column In Me.RDSTable.Column
+                                          Where Column.Relation.Count <> 0
+                                          Select Column.Relation(0).DestinationTable
+
+                        'If the RDS Table joins more than two RDS Tables, then something will have gone wrong. But is tightly controlled within this app.
+                        lrOriginTable = larRDSTable(0)
+                        lrDestinationTable = larRDSTable(1)
+                End Select
+
+                Me.TreeNode.Text = $"({lrOriginTable.Name})-[:{lrResponsibleFactType.GraphLabel(0).Label}]->({lrDestinationTable.Name})"
+            End If
 
         Catch ex As Exception
             Dim lsMessage As String

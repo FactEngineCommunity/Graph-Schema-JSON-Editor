@@ -232,9 +232,46 @@ Public Class frmSchema
 
         Try
 
-            Dim loTreeNode As TreeNode = Me.TreeView.SelectedNode
+            Call Me.AddNewRelationshipToTreeNode(Me.TreeView.SelectedNode)
 
-            Dim lrModel As FBM.Model = loTreeNode.Parent.Tag.Model
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+    Private Sub AddNewRelationshipToTreeNode(ByRef aoTreeNode As TreeNode)
+
+        Try
+            Dim loSchemaTreeNode As TreeNode = Nothing
+            Dim lrModel As FBM.Model = Nothing 'The Fact-Based Model.
+            Dim lrRDSModel As RDS.Model = Nothing 'The RDS (Relational Data Structure) Model.
+
+            Select Case aoTreeNode.Tag.GetType
+                Case Is = GetType(RDS.Model)
+
+                    loSchemaTreeNode = aoTreeNode
+
+                Case Is = GetType(tSchemaTreeMenuType)
+
+                    Dim lrMenuTypeObject As tSchemaTreeMenuType = aoTreeNode.Tag
+                    If lrMenuTypeObject.MenuType = pcenumSchemaTreeMenuType.Relationships Then
+                        loSchemaTreeNode = aoTreeNode.Parent
+                    Else
+                        Throw New Exception("Called for the wrong type of TreeNode.")
+                    End If
+
+                Case Else
+                    Throw New Exception("Called for the wrong type of TreeNode.")
+            End Select
+
+            lrRDSModel = loSchemaTreeNode.Tag
+            lrModel = lrRDSModel.Model 'I.e. The Relational Data  Structure model belongs to an overal Fact-Based Model that ultimately defines the RDS Model.
 
             'Get the Add/Edit Relationship form.
             Dim lfrmCRUDAddEditPGSRelationship As New frmCRUDAddEditRelationship
@@ -260,16 +297,105 @@ Public Class frmSchema
                 'Get the ModelElement (Node Type Names/Labels)
                 Dim lsFromModelElementName = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.from.ref 'E.g. Row
                 Dim lsToModelElementName = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.to.ref 'E.g. Cinema
-                'Get the Label/Type of the Relationship. E.g. IS_IN
-                Dim lsGraphLabel = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.type.ref
+                'Get the Relationship Type of the Relationship. E.g. IS_IN. NB FEFS Fact-Based Models stores this within the GraphLabel property (list of string), even though a Relationship Type only has one string value...effective GraphLabel.
+                Dim lsRelationshipType = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship.type.ref
 
-                'Create a new TreeNode
-                Dim loRelationshipTreeNode As New TreeNode($"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})", 2, 2)
+#Region "Node Types/RDS.Tables"
+                '=================================================================================
+                'Create the Node Types/RDS.Tables if they do not exist.
+                '  NB While this is contrary to normal RDS thinking (e.g. SQL), it is quite common in the PGS world to create Nodes by virtue of creating a Relationship. 
+                '  We apply this to the schema level as well.
+
+#Region "From NodeType"
+                Dim lrFromModelElement As FBM.ModelObject = lrModel.GetModelObjectByName(lsFromModelElementName, True)
+                'NB Node Types are created as Fact-Based Modeling Entity Types. The FBM model stores the overall schema. Entity Types can be convered to FactTypes (Relationships) if need be.
+                If lrFromModelElement Is Nothing Then
+                    'Create the NodeType/EntityType
+                    Dim lrFromEntityType = New FBM.EntityType(lrRDSModel.Model, pcenumLanguage.ORMModel, lsFromModelElementName,, True)
+                    lrModel.AddEntityType(lrFromEntityType, True, False, Nothing, True, False)
+
+                    lrFromModelElement = lrFromEntityType
+                    '---------------------------------------------------------
+                    'Add the Node Table/Table to the RDS (RelationalDataStructure)
+                    Dim lrRDSTable As New RDS.Table(lrRDSModel, lsFromModelElementName, lrFromEntityType)
+                    'Add the RDS Table to the RDS Schema
+                    lrRDSModel.addTable(lrRDSTable) 'NB Has no Properties (Columns) at this stage.
+                    Call Me.AddNodeToTreeView(loSchemaTreeNode, lrRDSTable)
+
+                End If
+#End Region
+
+#Region "To NodeType"
+                Dim lrToModelElement As FBM.ModelObject = lrModel.GetModelObjectByName(lsToModelElementName, True)
+                If lrToModelElement Is Nothing Then
+                    'Create the NodeType/EntityType.
+                    '  Node Types are created as Fact-Based Modeling Entity Types. The FBM model stores the overall schema. Entity Types can be convered to FactTypes (Relationships) if need be.
+                    Dim lrToEntityType = New FBM.EntityType(lrRDSModel.Model, pcenumLanguage.ORMModel, lsToModelElementName,, True)
+                    lrModel.AddEntityType(lrToEntityType, True, False, Nothing, True, False)
+
+                    lrToModelElement = lrToEntityType
+                    '---------------------------------------------------------
+                    'Add the Node Table/Table to the RDS (RelationalDataStructure)
+                    Dim lrRDSTable As New RDS.Table(lrRDSModel, lsToModelElementName, lrToEntityType)
+                    'Add the RDS Table to the RDS Schema
+                    lrRDSModel.addTable(lrRDSTable) 'NB Has no Properties (Columns) at this stage.
+                    Call Me.AddNodeToTreeView(loSchemaTreeNode, lrRDSTable)
+
+                End If
+#End Region
+
+#End Region
+                'Create a new FBM FactType to represent the Relationship.
+                '  NB Cardinality is determined by the UniquenessConstraint placed over the Roles of the FactType. E.g. Many-to-Many, Many-to-One.
+                '  FEFS takes care of whether the underlying RDS has a Foreign Key or a Many-to-Many RDS Table.
+                Dim lsFactTypeName = lsFromModelElementName & lsRelationshipType & lsToModelElementName 'Unique name created wen FactType is created as below (argument)
+
+
+                Dim larModelElement = {lrFromModelElement, lrToModelElement}.ToList
+                Dim lrFactType = lrModel.CreateFactType(lsFactTypeName, larModelElement, False, True, False, Nothing, False, Nothing, True, False)
+                lrModel.AddFactType(lrFactType, True, False, Nothing)
+
+                'Create the Internal Uniqueness Constraint for the FactType.
+                '  NB Cardinality is determined by the UniquenessConstraint placed over the Roles of the FactType. E.g. Many-to-Many, Many-to-One.
+                '  FEFS takes care of whether the underlying RDS has a Foreign Key or a Many-to-Many RDS Table.
+                Dim larRole As New List(Of FBM.Role)
+                If lfrmCRUDAddEditPGSRelationship.mbIsManyToMany Then
+                    larRole = lrFactType.RoleGroup
+                Else
+                    'Many-to-One. I.e. ForeignKey Reference.
+                    larRole.Add(lrFactType.RoleGroup(0))
+                End If
+
+                lrFactType.CreateInternalUniquenessConstraint(larRole, False, True, True, False, Nothing, False, False)
+
+                If lfrmCRUDAddEditPGSRelationship.mbIsManyToMany Then
+                    'Objectify the FactType and create the Many-to-Many RDS Table.
+                    Call lrFactType.Objectify(True, True, Nothing, True)
+                End If
+
+                '========================================================================
+                'Relationship Type. Very Important: Labels and Relationship Types are stored within the GraphLabel property of the FBM ModelElement within the FEFS FBM Model.
+                lrFactType.GraphLabel.Add(New RDS.GraphLabel(lrFactType, lsRelationshipType))
+
+                'Create a new Relationship TreeNode
+                Dim loRelationshipTreeNode As New TreeNode($"({lsFromModelElementName})-[:{lsRelationshipType}]->({lsToModelElementName})", 2, 2)
                 'Set the tag to the GSJRelationship (Property Graph Schema, Relationship).
                 loRelationshipTreeNode.Tag = lfrmCRUDAddEditPGSRelationship.mrGSJRelationship
 
-                loTreeNode.Nodes.Add(loRelationshipTreeNode)
-                loTreeNode.Expand()
+                If lfrmCRUDAddEditPGSRelationship.mbIsManyToMany Then
+                    lrGSJRelationship.ModelElement = lrFactType.getCorrespondingRDSTable(Nothing, False) 'The Many-to-Many RDS Table just created by Objectifying the FactType.
+                Else
+                    'Get the RDS Relation created when we created the ForeignKeyRelationship by creating an InternalUniquenessConstraint on the first Role (only) of the FactType.
+                    Dim lrRDSRelation = (From Relationship In lrRDSModel.Relation
+                                         Where Relationship.ResponsibleFactType.Id = lrFactType.Id
+                                         Select Relationship).First
+
+                    lrGSJRelationship.ModelElement = lrRDSRelation
+                End If
+
+                loSchemaTreeNode.Nodes(1).Nodes.Add(loRelationshipTreeNode)
+                loSchemaTreeNode.Expand()
+                loRelationshipTreeNode.EnsureVisible
 
             End If
 
@@ -550,6 +676,11 @@ Public Class frmSchema
 
     End Sub
 
+    ''' <summary>
+    ''' Properties Grid handling.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Private Sub TreeView_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles TreeView.AfterSelect
 
         Try
@@ -558,7 +689,7 @@ Public Class frmSchema
 
             Select Case Me.TreeView.SelectedNode.Tag.GetType
                 Case Is = GetType(GSJ.RelationshipObjectType)
-
+#Region "Relationhip Type/ Edge Type"
                     Dim lfrmFactTypeReadingEditor As New frmToolboxORMReadingEditor
 
                     lfrmFactTypeReadingEditor = frmMain.ToolboxForms.Find(AddressOf lfrmFactTypeReadingEditor.EqualsByName)
@@ -567,7 +698,7 @@ Public Class frmSchema
 
                     Select Case lrRelationshipObjectType.ModelElement.GetType
                         Case Is = GetType(RDS.Relation)
-
+#Region "RDS Relation"
                             Dim lrRDSRelation As RDS.Relation = lrRelationshipObjectType.ModelElement
 
                             '=============================================================
@@ -602,15 +733,118 @@ Public Class frmSchema
                                                                   lrRDSRelation.OriginTable
                                                                   )
                             lrERDRelation.RDSRelation = lrRDSRelation
+                            lrERDRelation.RelationshipType = lrRDSRelation.ResponsibleFactType.GraphLabel(0).Label
+                            lrERDRelation.TreeNode = Me.TreeView.SelectedNode
 
                             Dim lfrmPropertiesGrid As New frmToolboxProperties
                             lfrmPropertiesGrid = frmMain.GetToolboxForm(lfrmPropertiesGrid.Name)
 
                             If lfrmPropertiesGrid IsNot Nothing Then
+                                Dim loMiscFilterAttribute As Attribute = New System.ComponentModel.CategoryAttribute("Misc")
+                                lfrmPropertiesGrid.PropertyGrid.HiddenAttributes = New System.ComponentModel.AttributeCollection(New System.Attribute() {loMiscFilterAttribute})
+
                                 lfrmPropertiesGrid.SetSelectedObject(lrERDRelation)
                             End If
 #End Region
+#End Region
+                        Case Is = GetType(RDS.Table)
+#Region "RDS Table"
+                            Dim lrRDSTable As RDS.Table = lrRelationshipObjectType.ModelElement
+
+                            '=============================================================
+                            'FactType Reading Editor
+#Region "FactType Reading Editor" 'Object-Role Modeling View
+                            If lfrmFactTypeReadingEditor IsNot Nothing Then
+
+                                lfrmFactTypeReadingEditor.zrFactType = lrRDSTable.FBMModelElement 'The Fact-Based Modeling FactType responsible for the Many-to-Many RDS Table.
+
+                                Dim lrFactTypeInstance = New FBM.FactTypeInstance
+                                lrFactTypeInstance.FactType = lrRDSTable.FBMModelElement 'In this instance, guaranteed to be a FBM.FactType (representing the Many-to-Many RDS.Table)
+                                lrFactTypeInstance.Model = lrRDSTable.Model.Model
+                                lfrmFactTypeReadingEditor.zrFactTypeInstance = lrFactTypeInstance
+
+                                Call lfrmFactTypeReadingEditor.SetupForm()
+
+                            End If
+#End Region
+
+                            '=============================================================
+                            'Properties Grid
+#Region "Properties Grid"
+                            Dim lrERDRelation As New ERDRelationship(lrRDSTable.Model.Model,
+                                                                  Nothing,
+                                                                  lrRDSTable.Name, Nothing,
+                                                                   pcenumCMMLMultiplicity.Many,
+                                                                  False,
+                                                                  True,
+                                                                  Nothing,
+                                                                   pcenumCMMLMultiplicity.Many,
+                                                                  False,
+                                                                  lrRDSTable
+                                                                  )
+                            lrERDRelation.RDSTable = lrRDSTable
+                            lrERDRelation.RelationshipType = lrRDSTable.FBMModelElement.GraphLabel(0).Label
+                            lrERDRelation.TreeNode = Me.TreeView.SelectedNode
+
+                            Dim lfrmPropertiesGrid As New frmToolboxProperties
+                            lfrmPropertiesGrid = frmMain.GetToolboxForm(lfrmPropertiesGrid.Name)
+
+                            If lfrmPropertiesGrid IsNot Nothing Then
+                                Dim loMiscFilterAttribute As Attribute = New System.ComponentModel.CategoryAttribute("Misc")
+                                lfrmPropertiesGrid.PropertyGrid.HiddenAttributes = New System.ComponentModel.AttributeCollection(New System.Attribute() {loMiscFilterAttribute})
+
+                                lfrmPropertiesGrid.SetSelectedObject(lrERDRelation)
+                            End If
+#End Region
+
+#End Region
                     End Select
+#End Region
+                Case Is = GetType(RDS.Table)
+
+                    Dim lrRDSTable As RDS.Table = Me.TreeView.SelectedNode.Tag
+
+                    '=============================================================
+                    'FactType Reading Editor
+#Region "FactType Reading Editor" 'Object-Role Modeling View
+                    Dim lfrmFactTypeReadingEditor As New frmToolboxORMReadingEditor
+
+                    lfrmFactTypeReadingEditor = frmMain.ToolboxForms.Find(AddressOf lfrmFactTypeReadingEditor.EqualsByName)
+
+                    If lfrmFactTypeReadingEditor IsNot Nothing Then
+
+                        lfrmFactTypeReadingEditor.zrFactType = lrRDSTable.FBMModelElement 'The Fact-Based Modeling FactType responsible for the Many-to-Many RDS Table.
+
+                        Dim lrFactTypeInstance = New FBM.FactTypeInstance
+                        lrFactTypeInstance.FactType = lrRDSTable.FBMModelElement 'In this instance, guaranteed to be a FBM.FactType (representing the Many-to-Many RDS.Table)
+                        lrFactTypeInstance.Model = lrRDSTable.Model.Model
+                        lfrmFactTypeReadingEditor.zrFactTypeInstance = lrFactTypeInstance
+
+                        Call lfrmFactTypeReadingEditor.SetupForm()
+
+                    End If
+#End Region
+
+                    '=============================================================
+                    'Properties Grid
+#Region "Properties Grid"
+                    Dim lrERDEntity As New ERDEntity(lrRDSTable.Model.Model,
+                                                       Nothing,
+                                                       lrRDSTable)
+
+                    lrERDEntity.RDSTable = lrRDSTable
+                    lrERDEntity.TreeNode = Me.TreeView.SelectedNode
+
+                    Dim lfrmPropertiesGrid As New frmToolboxProperties
+                    lfrmPropertiesGrid = frmMain.GetToolboxForm(lfrmPropertiesGrid.Name)
+
+                    If lfrmPropertiesGrid IsNot Nothing Then
+                        Dim loMiscFilterAttribute As Attribute = New System.ComponentModel.CategoryAttribute("Misc")
+                        lfrmPropertiesGrid.PropertyGrid.HiddenAttributes = New System.ComponentModel.AttributeCollection(New System.Attribute() {loMiscFilterAttribute})
+
+                        lfrmPropertiesGrid.SetSelectedObject(lrERDEntity)
+                    End If
+#End Region
 
             End Select
 
@@ -979,6 +1213,15 @@ Public Class frmSchema
 
             'CodeSafe
             If e.Label = "" Then
+                'CodeSafe
+                Select Case lrTreeNode.Tag.GetType
+
+                    Case Is = GetType(RDS.Table)
+
+                        Dim lrRDsTable As RDS.Table = lrTreeNode.Tag
+                        e.Node.Text = $"({lrRDsTable.Name})"
+                End Select
+
                 Exit Sub
             End If
 
@@ -989,8 +1232,10 @@ Public Class frmSchema
                 Case Is = GetType(RDS.Table)
 
                     Dim lrRDsTable As RDS.Table = lrTreeNode.Tag
-
                     Dim lrFBMModel As FBM.Model = lrRDsTable.Model.Model
+
+                    'CodeSafe
+                    lsNewModelElementName = Regex.Replace(lsNewModelElementName, "[()]", "")
 
                     Dim lrFBMModelElement = lrFBMModel.GetModelObjectByName(lsNewModelElementName)
 
@@ -1500,5 +1745,8 @@ Public Class frmSchema
 
     Private Sub AddRelationshipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddRelationshipToolStripMenuItem.Click
 
+        Call Me.AddNewRelationshipToTreeNode(Me.TreeView.SelectedNode)
+
     End Sub
+
 End Class
