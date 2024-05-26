@@ -23,7 +23,7 @@ Partial Class frmSchema
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Schemas")
+        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Schemas")
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmSchema))
         Me.GroupBoxMain = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
@@ -119,9 +119,9 @@ Partial Class frmSchema
         Me.TreeView.LabelEdit = True
         Me.TreeView.Location = New System.Drawing.Point(3, 33)
         Me.TreeView.Name = "TreeView"
-        TreeNode2.Name = "Schemas"
-        TreeNode2.Text = "Schemas"
-        Me.TreeView.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode2})
+        TreeNode1.Name = "Schemas"
+        TreeNode1.Text = "Schemas"
+        Me.TreeView.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1})
         Me.TreeView.SelectedImageIndex = 0
         Me.TreeView.Size = New System.Drawing.Size(955, 445)
         Me.TreeView.TabIndex = 0
@@ -237,7 +237,7 @@ Partial Class frmSchema
         Me.AddSchemaToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.PGS_Add16x16
         Me.AddSchemaToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.AddSchemaToolStripMenuItem.Name = "AddSchemaToolStripMenuItem"
-        Me.AddSchemaToolStripMenuItem.Size = New System.Drawing.Size(141, 22)
+        Me.AddSchemaToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.AddSchemaToolStripMenuItem.Text = "&Add Schema"
         '
         'ImportToolStripMenuItem
@@ -268,7 +268,7 @@ Partial Class frmSchema
         'DatabaseSchemaToolStripMenuItem
         '
         Me.DatabaseSchemaToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FromSQLiteToolStripMenuItem})
-        Me.DatabaseSchemaToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.PGS16x16
+        Me.DatabaseSchemaToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.DatabaseSchemaImport16x16
         Me.DatabaseSchemaToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.DatabaseSchemaToolStripMenuItem.Name = "DatabaseSchemaToolStripMenuItem"
         Me.DatabaseSchemaToolStripMenuItem.Size = New System.Drawing.Size(210, 22)
@@ -279,7 +279,7 @@ Partial Class frmSchema
         Me.FromSQLiteToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.SQLiteLogo
         Me.FromSQLiteToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.FromSQLiteToolStripMenuItem.Name = "FromSQLiteToolStripMenuItem"
-        Me.FromSQLiteToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
+        Me.FromSQLiteToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.FromSQLiteToolStripMenuItem.Text = "...from SQLite"
         '
         'ContextMenuStripSchema

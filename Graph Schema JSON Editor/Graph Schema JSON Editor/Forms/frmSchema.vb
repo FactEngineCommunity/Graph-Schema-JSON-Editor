@@ -12,6 +12,8 @@ Public Class frmSchema
     Public WithEvents Application As tApplication
     Public WithEvents WorkingModel As FBM.Model = Nothing
 
+    Private miMouseButton As MouseButtons
+
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         If Me.Application Is Nothing Then Me.Application = prApplication
@@ -228,7 +230,6 @@ Public Class frmSchema
         '==========================================================
         'Properties
         For Each lrRDSColumn In arRDSTable.Column
-
             Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & If(lrRDSColumn.DataType Is Nothing, "string", lrRDSColumn.DataType.DataType) & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
 
             Dim lrNewPropertyTreeNode = New TreeNode(lsPropertyEmbellishment, 4, 4)
@@ -692,6 +693,12 @@ Public Class frmSchema
 
     End Sub
 
+    Private Sub TreeView_NodeMouseClick(sender As Object, e As TreeNodeMouseClickEventArgs) Handles TreeView.NodeMouseClick
+
+        Me.miMouseButton = e.Button
+
+    End Sub
+
     ''' <summary>
     ''' Properties Grid handling.
     ''' </summary>
@@ -702,6 +709,9 @@ Public Class frmSchema
         Try
             'CodeSafe
             If Me.TreeView.SelectedNode.Tag Is Nothing Then Exit Sub
+
+            'Right Button not supported here.
+            If Control.MouseButtons = MouseButtons.Right Or Me.miMouseButton = MouseButtons.Right Then Exit Sub
 
             Select Case Me.TreeView.SelectedNode.Tag.GetType
                 Case Is = GetType(RDS.Model)
@@ -831,7 +841,7 @@ Public Class frmSchema
                     End Select
 #End Region
                 Case Is = GetType(RDS.Table)
-
+#Region "Node/RDS.Table"
                     Dim lrRDSTable As RDS.Table = Me.TreeView.SelectedNode.Tag
 
                     '=============================================================
@@ -873,6 +883,29 @@ Public Class frmSchema
                         lfrmPropertiesGrid.PropertyGrid.HiddenAttributes = New System.ComponentModel.AttributeCollection(New System.Attribute() {loMiscFilterAttribute})
 
                         lfrmPropertiesGrid.SetSelectedObject(lrERDEntity)
+                    End If
+#End Region
+#End Region
+                Case Is = GetType(RDS.Column)
+
+                    Dim lrRDSColumn As RDS.Column = Me.TreeView.SelectedNode.Tag
+
+                    '=============================================================
+                    'Properties Grid
+#Region "Properties Grid"
+                    Dim lrERDAttribute As New ERDAttribute(lrRDSColumn)
+
+                    lrERDAttribute.Column = lrRDSColumn
+                    lrERDAttribute.TreeNode = Me.TreeView.SelectedNode
+
+                    Dim lfrmPropertiesGrid As New frmToolboxProperties
+                    lfrmPropertiesGrid = frmMain.GetToolboxForm(lfrmPropertiesGrid.Name)
+
+                    If lfrmPropertiesGrid IsNot Nothing Then
+                        Dim loMiscFilterAttribute As Attribute = New System.ComponentModel.CategoryAttribute("Misc")
+                        lfrmPropertiesGrid.PropertyGrid.HiddenAttributes = New System.ComponentModel.AttributeCollection(New System.Attribute() {loMiscFilterAttribute})
+
+                        lfrmPropertiesGrid.SetSelectedObject(lrERDAttribute)
                     End If
 #End Region
 
@@ -1035,6 +1068,7 @@ Public Class frmSchema
                         End If
 
                         lrModel.MakeDirty(True, True)
+                        prApplication.setWorkingModel(lrModel)
 
                     End If
 #End Region
@@ -1143,8 +1177,12 @@ Public Class frmSchema
                     Me.ToolStripLabelPromptSourceDatabase.Visible = True
                     Me.ToolStripLabelDatabaseName.Visible = True
 
+                    '====================================================
+                    'Create a new Fact-Based Model to store the schema.
                     Dim lrFBMModel As New FBM.Model(Path.GetFileName(lrOpenFileDialog.FileName), System.Guid.NewGuid.ToString)
 
+                    '====================================
+                    'Add the Core Model, that stores the RDS (Relational Data Structure) as a logical injection within the FBM MetaModel/Model.
                     lrFBMModel.AddCore()
                     lrFBMModel.RDSCreated = True
                     lrFBMModel.StoreAsXML = True
@@ -1802,6 +1840,7 @@ Public Class frmSchema
 
         Try
             If Me.Application.WorkingModel IsNot Nothing AndAlso Me.Application.WorkingModel.IsDirty Then
+                Call Me.Application.WorkingModel.SetStoreAsXML(True, False)
                 Call Me.Application.WorkingModel.Save(False, False, False, False)
                 Me.ToolStripButtonSave.Enabled = False
             End If

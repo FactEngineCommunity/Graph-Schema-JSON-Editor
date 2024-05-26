@@ -134,6 +134,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ClassesERD\tERD-Attribute.vb" />
     <Compile Include="Classes\ClassesERD\tERD-Entity.vb" />
     <Compile Include="Classes\ClassesERD\tERD-Relationship.vb" />
     <Compile Include="Classes\ClassesGeneral\tRichtextCell.vb" />
