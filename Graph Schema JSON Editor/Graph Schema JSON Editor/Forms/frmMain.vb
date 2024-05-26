@@ -18,6 +18,7 @@ Public Class frmMain
             prApplication.DebugMode = pcenumDebugMode.DebugCriticalErrorsOnly
             prApplication.ThrowCriticalDebugMessagesToScreen = True
             prApplication.ApplicationVersionNr = "0.9"
+            FactEngineForServices.psDatabaseConnectionString = My.Settings.DatabaseConnectionString
 
 #Region "Database Location - For embedded Boston database."
             '-------------------------------------------------------------------------------------------------------------
@@ -161,6 +162,9 @@ Public Class frmMain
             'WriteToStatusBar("Loading the Core MetaMetaModel")
             Call TableModel.GetModelDetails(prApplication.CMML.Core)
             prApplication.CMML.Core.Load(True, False)
+            prApplication.CMML.Core.LoadPreLoadedXMLPagesFromXML()
+
+            FactEngineForServices.prApplication.CMML.Core = prApplication.CMML.Core
 
             'Speed up loading of the Core Model.
             If Not prApplication.CMML.Core.StoreAsXML Then
