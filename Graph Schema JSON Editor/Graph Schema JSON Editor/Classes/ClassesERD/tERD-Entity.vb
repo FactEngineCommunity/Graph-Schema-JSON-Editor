@@ -136,7 +136,8 @@ Public Class ERDEntity
                                 Case Is = "GraphLabel"
 
                                     'GraphLabel processing.
-                                    Call Me.RDSTable.FBMModelElement.ModifyGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
+                                    ' NB ModifyGraphLabel adds a new GraphLabel if not exists
+                                    Call Me.RDSTable.FBMModelElement.ModifyorAddGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
                                     If Me.RDSTable.Name = aoChangedPropertyItem.OldValue Then
                                         Call Me.RDSTable.FBMModelElement.setName(aoChangedPropertyItem.ChangedItem.Value.ToString, False) 'Modifying TreeNode below.
                                     End If

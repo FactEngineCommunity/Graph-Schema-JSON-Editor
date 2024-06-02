@@ -183,9 +183,9 @@ Public Class ERDRelationship
                         'GraphLabel processing.
                         Select Case Me.ModelElement.GetType
                             Case Is = GetType(RDS.Relation)
-                                Call Me.RDSRelation.ResponsibleFactType.ModifyGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
+                                Call Me.RDSRelation.ResponsibleFactType.ModifyorAddGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
                             Case Is = GetType(RDS.Table)
-                                Call Me.RDSTable.FBMModelElement.ModifyGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
+                                Call Me.RDSTable.FBMModelElement.ModifyorAddGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
                         End Select
 
                     Case Is = "Value"
@@ -196,9 +196,9 @@ Public Class ERDRelationship
                                     'GraphLabel processing.
                                     Select Case Me.ModelElement.GetType
                                         Case Is = GetType(RDS.Relation)
-                                            Call Me.RDSRelation.ResponsibleFactType.ModifyGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
+                                            Call Me.RDSRelation.ResponsibleFactType.ModifyorAddGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
                                         Case Is = GetType(RDS.Table)
-                                            Call Me.RDSTable.FBMModelElement.ModifyGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
+                                            Call Me.RDSTable.FBMModelElement.ModifyorAddGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
                                     End Select
 
                                 Case Else
