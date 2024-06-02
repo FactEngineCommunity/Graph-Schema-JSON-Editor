@@ -903,7 +903,9 @@ Public Class frmSchema
 
                     If lfrmPropertiesGrid IsNot Nothing Then
                         Dim loMiscFilterAttribute As Attribute = New System.ComponentModel.CategoryAttribute("Misc")
-                        lfrmPropertiesGrid.PropertyGrid.HiddenAttributes = New System.ComponentModel.AttributeCollection(New System.Attribute() {loMiscFilterAttribute})
+                        'Dim loDBLevelFilterAttribute As Attribute = New System.ComponentModel.CategoryAttribute("DB Level")
+                        Dim loInstancesFilterAttribute As Attribute = New System.ComponentModel.CategoryAttribute("Instances")
+                        lfrmPropertiesGrid.PropertyGrid.HiddenAttributes = New System.ComponentModel.AttributeCollection(New System.Attribute() {loMiscFilterAttribute, loInstancesFilterAttribute}) 'loDBLevelFilterAttribute
 
                         lfrmPropertiesGrid.SetSelectedObject(lrERDAttribute)
                     End If
@@ -1425,7 +1427,6 @@ Public Class frmSchema
         Dim lsMessage As String
 
         Try
-
             Dim loDialogOpenFile = New OpenFileDialog
 
             loDialogOpenFile.DefaultExt = "xml"
@@ -1575,14 +1576,6 @@ Public Class frmSchema
                 'MsgBox(lsMessage)
             End If
 
-            '-----------------------------------------
-            'Update the TreeView
-            '-----------------------------------------
-            Dim lrNewTreeNode = Me.AddFBMModelAsSchemaToTree(lrModel)
-
-            lrNewTreeNode.Expand()
-            Me.TreeView.Nodes(0).Nodes(Me.TreeView.Nodes(0).Nodes.Count - 1).EnsureVisible()
-
             Dim lfrmFlashCard As New frmFlashCard
 
             '================================================================================================================
@@ -1597,6 +1590,13 @@ Public Class frmSchema
                 Call lrModel.PopulateAllCoreStructuresFromCoreMDAElements()
                 lrModel.RDSCreated = True
             End If
+
+            '==================================================================
+            'Update the TreeView
+            '-----------------------------------------
+            Dim lrNewTreeNode = Me.AddFBMModelAsSchemaToTree(lrModel, True)
+            lrNewTreeNode.Expand()
+            lrNewTreeNode.EnsureVisible()
 
             frmMain.Cursor = Cursors.Default
 
@@ -1651,13 +1651,18 @@ Public Class frmSchema
 
     End Sub
 
-    Private Function AddFBMModelAsSchemaToTree(ByRef arFBMModel As FBM.Model) As TreeNode
+    Private Function AddFBMModelAsSchemaToTree(ByRef arFBMModel As FBM.Model,
+                                               Optional ByVal abShowSchema As Boolean = False) As TreeNode
 
         Try
             Dim lrNewTreeNode = New TreeNode("Schema: " & arFBMModel.Name)
 
             lrNewTreeNode.Tag = arFBMModel.RDS
             Me.TreeView.Nodes(0).Nodes.Add(lrNewTreeNode)
+
+            If abShowSchema Then
+                Call Me.AddSchemaByFBMModel(arFBMModel, lrNewTreeNode)
+            End If
 
             Return lrNewTreeNode
 
@@ -1863,6 +1868,28 @@ Public Class frmSchema
             If Me.WorkingModel Is Nothing Then Exit Sub
 
             Me.ToolStripButtonSave.Enabled = True
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+    Private Sub ConfigurationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ConfigurationToolStripMenuItem.Click
+
+        Try
+            Dim lrRDSModel As RDS.Model = Me.TreeView.SelectedNode.Tag
+
+            Dim lfrmModelConfiguration As New frmCRUDModel
+
+            lfrmModelConfiguration.zrModel = lrRDSModel.Model
+
+            lfrmModelConfiguration.Show(Me.DockPanel)
+
         Catch ex As Exception
             Dim lsMessage As String
             Dim mb As MethodBase = MethodInfo.GetCurrentMethod()

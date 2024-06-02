@@ -12,6 +12,19 @@ Imports System.Reflection
 
 Public Module MyMethodExtensions
 
+
+    ''' <summary>
+    ''' Add/Append and item to an array.
+    ''' </summary>
+    ''' <typeparam name="T"></typeparam>
+    ''' <param name="arr"></param>
+    ''' <param name="item"></param>
+    <Extension()>
+    Public Sub Add(Of T)(ByRef arr As T(), item As T)
+        Array.Resize(arr, arr.Length + 1)
+        arr(arr.Length - 1) = item
+    End Sub
+
     <Extension()>
     Public Function AddUnique(Of T)(list As List(Of T), item As T)
 

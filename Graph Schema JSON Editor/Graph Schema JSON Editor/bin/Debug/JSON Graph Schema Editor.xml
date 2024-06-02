@@ -22,6 +22,11 @@ JSON Graph Schema Editor
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Add16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.AddAttribute16x16">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -37,6 +42,16 @@ JSON Graph Schema Editor
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Cog16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.CopyToClipboard16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Database16x16">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
@@ -48,6 +63,11 @@ JSON Graph Schema Editor
 </summary>
 </member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.delete16x16">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.DeleteCross16x16">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
@@ -73,6 +93,11 @@ JSON Graph Schema Editor
 </summary>
 </member>
 <member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.FactBasedModeling16x161">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
+<member name="P:JSON_Graph_Schema_Editor.My.Resources.Resources.Folder16x16">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
@@ -312,6 +337,14 @@ JSON Graph Schema Editor
  </summary>
  <param name="aiSchemaTreeMenuType">The Type of the Tree Menu. E.g. Properties</param>
 </member>
+<member name="M:JSON_Graph_Schema_Editor.frmCRUDModel.CheckBoxSaveToXML_CheckedChanged(System.Object,System.EventArgs)">
+ <summary>
+ 20220907-VM-Possible that Page data was not being saved when changed from StoreAsXML to StoreInDatabase. Fix below.
+ Call Me.zrModel.Save(True, True,True ) '20220907-VM-Was Save(True,False).
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
 <member name="M:JSON_Graph_Schema_Editor.frmSchema.AddNodeTypeToSelectedTreeNode(System.Windows.Forms.TreeNode@)">
  <summary>
  Adds a Node Type to the Schema of the Selected TreeNode, or the given TreeNode.
@@ -405,6 +438,14 @@ JSON Graph Schema Editor
      ''' </summary>
  <param name="aoRichTextBox"></param>
  <remarks></remarks>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.MyMethodExtensions.Add``1(``0[]@,``0)">
+ <summary>
+ Add/Append and item to an array.
+ </summary>
+ <typeparam name="T"></typeparam>
+ <param name="arr"></param>
+ <param name="item"></param>
 </member>
 <member name="M:JSON_Graph_Schema_Editor.publicFunctions.ShowFlashCard(System.String,System.Nullable{System.Drawing.Color},System.Int32,System.Single)">
  <summary>

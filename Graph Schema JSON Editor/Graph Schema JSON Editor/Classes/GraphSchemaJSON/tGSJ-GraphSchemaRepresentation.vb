@@ -36,7 +36,9 @@ Namespace GSJ
 
             Try
 
-#Region "RDS (Tables)-> PGS (Nodes/Properties)"
+#Region "nodeLabels: RDS (Tables)-> PGS (Nodes/Properties)"
+
+                'NB See also: nodeObjectTypes (Region below)
 
                 For Each lrRDSTable In arFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
 
@@ -119,7 +121,7 @@ Namespace GSJ
 
                 For Each lrRDSTable In arFBMModel.RDS.Table.FindAll(Function(x) Not x.FBMModelElement.IsCandidatePGSRelationshipNode)
 
-                    Dim lrGSNodeObjectType = New GSJ.NodeObjectType(lrRDSTable.Name)
+                    Dim lrGSNodeObjectType = New GSJ.NodeObjectType(lrRDSTable.Name & lrRDSTable.FBMModelElement.GUID)
                     lrGSNodeObjectType.labels.Add(New GSJ.Label("#" & lrRDSTable.Name))
 
                     Me.graphSchema.NodeObjectTypes.Add(lrGSNodeObjectType)

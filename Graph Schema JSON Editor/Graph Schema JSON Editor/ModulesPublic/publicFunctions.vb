@@ -17,6 +17,20 @@ Public Module publicFunctions
         Return FullAppPath
     End Function
 
+    Public Function NullVal(ByVal arObject As Object, ByVal arReturnObject As Object) As Object
+
+        If IsDBNull(arObject) Then
+            Return arReturnObject
+        ElseIf arObject Is Nothing Then
+            Return arReturnObject
+        ElseIf arObject.Equals(0) Then
+            Return arObject
+        Else
+            Return arObject
+        End If
+
+    End Function
+
     ''' <summary>
     ''' Displays a FlashCard on the screen.
     ''' </summary>
