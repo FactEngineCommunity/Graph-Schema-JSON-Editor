@@ -267,6 +267,12 @@ Public Class frmCRUDModel
                 Me.ComboBoxDatabaseType.SelectedIndex = Me.ComboBoxDatabaseType.FindString(Me.zrModel.TargetDatabaseType.ToString)
             End If
 
+            'Add ISO GQL as a Database Type.
+            Dim liISOGQLIndex = Me.ComboBoxDatabaseType.Items.Add(New tComboboxItem(pcenumDatabaseType.ISOGQL, pcenumDatabaseType.ISOGQL.ToString, pcenumDatabaseType.ISOGQL))
+            If Me.zrModel.TargetDatabaseType = pcenumDatabaseType.ISOGQL Then
+                Me.ComboBoxDatabaseType.SelectedIndex = liISOGQLIndex
+            End If
+
         Catch ex As Exception
             Dim lsMessage As String
             Dim mb As MethodBase = MethodInfo.GetCurrentMethod()

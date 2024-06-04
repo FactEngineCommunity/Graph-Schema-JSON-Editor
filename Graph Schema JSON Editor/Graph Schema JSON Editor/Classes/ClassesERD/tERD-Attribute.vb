@@ -5,7 +5,6 @@ Imports System.Reflection
 Public Class ERDAttribute
     Inherits ERD.Attribute
 
-
     Public TreeNode As TreeNode 'The TreeNode within the Schema Viewer that represents the Property/Column/Attribute.
 
     <CategoryAttribute("Property/Attribute"),
@@ -84,14 +83,26 @@ Public Class ERDAttribute
                             Call Me.Column.setName(lsNewColumnName)
                         End If
 
+                    Case Is = "DataType"
+
+                        Me._DBDataType = Nothing
+                        Call Me.Column.SetDataType(Me.DataType)
+
+                        If Me.TreeNode IsNot Nothing Then
+                            Me.TreeNode.Text = Me.Column.Name & " { ""type"": """ & Me.Column.DBDataType & """, ""nullable"": """ & LCase(Me.Column.IsNullable.ToString) & """}"
+                            Me.TreeNode.TreeView.Refresh()
+                            Me.TreeNode.TreeView.Invalidate(Me.TreeNode.Bounds)
+                        End If
+
                 End Select
             End If
 
             If Me.TreeNode IsNot Nothing Then
 
                 Dim lrRDSColumn As RDS.Column = Me.Column
+                Dim lsDataType As String = lrRDSColumn.DBDataType
 
-                Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & If(lrRDSColumn.DataType Is Nothing, "string", lrRDSColumn.DataType.DataType) & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
+                Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & If(lrRDSColumn.DataType Is Nothing, lsDataType, lrRDSColumn.DataType.DataType) & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
 
                 Me.TreeNode.Text = lsPropertyEmbellishment
 

@@ -128,6 +128,8 @@ Public Class ERDEntity
                             Me.RDSTable.FBMModelElement.GraphLabel.RemoveAll(Function(x) x.ModelElement.Id = Me.RDSTable.FBMModelElement.Id And x.Label = Me.RDSTable.Name)
 
                             Call Me.RDSTable.FBMModelElement.setName(lsNewTableName, False)
+                            'Enable Save Button
+                            Me.RDSTable.Model.Model.MakeDirty(True, True)
                         End If
 
                     Case Is = "Value"

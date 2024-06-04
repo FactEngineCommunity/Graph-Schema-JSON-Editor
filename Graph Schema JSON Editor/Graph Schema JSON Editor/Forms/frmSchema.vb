@@ -68,7 +68,9 @@ Public Class frmSchema
             Dim lsEntityTypeName = "New Node Type"
             'Create a unique NodeType Name.
             lsEntityTypeName = lrRDSModel.Model.CreateUniqueEntityTypeName(lsEntityTypeName, 0, False)
-            Dim lrEntityType As New FBM.EntityType(lrRDSModel.Model, pcenumLanguage.ORMModel, lsEntityTypeName)
+            Dim lrEntityType As New FBM.EntityType(lrRDSModel.Model, pcenumLanguage.ORMModel, lsEntityTypeName, Nothing, True)
+
+            lrRDSModel.Model.AddEntityType(lrEntityType, True, False, Nothing, True, True)
 
             Dim loNewNodeTreeNode = New TreeNode($"({lsEntityTypeName})", 1, 1)
             loTreeNode.Nodes.Add(loNewNodeTreeNode)
@@ -230,7 +232,10 @@ Public Class frmSchema
         '==========================================================
         'Properties
         For Each lrRDSColumn In arRDSTable.Column
-            Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & If(lrRDSColumn.DataType Is Nothing, "string", lrRDSColumn.DataType.DataType) & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
+
+            Dim lsDataType As String = lrRDSColumn.DBDataType
+
+            Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & lsDataType & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
 
             Dim lrNewPropertyTreeNode = New TreeNode(lsPropertyEmbellishment, 4, 4)
             lrNewPropertyTreeNode.Tag = lrRDSColumn
@@ -653,13 +658,25 @@ Public Class frmSchema
             Dim lrFBMModel As FBM.Model = lrRDSTable.Model.Model
 
             Dim lrFBMValueType As New FBM.ValueType(lrRDSTable.Model.Model, pcenumLanguage.ORMModel, "New Property", True)
+            'Add the Value Type to the Fact-Based Model.
+            Call lrFBMModel.AddValueType(lrFBMValueType, True, False, Nothing, True)
 
             Dim larFBMModelElement As New List(Of FBM.ModelObject)
             larFBMModelElement.Add(lrRDSTable.FBMModelElement)
             larFBMModelElement.Add(lrFBMValueType)
 
+            'Create and Add a FactType to the Fact-Based Model for the new Property/RDSColumn.
             Dim lsNewFactTypeName = larFBMModelElement(0).Id & "Has" & larFBMModelElement(1).Id
             Dim lrFBMFactType = lrRDSTable.Model.Model.CreateFactType(lsNewFactTypeName, larFBMModelElement, False, True, False, Nothing, True, Nothing, True, False)
+
+            'Create the Internal Uniqueness Constraint for the FactType.
+            '  NB Cardinality is determined by the UniquenessConstraint placed over the Roles of the FactType. E.g. Many-to-Many, Many-to-One.
+            '  FEFS takes care of whether the underlying RDS has a Foreign Key or a Many-to-Many RDS Table.
+            Dim larRole As New List(Of FBM.Role)
+            'Many-to-One. I.e. ForeignKey Reference.
+            larRole.Add(lrFBMFactType.RoleGroup(0))
+            lrFBMFactType.CreateInternalUniquenessConstraint(larRole, False, True, True, False, Nothing, False, False)
+
 
             Dim lrRDSColumn As New RDS.Column(lrRDSTable, "New Property", lrFBMFactType.RoleGroup(0), lrFBMFactType.RoleGroup(1), False)
 
@@ -685,7 +702,6 @@ Public Class frmSchema
 
 
             End If
-
 
         Catch ex As Exception
 
@@ -715,19 +731,27 @@ Public Class frmSchema
 
             Select Case Me.TreeView.SelectedNode.Tag.GetType
                 Case Is = GetType(RDS.Model)
-
+#Region "Schema"
+                    'Schema is stored as a Relational Data Schema (with homomorphism to Property Graph Schema).
                     Dim lrRDSModel As RDS.Model = Me.TreeView.SelectedNode.Tag
 
                     Call Me.Application.setWorkingModel(lrRDSModel.Model)
+                    Me.WorkingModel = Me.Application.WorkingModel 'For Save Button etc when Model made dirty.
 
                     If Not lrRDSModel.Model.Loaded Then
 
                         With New WaitCursor
+                            'Load the Fact-Based Model that stores the Schema.
                             Call lrRDSModel.Model.Load(False, False, Nothing, True)
+
+                            'Get the Database Data Types for the Model.
+                            lrRDSModel.Model.connectToDatabase() 'Creates a dummy connection for ISO GQL DatabaseType (i.e. Is just exporting to JSON).
+                            lrRDSModel.Model.DatabaseConnection.getDatabaseDataTypes()
+
                             Call Me.AddSchemaByFBMModel(lrRDSModel.Model, Me.TreeView.SelectedNode)
                         End With
                     End If
-
+#End Region
                 Case Is = GetType(GSJ.RelationshipObjectType)
 #Region "Relationhip Type/ Edge Type"
                     Dim lfrmFactTypeReadingEditor As New frmToolboxORMReadingEditor
@@ -844,6 +868,8 @@ Public Class frmSchema
 #Region "Node/RDS.Table"
                     Dim lrRDSTable As RDS.Table = Me.TreeView.SelectedNode.Tag
 
+                    Call Me.Application.setWorkingModel(lrRDSTable.Model.Model)
+                    Me.WorkingModel = Me.Application.WorkingModel 'For Save Button etc when Model made dirty.
                     '=============================================================
                     'FactType Reading Editor
 #Region "FactType Reading Editor" 'Object-Role Modeling View
@@ -887,9 +913,11 @@ Public Class frmSchema
 #End Region
 #End Region
                 Case Is = GetType(RDS.Column)
-
+#Region "Property/Column"
                     Dim lrRDSColumn As RDS.Column = Me.TreeView.SelectedNode.Tag
 
+                    Call Me.Application.setWorkingModel(lrRDSColumn.Model.Model)
+                    Me.WorkingModel = Me.Application.WorkingModel 'For Save Button etc when Model made dirty.
                     '=============================================================
                     'Properties Grid
 #Region "Properties Grid"
@@ -910,6 +938,15 @@ Public Class frmSchema
                         lfrmPropertiesGrid.SetSelectedObject(lrERDAttribute)
                     End If
 #End Region
+#End Region
+                Case Is = GetType(tSchemaTreeMenuType)
+
+                    Dim lrMenuOption As tSchemaTreeMenuType = Me.TreeView.SelectedNode.Tag
+
+                    Select Case lrMenuOption.MenuType
+                        Case Is = pcenumSchemaTreeMenuType.Relationships
+                            Me.TreeView.SelectedNode.Expand()
+                    End Select
 
             End Select
 
@@ -1784,17 +1821,22 @@ Public Class frmSchema
     Public Sub AddNewSchema()
 
         Try
-            '=====================================================================================================
-            'Create a Fact-Based Model within which to store the Schema.
-            Dim lrFBMModel As New FBM.Model(pcenumLanguage.ORMModel, "New Schema", System.Guid.NewGuid.ToString)
+            With New WaitCursor
+                '=====================================================================================================
+                'Create a Fact-Based Model within which to store the Schema.
+                Dim lrFBMModel As New FBM.Model(pcenumLanguage.ORMModel, "New Schema", System.Guid.NewGuid.ToString)
 
-            '============================================================
-            'Add the Core MetaModel for Relational Data Structures etc
-            lrFBMModel.AddCore()
-            lrFBMModel.RDSCreated = True 'Core has been added.
-            lrFBMModel.StoreAsXML = True 'FBM Model is stored as XML when it is saved.
+                'Set Target Database Type to ISOGQL so that ORM/Fact-Based Modelling data types get converted to ISOGQL data types.
+                lrFBMModel.TargetDatabaseType = pcenumDatabaseType.ISOGQL
 
-            Call Me.AddSchemaByFBMModel(lrFBMModel)
+                '============================================================
+                'Add the Core MetaModel for Relational Data Structures etc
+                lrFBMModel.AddCore()
+                lrFBMModel.RDSCreated = True 'Core has been added.
+                lrFBMModel.StoreAsXML = True 'FBM Model is stored as XML when it is saved.
+
+                Call Me.AddSchemaByFBMModel(lrFBMModel)
+            End With
 
         Catch ex As Exception
             Dim lsMessage As String
@@ -1847,8 +1889,9 @@ Public Class frmSchema
             If Me.Application.WorkingModel IsNot Nothing AndAlso Me.Application.WorkingModel.IsDirty Then
                 Call Me.Application.WorkingModel.SetStoreAsXML(True, False)
                 Call Me.Application.WorkingModel.Save(False, False, False, False)
-                Me.ToolStripButtonSave.Enabled = False
             End If
+
+            Me.ToolStripButtonSave.Enabled = False
 
         Catch ex As Exception
             Dim lsMessage As String
