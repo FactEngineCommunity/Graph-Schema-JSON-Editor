@@ -23,7 +23,7 @@ Partial Class frmSchema
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Schemas")
+        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Schemas")
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmSchema))
         Me.GroupBoxMain = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
@@ -61,7 +61,6 @@ Partial Class frmSchema
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.EditNodeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeleteNodeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStripProperty = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AddPropertyToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
@@ -121,9 +120,9 @@ Partial Class frmSchema
         Me.TreeView.LabelEdit = True
         Me.TreeView.Location = New System.Drawing.Point(3, 33)
         Me.TreeView.Name = "TreeView"
-        TreeNode1.Name = "Schemas"
-        TreeNode1.Text = "Schemas"
-        Me.TreeView.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1})
+        TreeNode2.Name = "Schemas"
+        TreeNode2.Text = "Schemas"
+        Me.TreeView.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode2})
         Me.TreeView.SelectedImageIndex = 0
         Me.TreeView.Size = New System.Drawing.Size(955, 445)
         Me.TreeView.TabIndex = 0
@@ -371,15 +370,16 @@ Partial Class frmSchema
         'ContextMenuStripNode
         '
         Me.ContextMenuStripNode.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.ContextMenuStripNode.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PropertiesToolStripMenuItem, Me.ToolStripSeparator4, Me.ToolStripMenuItem1, Me.ToolStripSeparator2, Me.EditNodeToolStripMenuItem, Me.DeleteNodeToolStripMenuItem})
+        Me.ContextMenuStripNode.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PropertiesToolStripMenuItem, Me.ToolStripSeparator4, Me.ToolStripMenuItem1, Me.ToolStripSeparator2, Me.DeleteNodeToolStripMenuItem})
         Me.ContextMenuStripNode.Name = "ContextMenuStripNode"
-        Me.ContextMenuStripNode.Size = New System.Drawing.Size(171, 120)
+        Me.ContextMenuStripNode.Size = New System.Drawing.Size(171, 88)
         '
         'PropertiesToolStripMenuItem
         '
         Me.PropertiesToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.AddAttribute16x16
+        Me.PropertiesToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.PropertiesToolStripMenuItem.Name = "PropertiesToolStripMenuItem"
-        Me.PropertiesToolStripMenuItem.Size = New System.Drawing.Size(170, 26)
+        Me.PropertiesToolStripMenuItem.Size = New System.Drawing.Size(170, 24)
         Me.PropertiesToolStripMenuItem.Text = "&Add Property"
         '
         'ToolStripSeparator4
@@ -390,7 +390,7 @@ Partial Class frmSchema
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(170, 26)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(170, 24)
         Me.ToolStripMenuItem1.Text = "&Rename"
         '
         'ToolStripSeparator2
@@ -398,16 +398,10 @@ Partial Class frmSchema
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
         Me.ToolStripSeparator2.Size = New System.Drawing.Size(167, 6)
         '
-        'EditNodeToolStripMenuItem
-        '
-        Me.EditNodeToolStripMenuItem.Name = "EditNodeToolStripMenuItem"
-        Me.EditNodeToolStripMenuItem.Size = New System.Drawing.Size(170, 26)
-        Me.EditNodeToolStripMenuItem.Text = "&Edit Node Type"
-        '
         'DeleteNodeToolStripMenuItem
         '
         Me.DeleteNodeToolStripMenuItem.Name = "DeleteNodeToolStripMenuItem"
-        Me.DeleteNodeToolStripMenuItem.Size = New System.Drawing.Size(170, 26)
+        Me.DeleteNodeToolStripMenuItem.Size = New System.Drawing.Size(170, 24)
         Me.DeleteNodeToolStripMenuItem.Text = "&Delete Node Type"
         '
         'ContextMenuStripProperty
@@ -478,12 +472,12 @@ Partial Class frmSchema
         Me.ContextMenuStripProperties.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.ContextMenuStripProperties.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddPropertyToolStripMenuItem})
         Me.ContextMenuStripProperties.Name = "ContextMenuStripProperties"
-        Me.ContextMenuStripProperties.Size = New System.Drawing.Size(181, 48)
+        Me.ContextMenuStripProperties.Size = New System.Drawing.Size(145, 26)
         '
         'AddPropertyToolStripMenuItem
         '
         Me.AddPropertyToolStripMenuItem.Name = "AddPropertyToolStripMenuItem"
-        Me.AddPropertyToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AddPropertyToolStripMenuItem.Size = New System.Drawing.Size(144, 22)
         Me.AddPropertyToolStripMenuItem.Text = "&Add Property"
         '
         'frmSchema
@@ -523,7 +517,6 @@ Partial Class frmSchema
     Friend WithEvents AddRelationshipToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ContextMenuStripNode As ContextMenuStrip
     Friend WithEvents PropertiesToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents EditNodeToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents DeleteNodeToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ContextMenuStripProperty As ContextMenuStrip
     Friend WithEvents AddPropertyToolStripMenuItem1 As ToolStripMenuItem

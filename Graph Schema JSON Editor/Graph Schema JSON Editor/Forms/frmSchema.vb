@@ -295,6 +295,10 @@ Public Class frmSchema
             lrRDSModel = loSchemaTreeNode.Tag
             lrModel = lrRDSModel.Model 'I.e. The Relational Data  Structure model belongs to an overal Fact-Based Model that ultimately defines the RDS Model.
 
+            'CodeSafe. We need a WorkingModel for the [Save] button.
+            Call Me.Application.setWorkingModel(lrRDSModel.Model)
+            Me.WorkingModel = Me.Application.WorkingModel 'For Save Button etc when Model made dirty.
+
             'Get the Add/Edit Relationship form.
             Dim lfrmCRUDAddEditPGSRelationship As New frmCRUDAddEditRelationship
 
@@ -418,6 +422,8 @@ Public Class frmSchema
                 loSchemaTreeNode.Nodes(1).Nodes.Add(loRelationshipTreeNode)
                 loSchemaTreeNode.Expand()
                 loRelationshipTreeNode.EnsureVisible()
+
+                Call lrModel.MakeDirty(True, True)
 
             End If
 
@@ -745,8 +751,15 @@ Public Class frmSchema
                             Call lrRDSModel.Model.Load(False, False, Nothing, True)
 
                             'Get the Database Data Types for the Model.
-                            lrRDSModel.Model.connectToDatabase() 'Creates a dummy connection for ISO GQL DatabaseType (i.e. Is just exporting to JSON).
-                            lrRDSModel.Model.DatabaseConnection.getDatabaseDataTypes()
+                            Try
+                                lrRDSModel.Model.connectToDatabase() 'Creates a dummy connection for ISO GQL DatabaseType (i.e. Is just exporting to JSON).
+                                If lrRDSModel.Model.DatabaseConnection IsNot Nothing Then
+                                    lrRDSModel.Model.DatabaseConnection.getDatabaseDataTypes()
+                                End If
+                            Catch ex As Exception
+                                'We Tried.
+                            End Try
+
 
                             Call Me.AddSchemaByFBMModel(lrRDSModel.Model, Me.TreeView.SelectedNode)
                         End With
@@ -911,6 +924,8 @@ Public Class frmSchema
                         lfrmPropertiesGrid.SetSelectedObject(lrERDEntity)
                     End If
 #End Region
+
+                    Me.TreeView.SelectedNode.Expand()
 #End Region
                 Case Is = GetType(RDS.Column)
 #Region "Property/Column"
@@ -944,7 +959,8 @@ Public Class frmSchema
                     Dim lrMenuOption As tSchemaTreeMenuType = Me.TreeView.SelectedNode.Tag
 
                     Select Case lrMenuOption.MenuType
-                        Case Is = pcenumSchemaTreeMenuType.Relationships
+                        Case Is = pcenumSchemaTreeMenuType.Relationships,
+                                  pcenumSchemaTreeMenuType.Properties
                             Me.TreeView.SelectedNode.Expand()
                     End Select
 
@@ -1444,7 +1460,7 @@ Public Class frmSchema
             If MsgBox(lsMessage, MsgBoxStyle.YesNoCancel) = MsgBoxResult.Yes Then
 
                 'Delete the Fact-Based Model (representing the Graph Schema) from the database.
-                TableModel.DeleteModel(lrFBMModel)
+                lrFBMModel.RemoveFromDatabase() 'Make sure MySettings.DatabaseConnectionString is set (for XML saved Models).
 
                 Me.TreeView.Nodes.Remove(Me.TreeView.SelectedNode)
 
@@ -1770,6 +1786,21 @@ Public Class frmSchema
                         Dim lrFBMModel = lrGraphSchemaRepresentationExport.graphSchemaRepresentation.MapToFBMModel()
                         lrFBMModel.Name = Path.GetFileName(filePath)
 
+                        'ISOGQL DatabaseType by default. And as also used for DataTypes of Propertie/Columns
+                        lrFBMModel.TargetDatabaseType = pcenumDatabaseType.ISOGQL
+
+#Region "Data Types"
+                        'Get the Database Data Types for the Model.
+                        Try
+                            lrFBMModel.connectToDatabase() 'Creates a dummy connection for ISO GQL DatabaseType (i.e. Is just exporting to JSON).
+                            If lrFBMModel.DatabaseConnection IsNot Nothing Then
+                                lrFBMModel.DatabaseConnection.getDatabaseDataTypes()
+                            End If
+                        Catch ex As Exception
+                            'We Tried.
+                        End Try
+#End Region
+
                         Call Me.AddSchemaByFBMModel(lrFBMModel)
 
                     End With
@@ -1834,6 +1865,20 @@ Public Class frmSchema
                 lrFBMModel.AddCore()
                 lrFBMModel.RDSCreated = True 'Core has been added.
                 lrFBMModel.StoreAsXML = True 'FBM Model is stored as XML when it is saved.
+                'Save the Model in the Database (Most of the Model, as above, is saved as XML for fast loading).
+                lrFBMModel.Save(False, False, False, False)
+
+#Region "Data Types"
+                'Get the Database Data Types for the Model.
+                Try
+                    lrFBMModel.connectToDatabase() 'Creates a dummy connection for ISO GQL DatabaseType (i.e. Is just exporting to JSON).
+                    If lrFBMModel.DatabaseConnection IsNot Nothing Then
+                        lrFBMModel.DatabaseConnection.getDatabaseDataTypes()
+                    End If
+                Catch ex As Exception
+                    'We Tried.
+                End Try
+#End Region
 
                 Call Me.AddSchemaByFBMModel(lrFBMModel)
             End With
