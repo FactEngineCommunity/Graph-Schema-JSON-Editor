@@ -235,7 +235,39 @@ Public Class frmSchema
 
             Dim lsDataType As String = lrRDSColumn.DBDataType
 
-            Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & lsDataType & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
+#Region "Data Type Length/Precision"
+            Dim lsDataTypeLengthPrecision As String = ""
+
+            Select Case lrRDSColumn.getMetamodelDataType
+                Case pcenumORMDataType.NumericDecimal, pcenumORMDataType.NumericFloatCustomPrecision,
+                         pcenumORMDataType.NumericFloatDoublePrecision, pcenumORMDataType.NumericFloatSinglePrecision,
+                         pcenumORMDataType.NumericMoney
+                    ' Data types that require both length and precision
+                    lsDataTypeLengthPrecision = $"({lrRDSColumn.getMetamodelDataTypeLength},{lrRDSColumn.getMetamodelDataTypePrecision})"
+
+                Case pcenumORMDataType.Boolean, pcenumORMDataType.LogicalTrueFalse, pcenumORMDataType.LogicalYesNo,
+                         pcenumORMDataType.NumericAutoCounter, pcenumORMDataType.AutoUUID, pcenumORMDataType.NumericSignedBigInteger,
+                         pcenumORMDataType.NumericSignedInteger, pcenumORMDataType.NumericSignedSmallInteger,
+                         pcenumORMDataType.NumericUnsignedBigInteger, pcenumORMDataType.NumericUnsignedInteger,
+                         pcenumORMDataType.NumericUnsignedSmallInteger, pcenumORMDataType.NumericUnsignedTinyInteger,
+                         pcenumORMDataType.OtherObjectID, pcenumORMDataType.OtherRowID, pcenumORMDataType.RawDataFixedLength,
+                         pcenumORMDataType.RawDataLargeLength, pcenumORMDataType.RawDataOLEObject, pcenumORMDataType.RawDataPicture,
+                         pcenumORMDataType.RawDataVariableLength, pcenumORMDataType.TemporalAutoTimestamp,
+                         pcenumORMDataType.TemporalDate, pcenumORMDataType.TemporalDateAndTime, pcenumORMDataType.TemporalTime
+                    ' Data types that do not require length or precision specifications
+                    lsDataTypeLengthPrecision = ""
+
+                Case pcenumORMDataType.TextFixedLength, pcenumORMDataType.TextLargeLength, pcenumORMDataType.TextVariableLength
+                    ' Data types that require only length
+                    lsDataTypeLengthPrecision = $"({lrRDSColumn.getMetamodelDataTypeLength})"
+
+                Case Else
+                    ' Default or unknown data type
+                    lsDataTypeLengthPrecision = "<Data Type Not Set>"
+            End Select
+#End Region
+
+            Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & lsDataType & lsDataTypeLengthPrecision & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
 
             Dim lrNewPropertyTreeNode = New TreeNode(lsPropertyEmbellishment, 4, 4)
             lrNewPropertyTreeNode.Tag = lrRDSColumn
@@ -423,6 +455,10 @@ Public Class frmSchema
                 loSchemaTreeNode.Expand()
                 loRelationshipTreeNode.EnsureVisible()
 
+                Dim loPropertiesTreeNode As New TreeNode("Properties")
+                loPropertiesTreeNode.Tag = pcenumSchemaTreeMenuType.Properties
+                loRelationshipTreeNode.Nodes.Add(loPropertiesTreeNode)
+
                 Call lrModel.MakeDirty(True, True)
 
             End If
@@ -506,7 +542,12 @@ Public Class frmSchema
 
                 For Each lrRDSColumn In lrRDSTable.Column
 
-                    Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & If(lrRDSColumn.DataType Is Nothing, "string", lrRDSColumn.DataType.DataType) & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
+                    Dim lsDataType As String = lrRDSColumn.DBDataType
+
+                    Dim lsDataTypeLengthPrecision As String = ""
+                    lsDataTypeLengthPrecision = $"({lrRDSColumn.getMetamodelDataTypeLength})"
+
+                    Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & lsDataType & lsDataTypeLengthPrecision & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
 
                     Dim lrNewPropertyTreeNode = New TreeNode(lsPropertyEmbellishment, 4, 4)
                     lrNewPropertyTreeNode.Tag = lrRDSColumn
@@ -615,6 +656,7 @@ Public Class frmSchema
 
         ' Define the drawing patterns and corresponding colors
         Dim patterns As New Dictionary(Of String, Color) From {
+            {"""[a-z]+\([0-9]+(?:,[0-9]+)?\)""", Color.SteelBlue},
             {"\([^\)]*\)", Color.Purple},     ' Text in parentheses in purple
             {"\[:[^\]]*\]", Color.DarkGreen}, ' Text between "[: " and "]" in dark green
             {"""[a-z]*"":", Color.Salmon},
@@ -637,22 +679,38 @@ Public Class frmSchema
 
         Dim lrRDSTable As RDS.Table = Me.TreeView.SelectedNode.Tag
 
-        Dim lrFBMModel As FBM.Model = lrRDSTable.Model.Model
+        Call Me.AddColumnToRDSTableForTreeNode(lrRDSTable, Me.TreeView.SelectedNode.Nodes(0)) 'Nodes(0) is 'Properties'.
 
-        Dim lrFBMValueType As New FBM.ValueType(lrRDSTable.Model.Model, pcenumLanguage.ORMModel, "New Property", True)
+    End Sub
 
-        Dim larFBMModelElement As New List(Of FBM.ModelObject)
-        larFBMModelElement.Add(lrRDSTable.FBMModelElement)
-        larFBMModelElement.Add(lrFBMValueType)
+    Private Sub AddColumnToRDSTableForTreeNode(ByRef arRDSTable As RDS.Table, aoTreeNode As TreeNode)
 
-        Dim lsNewFactTypeName = larFBMModelElement(0).Id & "Has" & larFBMModelElement(1).Id
-        Dim lrFBMFactType = lrRDSTable.Model.Model.CreateFactType(lsNewFactTypeName, larFBMModelElement, False, True, False, Nothing, True, Nothing, True, False)
+        Try
+            Dim lrFBMModel As FBM.Model = arRDSTable.Model.Model
 
-        Dim lrRDSColumn As New RDS.Column(lrRDSTable, "New Property", lrFBMFactType.RoleGroup(0), lrFBMFactType.RoleGroup(1), False)
+            Dim lrFBMValueType As New FBM.ValueType(arRDSTable.Model.Model, pcenumLanguage.ORMModel, "New Property", True)
 
-        Dim lrNewPropertyTreeNode = New TreeNode(lrFBMValueType.Name, 4, 4)
-        Me.TreeView.SelectedNode.Nodes(0).Nodes.Add(lrNewPropertyTreeNode)
-        Me.TreeView.SelectedNode.Nodes(0).Expand()
+            Dim larFBMModelElement As New List(Of FBM.ModelObject)
+            larFBMModelElement.Add(arRDSTable.FBMModelElement)
+            larFBMModelElement.Add(lrFBMValueType)
+
+            Dim lsNewFactTypeName = larFBMModelElement(0).Id & "Has" & larFBMModelElement(1).Id
+            Dim lrFBMFactType = arRDSTable.Model.Model.CreateFactType(lsNewFactTypeName, larFBMModelElement, False, True, False, Nothing, True, Nothing, True, False)
+
+            Dim lrRDSColumn As New RDS.Column(arRDSTable, "New Property", lrFBMFactType.RoleGroup(0), lrFBMFactType.RoleGroup(1), False)
+
+            Dim lrNewPropertyTreeNode = New TreeNode(lrFBMValueType.Name, 4, 4)
+            aoTreeNode.Nodes.Add(lrNewPropertyTreeNode)
+            aoTreeNode.Expand()
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
 
     End Sub
 
@@ -664,6 +722,8 @@ Public Class frmSchema
             Dim lrFBMModel As FBM.Model = lrRDSTable.Model.Model
 
             Dim lrFBMValueType As New FBM.ValueType(lrRDSTable.Model.Model, pcenumLanguage.ORMModel, "New Property", True)
+            lrFBMValueType.DataTypeLength = 50
+            lrFBMValueType.DataType = pcenumORMDataType.TextFixedLength
             'Add the Value Type to the Fact-Based Model.
             Call lrFBMModel.AddValueType(lrFBMValueType, True, False, Nothing, True)
 
@@ -685,8 +745,41 @@ Public Class frmSchema
 
 
             Dim lrRDSColumn As New RDS.Column(lrRDSTable, "New Property", lrFBMFactType.RoleGroup(0), lrFBMFactType.RoleGroup(1), False)
+            Dim lsDataType As String = lrRDSColumn.DBDataType
 
-            Dim lsPropertyEmbellishment = lrFBMValueType.Name & " { ""type"": """ & If(lrRDSColumn.DataType Is Nothing, "string", lrRDSColumn.DataType.DataType) & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
+#Region "Data Type Length/Precision"
+            Dim lsDataTypeLengthPrecision As String = ""
+
+            Select Case lrRDSColumn.getMetamodelDataType
+                Case pcenumORMDataType.NumericDecimal, pcenumORMDataType.NumericFloatCustomPrecision,
+                         pcenumORMDataType.NumericFloatDoublePrecision, pcenumORMDataType.NumericFloatSinglePrecision,
+                         pcenumORMDataType.NumericMoney
+                    ' Data types that require both length and precision
+                    lsDataTypeLengthPrecision = $"({lrRDSColumn.getMetamodelDataTypeLength},{lrRDSColumn.getMetamodelDataTypePrecision})"
+
+                Case pcenumORMDataType.Boolean, pcenumORMDataType.LogicalTrueFalse, pcenumORMDataType.LogicalYesNo,
+                         pcenumORMDataType.NumericAutoCounter, pcenumORMDataType.AutoUUID, pcenumORMDataType.NumericSignedBigInteger,
+                         pcenumORMDataType.NumericSignedInteger, pcenumORMDataType.NumericSignedSmallInteger,
+                         pcenumORMDataType.NumericUnsignedBigInteger, pcenumORMDataType.NumericUnsignedInteger,
+                         pcenumORMDataType.NumericUnsignedSmallInteger, pcenumORMDataType.NumericUnsignedTinyInteger,
+                         pcenumORMDataType.OtherObjectID, pcenumORMDataType.OtherRowID, pcenumORMDataType.RawDataFixedLength,
+                         pcenumORMDataType.RawDataLargeLength, pcenumORMDataType.RawDataOLEObject, pcenumORMDataType.RawDataPicture,
+                         pcenumORMDataType.RawDataVariableLength, pcenumORMDataType.TemporalAutoTimestamp,
+                         pcenumORMDataType.TemporalDate, pcenumORMDataType.TemporalDateAndTime, pcenumORMDataType.TemporalTime
+                    ' Data types that do not require length or precision specifications
+                    lsDataTypeLengthPrecision = ""
+
+                Case pcenumORMDataType.TextFixedLength, pcenumORMDataType.TextLargeLength, pcenumORMDataType.TextVariableLength
+                    ' Data types that require only length
+                    lsDataTypeLengthPrecision = $"({lrRDSColumn.getMetamodelDataTypeLength})"
+
+                Case Else
+                    ' Default or unknown data type
+                    lsDataTypeLengthPrecision = "<Data Type Not Set>"
+            End Select
+#End Region
+
+            Dim lsPropertyEmbellishment = lrFBMValueType.Name & " { ""type"": """ & lsDataType & lsDataTypeLengthPrecision & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
 
             Dim lrNewPropertyTreeNode = New TreeNode(lsPropertyEmbellishment, 4, 4)
             lrNewPropertyTreeNode.Tag = lrRDSColumn
@@ -1977,6 +2070,24 @@ Public Class frmSchema
             lfrmModelConfiguration.zrModel = lrRDSModel.Model
 
             lfrmModelConfiguration.Show(Me.DockPanel)
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
+
+    Private Sub ToolStripMenuItemRelationshipAddProperty_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItemRelationshipAddProperty.Click
+
+        Try
+            Dim lrRDSTable As RDS.Table = Me.TreeView.SelectedNode.Tag
+
+            Call Me.AddColumnToRDSTableForTreeNode(lrRDSTable, Me.TreeView.SelectedNode.Nodes(0)) 'Nodes(0) is 'Properties'.
 
         Catch ex As Exception
             Dim lsMessage As String

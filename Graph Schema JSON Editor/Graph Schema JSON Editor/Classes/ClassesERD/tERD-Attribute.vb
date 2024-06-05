@@ -88,11 +88,13 @@ Public Class ERDAttribute
                         Me._DBDataType = Nothing
                         Call Me.Column.SetDataType(Me.DataType)
 
-                        If Me.TreeNode IsNot Nothing Then
-                            Me.TreeNode.Text = Me.Column.Name & " { ""type"": """ & Me.Column.DBDataType & """, ""nullable"": """ & LCase(Me.Column.IsNullable.ToString) & """}"
-                            Me.TreeNode.TreeView.Refresh()
-                            Me.TreeNode.TreeView.Invalidate(Me.TreeNode.Bounds)
-                        End If
+                    Case Is = "DataTypeLength"
+
+                        Call Me.Column.SetDataTypeLength(Me.DataTypeLength)
+
+                    Case Is = "DataTypePrecision"
+
+                        Call Me.Column.SetDataTypePrecision(Me.DataTypePrecision)
 
                 End Select
             End If
@@ -102,7 +104,39 @@ Public Class ERDAttribute
                 Dim lrRDSColumn As RDS.Column = Me.Column
                 Dim lsDataType As String = lrRDSColumn.DBDataType
 
-                Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & If(lrRDSColumn.DataType Is Nothing, lsDataType, lrRDSColumn.DataType.DataType) & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
+#Region "Data Type Length/Precision"
+                Dim lsDataTypeLengthPrecision As String = ""
+
+                Select Case lrRDSColumn.getMetamodelDataType
+                    Case pcenumORMDataType.NumericDecimal, pcenumORMDataType.NumericFloatCustomPrecision,
+                         pcenumORMDataType.NumericFloatDoublePrecision, pcenumORMDataType.NumericFloatSinglePrecision,
+                         pcenumORMDataType.NumericMoney
+                        ' Data types that require both length and precision
+                        lsDataTypeLengthPrecision = $"({lrRDSColumn.getMetamodelDataTypeLength},{lrRDSColumn.getMetamodelDataTypePrecision})"
+
+                    Case pcenumORMDataType.Boolean, pcenumORMDataType.LogicalTrueFalse, pcenumORMDataType.LogicalYesNo,
+                         pcenumORMDataType.NumericAutoCounter, pcenumORMDataType.AutoUUID, pcenumORMDataType.NumericSignedBigInteger,
+                         pcenumORMDataType.NumericSignedInteger, pcenumORMDataType.NumericSignedSmallInteger,
+                         pcenumORMDataType.NumericUnsignedBigInteger, pcenumORMDataType.NumericUnsignedInteger,
+                         pcenumORMDataType.NumericUnsignedSmallInteger, pcenumORMDataType.NumericUnsignedTinyInteger,
+                         pcenumORMDataType.OtherObjectID, pcenumORMDataType.OtherRowID, pcenumORMDataType.RawDataFixedLength,
+                         pcenumORMDataType.RawDataLargeLength, pcenumORMDataType.RawDataOLEObject, pcenumORMDataType.RawDataPicture,
+                         pcenumORMDataType.RawDataVariableLength, pcenumORMDataType.TemporalAutoTimestamp,
+                         pcenumORMDataType.TemporalDate, pcenumORMDataType.TemporalDateAndTime, pcenumORMDataType.TemporalTime
+                        ' Data types that do not require length or precision specifications
+                        lsDataTypeLengthPrecision = ""
+
+                    Case pcenumORMDataType.TextFixedLength, pcenumORMDataType.TextLargeLength, pcenumORMDataType.TextVariableLength
+                        ' Data types that require only length
+                        lsDataTypeLengthPrecision = $"({lrRDSColumn.getMetamodelDataTypeLength})"
+
+                    Case Else
+                        ' Default or unknown data type
+                        lsDataTypeLengthPrecision = "<Data Type Not Set>"
+                End Select
+#End Region
+
+                Dim lsPropertyEmbellishment = lrRDSColumn.Name & " { ""type"": """ & lsDataType & lsDataTypeLengthPrecision & """, ""nullable"": """ & LCase(lrRDSColumn.IsNullable.ToString) & """}"
 
                 Me.TreeNode.Text = lsPropertyEmbellishment
 

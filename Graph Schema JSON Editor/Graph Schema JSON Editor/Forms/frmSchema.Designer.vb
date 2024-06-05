@@ -23,7 +23,7 @@ Partial Class frmSchema
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Schemas")
+        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Schemas")
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmSchema))
         Me.GroupBoxMain = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
@@ -120,9 +120,9 @@ Partial Class frmSchema
         Me.TreeView.LabelEdit = True
         Me.TreeView.Location = New System.Drawing.Point(3, 33)
         Me.TreeView.Name = "TreeView"
-        TreeNode2.Name = "Schemas"
-        TreeNode2.Text = "Schemas"
-        Me.TreeView.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode2})
+        TreeNode1.Name = "Schemas"
+        TreeNode1.Text = "Schemas"
+        Me.TreeView.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1})
         Me.TreeView.SelectedImageIndex = 0
         Me.TreeView.Size = New System.Drawing.Size(955, 445)
         Me.TreeView.TabIndex = 0
@@ -458,13 +458,14 @@ Partial Class frmSchema
         Me.ContextMenuStripRelationship.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.ContextMenuStripRelationship.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemRelationshipAddProperty})
         Me.ContextMenuStripRelationship.Name = "ContextMenuStripRelationship"
-        Me.ContextMenuStripRelationship.Size = New System.Drawing.Size(149, 30)
+        Me.ContextMenuStripRelationship.Size = New System.Drawing.Size(185, 50)
         '
         'ToolStripMenuItemRelationshipAddProperty
         '
         Me.ToolStripMenuItemRelationshipAddProperty.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.AddAttribute16x16
+        Me.ToolStripMenuItemRelationshipAddProperty.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.ToolStripMenuItemRelationshipAddProperty.Name = "ToolStripMenuItemRelationshipAddProperty"
-        Me.ToolStripMenuItemRelationshipAddProperty.Size = New System.Drawing.Size(148, 26)
+        Me.ToolStripMenuItemRelationshipAddProperty.Size = New System.Drawing.Size(184, 24)
         Me.ToolStripMenuItemRelationshipAddProperty.Text = "&Add Property"
         '
         'ContextMenuStripProperties
