@@ -1,3 +1,4 @@
+**Versioning/Release**
 v0.9 Pre-Release
 
 # Graph-Schema-JSON-Editor
