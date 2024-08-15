@@ -509,7 +509,9 @@ Public Class frmSchema
     ''' <summary>
     ''' Add Relationship to Schema
     ''' </summary>
-    Private Sub AddRelationshipToTreeView(ByRef arSchemaTreeNode As TreeNode, ByRef arFBMFactType As FBM.FactType)
+    Private Sub AddRelationshipToTreeView(ByRef arSchemaTreeNode As TreeNode,
+                                          ByRef arFBMFactType As FBM.FactType,
+                                          ByRef arRDSRelation As RDS.Relation)
 
         Try
             Dim lrFBMFactType As FBM.FactType = arFBMFactType
@@ -528,7 +530,7 @@ Public Class frmSchema
                 Dim lsGraphLabel = lrGraphLabel.Label
 
                 Dim loRelationshipTreeNode As New TreeNode($"({lsFromModelElementName})-[:{lsGraphLabel}]->({lsToModelElementName})", 2, 2)
-                loRelationshipTreeNode.Tag = arFBMFactType
+                loRelationshipTreeNode.Tag = arRDSRelation
 
                 loTreeNode.Nodes.Add(loRelationshipTreeNode)
 
@@ -1056,6 +1058,36 @@ Public Class frmSchema
                                   pcenumSchemaTreeMenuType.Properties
                             Me.TreeView.SelectedNode.Expand()
                     End Select
+                Case Is = GetType(RDS.Relation)
+#Region "RDS Relation"
+                    Dim lrRDSRelation As RDS.Relation = Me.TreeView.SelectedNode.Tag
+
+                    '=============================================================
+                    'Properties Grid
+#Region "Properties Grid"
+                    Dim lrERDRelation As New ERDRelationship
+
+                    lrERDRelation.Model = lrRDSRelation.Model.Model
+                    lrERDRelation.RDSRelation = lrRDSRelation
+                    lrERDRelation.TreeNode = Me.TreeView.SelectedNode
+
+                    If lrRDSRelation.ResponsibleFactType.isRDSTable Then
+                        lrERDRelation.ModelElement = lrRDSRelation.ResponsibleFactType.getCorrespondingRDSTable
+                    Else
+                        lrERDRelation.ModelElement = lrRDSRelation
+                    End If
+
+                    Dim lfrmPropertiesGrid As New frmToolboxProperties
+                    lfrmPropertiesGrid = frmMain.GetToolboxForm(lfrmPropertiesGrid.Name)
+
+                    If lfrmPropertiesGrid IsNot Nothing Then
+                        Dim loMiscFilterAttribute As Attribute = New System.ComponentModel.CategoryAttribute("Misc")
+                        lfrmPropertiesGrid.PropertyGrid.HiddenAttributes = New System.ComponentModel.AttributeCollection(New System.Attribute() {loMiscFilterAttribute})
+
+                        lfrmPropertiesGrid.SetSelectedObject(lrERDRelation)
+                    End If
+#End Region
+#End Region
 
             End Select
 
@@ -1404,7 +1436,18 @@ Public Class frmSchema
 
             For Each lrPGSRelationshipNodeFactType In arFBMModel.FactType.FindAll(Function(x) x.IsCandidatePGSRelationshipNode)
 
-                Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrPGSRelationshipNodeFactType)
+                Dim larFactType = {lrPGSRelationshipNodeFactType.Id}
+
+                For Each lrLinkFactType In lrPGSRelationshipNodeFactType.getLinkFactTypes
+                    larFactType.Add(lrLinkFactType.Id)
+                Next
+
+                Dim larRDSRelationship = From Relationship In arFBMModel.RDS.Relation
+                                         Where larFactType.Contains(Relationship.ResponsibleFactType.Id)
+                                         Select Relationship
+
+                Dim lrRDSRelationship = larRDSRelationship.First
+                Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrPGSRelationshipNodeFactType, lrRDSRelationship)
 
             Next
 

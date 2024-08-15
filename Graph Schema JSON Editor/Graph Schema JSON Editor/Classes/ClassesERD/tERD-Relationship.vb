@@ -109,6 +109,11 @@ Public Class ERDRelationship
         End Set
     End Property
 
+    ''' <summary>
+    ''' Parameterless Constructor.
+    ''' </summary>
+    Public Sub New()
+    End Sub
 
     ''' <summary>
     ''' Object constructor.
@@ -166,6 +171,8 @@ Public Class ERDRelationship
                             Optional ByVal asSelectedGridItemLabel As String = "")
 
         Try
+            Dim lrResponsibleFactType As FBM.FactType = Nothing 'The FactType responsible for the EdgeType/Relationship.
+
             '------------------------------------------------
             'Set the values in the underlying RDS.Relation
             '------------------------------------------------
@@ -183,7 +190,19 @@ Public Class ERDRelationship
                         'GraphLabel processing.
                         Select Case Me.ModelElement.GetType
                             Case Is = GetType(RDS.Relation)
-                                Call Me.RDSRelation.ResponsibleFactType.ModifyorAddGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
+
+                                lrResponsibleFactType = Me.RDSRelation.ResponsibleFactType
+
+                                If Me.RDSRelation.ResponsibleFactType.IsLinkFactType Then
+
+                                    Dim lrObjectifyingFactType = (From FactType In Me.Model.FactType
+                                                                  Where FactType.getLinkFactTypes.Contains(Me.RDSRelation.ResponsibleFactType)
+                                                                  Select FactType).First
+
+                                    lrResponsibleFactType = lrObjectifyingFactType
+                                End If
+
+                                Call lrResponsibleFactType.ModifyorAddGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
                             Case Is = GetType(RDS.Table)
                                 Call Me.RDSTable.FBMModelElement.ModifyorAddGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
                         End Select
@@ -212,7 +231,6 @@ Public Class ERDRelationship
             'Removing an item using the UITypeEditor does not trigger a return of aoChangedPropertyItem (As PropertyValueChangedEventArgs).
             '  So we must check each time (back here) whether there is an item to remove from the GraphLabels list for the [ModelElement]Instance.
             Dim lrDataStore As New DataStore.Store
-            Dim lrResponsibleFactType As FBM.FactType = Nothing 'The FactType responsible for the EdgeType/Relationship.
 
             Select Case Me.ModelElement.GetType
                 Case Is = GetType(RDS.Relation)
@@ -244,8 +262,23 @@ Public Class ERDRelationship
 
                 Select Case Me.ModelElement.GetType
                     Case Is = GetType(RDS.Relation)
-                        lrOriginTable = Me.RDSRelation.OriginTable
-                        lrDestinationTable = Me.RDSRelation.DestinationTable
+                        If Me.RDSRelation.ResponsibleFactType.IsLinkFactType Then
+
+                            Dim lrObjectifyingFactType = (From FactType In Me.Model.FactType
+                                                          Where FactType.getLinkFactTypes.Contains(Me.RDSRelation.ResponsibleFactType)
+                                                          Select FactType).First
+
+                            lrResponsibleFactType = lrObjectifyingFactType
+
+                            Dim larRelationshipRole = (From Role In lrObjectifyingFactType.RoleGroup.FindAll(Function(x) x.JoinsValueType Is Nothing)
+                                                       Select Role).ToList
+
+                            lrOriginTable = larRelationshipRole(0).JoinedORMObject.getCorrespondingRDSTable
+                            lrDestinationTable = larRelationshipRole(1).JoinedORMObject.getCorrespondingRDSTable
+                        Else
+                            lrOriginTable = Me.RDSRelation.OriginTable
+                            lrDestinationTable = Me.RDSRelation.DestinationTable
+                        End If
                     Case Is = GetType(RDS.Table)
                         Dim larRDSTable = From Column In Me.RDSTable.Column
                                           Where Column.Relation.Count <> 0

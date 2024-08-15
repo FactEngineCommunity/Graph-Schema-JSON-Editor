@@ -224,6 +224,11 @@ JSON Graph Schema Editor
  </summary>
  <returns></returns>
 </member>
+<member name="M:JSON_Graph_Schema_Editor.ERDRelationship.#ctor">
+ <summary>
+ Parameterless Constructor.
+ </summary>
+</member>
 <member name="M:JSON_Graph_Schema_Editor.ERDRelationship.#ctor(FactEngineForServices.FBM.Model@,FactEngineForServices.FBM.Page@,System.String,FactEngineForServices.FBM.FactDataInstance@,FactEngineForServices.publicCMML.pcenumCMMLMultiplicity,System.Boolean,System.Boolean,FactEngineForServices.FBM.FactDataInstance@,FactEngineForServices.publicCMML.pcenumCMMLMultiplicity,System.Boolean,FactEngineForServices.RDS.Table@,FactEngineForServices.RDS.Relation@)">
  <summary>
  Object constructor.
@@ -382,7 +387,7 @@ JSON Graph Schema Editor
  Add Relationship to Schema
  </summary>
 </member>
-<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddRelationshipToTreeView(System.Windows.Forms.TreeNode@,FactEngineForServices.FBM.FactType@)">
+<member name="M:JSON_Graph_Schema_Editor.frmSchema.AddRelationshipToTreeView(System.Windows.Forms.TreeNode@,FactEngineForServices.FBM.FactType@,FactEngineForServices.RDS.Relation@)">
  <summary>
  Add Relationship to Schema
  </summary>
