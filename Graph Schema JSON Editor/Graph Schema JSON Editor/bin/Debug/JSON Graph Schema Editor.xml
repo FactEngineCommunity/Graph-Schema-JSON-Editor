@@ -246,6 +246,98 @@ JSON Graph Schema Editor
  <param name="arCorrespondingRDSTable">If the Relation is a (FEFS) PGSRelation, then has a corresponding Table.</param>
  <param name="arCorrespondingRDSRelation">If the Relationship is a RDS.Relation(ship) (Foreign Key), then the RDS.Relation.</param>
 </member>
+<member name="F:JSON_Graph_Schema_Editor.XMLModel16.JoinPath._RolePath">
+ <summary>
+ The set of Roles traversed in order to form the JoinPath.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="T:JSON_Graph_Schema_Editor.XMLModel16.Model">
+ <summary>    
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.XMLModel16.Model.MapFromFBMModel(FactEngineForServices.FBM.Model)">
+ <summary>
+ Maps an instance of FBM.Model to this class.
+ </summary>
+ <param name="arFBMModel">The model being mapped.</param>
+ <remarks></remarks>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.XMLModel16.Model.MapToFBMModel(FactEngineForServices.FBM.Model@)">
+ <summary>
+ Maps an instance of this class to an instance of FBM.Model
+ </summary>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.XMLModel16.Model.GetFactTypeDetails(FactEngineForServices.FBM.FactType@)">
+ <summary>
+ Gets the details of a FBM.FactType from the XMLModel.FactType in the Model (me)
+ </summary>
+ <param name="arFactType">The FactType for which the details are being retrieved</param>
+ <remarks></remarks>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.XMLModel16.ORMModel.#ctor">
+ <summary>
+ Parameterless Constructor
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:JSON_Graph_Schema_Editor.XMLModel.JoinPath._RolePath">
+ <summary>
+ The set of Roles traversed in order to form the JoinPath.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="T:JSON_Graph_Schema_Editor.XMLModel.Model">
+ <summary>
+ v1.3 Adds the GUID field to the ValueType, FactType and RoleConstraint classes.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.XMLModel.Model.MapFromFBMModel(FactEngineForServices.FBM.Model,System.Boolean)">
+ <summary>
+ Maps an instance of FBM.Model to this class.
+ </summary>
+ <param name="arFBMModel">The model being mapped.</param>
+ <remarks></remarks>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.XMLModel.Model.MapToFBMModel(FactEngineForServices.FBM.Model@,System.ComponentModel.BackgroundWorker@,System.Boolean)">
+ <summary>
+ Maps an instance of this class to an instance of FBM.Model
+ </summary>
+ <param name="arModel">The FBM Model to map to.</param>
+ <param name="aoBackgroundWorker">For reporting progress. Start at 60%.</param>
+ <param name="abSkipAlreadyLoadedModelElements">True if to test whether ModelElements have already been loaded.</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.XMLModel.Model.MapToFBMPages(FactEngineForServices.FBM.Model@,System.ComponentModel.BackgroundWorker@)">
+ <summary>
+ 
+ </summary>
+ <param name="arModel"></param>
+ <param name="aoBackgroundWorker"></param>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.XMLModel.Model.GetFactTypeDetails(FactEngineForServices.FBM.FactType@,JSON_Graph_Schema_Editor.XMLModel.FactType@)">
+ <summary>
+ Gets the details of a FBM.FactType from the XMLModel.FactType in the Model (me)
+ </summary>
+ <param name="arFactType">The FactType for which the details are being retrieved</param>
+ <remarks></remarks>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.XMLModel.ORMModel.#ctor">
+ <summary>
+ Parameterless Constructor
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:JSON_Graph_Schema_Editor.XMLModel.Synonym.#ctor">
+ <summary>
+ Parameterless Costructor
+ </summary>
+</member>
 <member name="M:JSON_Graph_Schema_Editor.GSJ.GraphSchema.#ctor">
  <summary>
  Parameterless Constructor

@@ -2143,4 +2143,121 @@ Public Class frmSchema
 
     End Sub
 
+    Private Sub AsfbmFactBasedModelingFileInXMLToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AsfbmFactBasedModelingFileInXMLToolStripMenuItem.Click
+
+        Dim lsFolderLocation As String = ""
+        Dim lsFileName As String = ""
+        Dim loStreamWriter As StreamWriter ' Create file by FileStream class
+        Dim loXMLSerialiser As XmlSerializer ' Create binary object
+        Dim lrModel As FBM.Model
+        Dim lrExportModel As New XMLModel.Model
+
+        Try
+            '-----------------------------------------
+            'Get the Model from the selected TreeNode
+            '-----------------------------------------
+            lrModel = Me.TreeView.SelectedNode.Tag.Model
+            If Not lrModel.Loaded Then
+                Call Me.DoModelLoading(lrModel)
+                prApplication.WorkingModel = lrModel
+            End If
+
+            lrExportModel.ORMModel.ModelId = lrModel.ModelId
+            lrExportModel.ORMModel.Name = lrModel.Name
+
+            If pbExportFBMExcludeMDAModelElements Then
+                If MsgBox("Important: Your configuration settings will only allow the export of Object-Role Models. Are you happy to proceed?", MsgBoxStyle.YesNoCancel) <> MsgBoxResult.Yes Then
+                    Exit Sub
+                End If
+            End If
+
+            If Not lrExportModel.MapFromFBMModel(lrModel, pbExportFBMExcludeMDAModelElements) Then
+                MsgBox("Fix the model errors, then try again.")
+                Exit Sub
+            End If
+
+            Dim lsFileLocationName As String = ""
+            If FactEngineForServices.IsSerializable(lrExportModel) Then
+
+                Dim lrSaveFileDialog As New SaveFileDialog()
+
+                lsFileName = lrModel.Name & ".fbm"
+                lsFileLocationName = lsFileName
+
+                lrSaveFileDialog.Filter = "Fact-Based Model file (*.fbm)|*.fbm"
+                lrSaveFileDialog.FilterIndex = 0
+                lrSaveFileDialog.RestoreDirectory = True
+                lrSaveFileDialog.FileName = lsFileLocationName
+
+                If lrSaveFileDialog.ShowDialog() = DialogResult.OK Then
+                    lsFileLocationName = lrSaveFileDialog.FileName
+                Else
+                    Exit Sub
+                End If
+
+                'If DialogFolderBrowser.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                '    lsFolderLocation = DialogFolderBrowser.SelectedPath
+                'Else
+                '    Exit Sub
+                'End If
+
+
+                loStreamWriter = New StreamWriter(lsFileLocationName) 'lsFolderLocation & "\" & lsFileName)
+
+                'loXMLSerialiser = New XmlSerializer(GetType(FBM.tORMModel))
+                loXMLSerialiser = New XmlSerializer(GetType(XMLModel.Model))
+
+                'Serialize object to file
+                loXMLSerialiser.Serialize(loStreamWriter, lrExportModel)
+                loStreamWriter.Close()
+
+                Dim lsMessage As String = ""
+                lsMessage = "Your file is ready for viewing."
+
+                ShowFlashCard(lsMessage, Color.FromArgb(208, 231, 210))
+
+            End If 'IsSerialisable
+
+        Catch ex As Exception
+            Dim lsMessage As String = ""
+            lsMessage = "Error: frnToolboxEnterpriseTree.ExportToORMCMMLToolStripMenuItem: " & vbCrLf & vbCrLf & ex.Message
+            Call prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+
+        End Try
+
+    End Sub
+
+    Private Sub DoModelLoading(ByRef arModel As FBM.Model)
+
+        Try
+            '==============================================================================================
+
+            '------------------------------
+            'Load the Model and the Pages
+            '------------------------------                                
+            If TableModel.ExistsModelById(arModel.ModelId) And Not arModel.Loaded Then
+                Call TableModel.GetModelDetails(arModel)
+
+                Me.Cursor = Cursors.WaitCursor
+
+                Dim lrReturnModel = arModel.Load(True, pbModelLoadPagesUseThreading, poBackgroundWorkerModelLoader)
+
+                If lrReturnModel IsNot arModel Then
+                    arModel = lrReturnModel
+                End If
+
+                Me.Cursor = Cursors.Default
+
+            End If
+
+        Catch ex As Exception
+            Dim lsMessage As String
+            Dim mb As MethodBase = MethodInfo.GetCurrentMethod()
+
+            lsMessage = "Error: " & mb.ReflectedType.Name & "." & mb.Name
+            lsMessage &= vbCrLf & vbCrLf & ex.Message
+            prApplication.ThrowErrorMessage(lsMessage, pcenumErrorType.Critical, ex.StackTrace,,)
+        End Try
+
+    End Sub
 End Class
