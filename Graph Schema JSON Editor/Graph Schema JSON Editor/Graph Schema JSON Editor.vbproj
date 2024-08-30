@@ -50,6 +50,9 @@
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>GraphSchemaJSONIcon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CsvHelper, Version=32.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.32.0.1\lib\net48\CsvHelper.dll</HintPath>
@@ -484,6 +487,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\MenuImages\Cog16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="GraphSchemaJSONIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

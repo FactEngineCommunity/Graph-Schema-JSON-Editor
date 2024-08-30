@@ -1087,6 +1087,29 @@ Public Class frmSchema
                         lfrmPropertiesGrid.SetSelectedObject(lrERDRelation)
                     End If
 #End Region
+
+                    '=============================================================
+                    'FactType Reading Editor
+#Region "FactType Reading Editor" 'Object-Role Modeling View
+
+                    Dim lfrmFactTypeReadingEditor As New frmToolboxORMReadingEditor
+                    lfrmFactTypeReadingEditor = frmMain.ToolboxForms.Find(AddressOf lfrmFactTypeReadingEditor.EqualsByName)
+
+                    If lfrmFactTypeReadingEditor IsNot Nothing Then
+
+                        lfrmFactTypeReadingEditor.zrFactType = lrRDSRelation.ResponsibleFactType
+
+                        Dim lrFactTypeInstance = New FBM.FactTypeInstance
+                        lrFactTypeInstance.FactType = lrRDSRelation.ResponsibleFactType
+                        lrFactTypeInstance.Model = lrRDSRelation.Model.Model
+                        lfrmFactTypeReadingEditor.zrFactTypeInstance = lrFactTypeInstance
+
+                        Call lfrmFactTypeReadingEditor.SetupForm()
+
+                    End If
+#End Region
+
+
 #End Region
 
             End Select
