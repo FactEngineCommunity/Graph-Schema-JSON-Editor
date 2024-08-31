@@ -1073,6 +1073,7 @@ Public Class frmSchema
 
                     If lrRDSRelation.ResponsibleFactType.isRDSTable Then
                         lrERDRelation.ModelElement = lrRDSRelation.ResponsibleFactType.getCorrespondingRDSTable
+                        lrERDRelation.RDSTable = lrERDRelation.ModelElement
                     Else
                         lrERDRelation.ModelElement = lrRDSRelation
                     End If
@@ -1109,6 +1110,7 @@ Public Class frmSchema
                     End If
 #End Region
 
+                    Me.Application.setWorkingModel(lrRDSRelation.Model.Model)
 
 #End Region
 
@@ -1409,7 +1411,9 @@ Public Class frmSchema
                     pbReverseEngineeringKeepDatabaseColumnNames = True
 
                     Dim lsErrorMessage As String = ""
-                    Call lrReverseEngineerTool.ReverseEngineerDatabase(lsErrorMessage)
+                    With New WaitCursor
+                        Call lrReverseEngineerTool.ReverseEngineerDatabase(lsErrorMessage)
+                    End With
 
                     Call Me.AddSchemaByFBMModel(lrFBMModel)
 
@@ -1454,7 +1458,9 @@ Public Class frmSchema
             Next
 
             For Each lrRDSRelationship In arFBMModel.RDS.Relation.FindAll(Function(x) Not x.ResponsibleFactType.IsLinkFactType Or Not (x.ResponsibleFactType.IsLinkFactType AndAlso x.ResponsibleFactType.LinkFactTypeRole.FactType.IsCandidatePGSRelationshipNode)).OrderBy(Function(x) x.OriginTable.Name)
-                Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrRDSRelationship)
+                If Not lrRDSRelationship.ResponsibleFactType.IsCandidatePGSRelationshipNode Then
+                    Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrRDSRelationship)
+                End If
             Next
 
             For Each lrPGSRelationshipNodeFactType In arFBMModel.FactType.FindAll(Function(x) x.IsCandidatePGSRelationshipNode)
@@ -2283,4 +2289,15 @@ Public Class frmSchema
         End Try
 
     End Sub
+
+    Private Sub Application_WorkingModelMadeDirty() Handles Application.WorkingModelMadeDirty
+
+        Me.ToolStripButtonSave.Enabled = False
+
+        If Me.Application.WorkingModel IsNot Nothing AndAlso Me.Application.WorkingModel.IsDirty Then
+            Me.ToolStripButtonSave.Enabled = True
+        End If
+
+    End Sub
+
 End Class

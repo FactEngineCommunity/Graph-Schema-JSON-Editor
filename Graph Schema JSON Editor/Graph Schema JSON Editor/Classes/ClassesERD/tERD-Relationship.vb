@@ -193,14 +193,14 @@ Public Class ERDRelationship
 
                                 lrResponsibleFactType = Me.RDSRelation.ResponsibleFactType
 
-                                If Me.RDSRelation.ResponsibleFactType.IsLinkFactType Then
+                                'If Me.RDSRelation.ResponsibleFactType.IsLinkFactType Then
 
-                                    Dim lrObjectifyingFactType = (From FactType In Me.Model.FactType
-                                                                  Where FactType.getLinkFactTypes.Contains(Me.RDSRelation.ResponsibleFactType)
-                                                                  Select FactType).First
+                                '    Dim lrObjectifyingFactType = (From FactType In Me.Model.FactType
+                                '                                  Where FactType.getLinkFactTypes.Contains(Me.RDSRelation.ResponsibleFactType)
+                                '                                  Select FactType).First
 
-                                    lrResponsibleFactType = lrObjectifyingFactType
-                                End If
+                                '    lrResponsibleFactType = lrObjectifyingFactType
+                                'End If
 
                                 Call lrResponsibleFactType.ModifyorAddGraphLabel(aoChangedPropertyItem.OldValue, aoChangedPropertyItem.ChangedItem.Value.ToString)
                             Case Is = GetType(RDS.Table)
@@ -268,7 +268,7 @@ Public Class ERDRelationship
                                                           Where FactType.getLinkFactTypes.Contains(Me.RDSRelation.ResponsibleFactType)
                                                           Select FactType).First
 
-                            lrResponsibleFactType = lrObjectifyingFactType
+                            'lrResponsibleFactType = lrObjectifyingFactType 'Keep LinkFactType
 
                             Dim larRelationshipRole = (From Role In lrObjectifyingFactType.RoleGroup.FindAll(Function(x) x.JoinsValueType Is Nothing)
                                                        Select Role).ToList

@@ -2045,6 +2045,13 @@ Walks the ParseTree and finds the tokens as per the Properties/Fields of the ao_
  </summary>
  <remarks></remarks>
 </member>
+<member name="M:FactEngineForServices.FBM.Model.generateRDSRelationForPGSRelationNode(FactEngineForServices.FBM.FactType@,System.Boolean)">
+ <summary>
+ Creates an RDS.Relation for PGSRelationNodes (for appropriate FactTypes).
+ PRECONDITION: The Fact Type is a Candidate for PGSRelationNodes.
+ </summary>
+ <param name="arResponsibleFactType"></param>
+</member>
 <member name="M:FactEngineForServices.FBM.Model.removeColumnsIndexColumnsForRole(FactEngineForServices.FBM.Role@)">
  <summary>
  PRECONDITION: The Role hasn't already been removed from the FactType.
@@ -5388,6 +5395,15 @@ Walks the ParseTree and finds the tokens as per the Properties/Fields of the ao_
  <summary>
  this will be thie dispose method, this will be used to free up resources from memory
  </summary>
+</member>
+<member name="M:FactEngineForServices.MyMethodExtensions.Between(System.Int32,System.Int32,System.Int32)">
+ <summary>
+ Integer BETWEEN
+ </summary>
+ <param name="value"></param>
+ <param name="min"></param>
+ <param name="max"></param>
+ <returns></returns>
 </member>
 <member name="M:FactEngineForServices.MyMethodExtensions.Add``1(``0[]@,``0)">
  <summary>

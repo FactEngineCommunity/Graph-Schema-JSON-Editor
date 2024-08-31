@@ -167,7 +167,9 @@ Public Class frmToolboxORMReadingEditor
 
     Private Sub frm_orm_reading_editor_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
 
-        Me.zrTextHighlighter.Dispose()
+        If Me.zrTextHighlighter IsNot Nothing Then
+            Me.zrTextHighlighter.Dispose()
+        End If
 
     End Sub
 
