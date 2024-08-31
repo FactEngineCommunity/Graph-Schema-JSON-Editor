@@ -153,6 +153,11 @@ Public Class frmSchema
 
                                 ContextMenuStripProperty.Show(TreeView, e.Location)
 
+                            Case Is = GetType(RDS.Relation)
+
+                                Me.TreeView.SelectedNode = nodeAtMousePosition
+                                ContextMenuStripRelationship.Show(TreeView, e.Location)
+
                             Case Is = GetType(tSchemaTreeMenuType)
 
                                 Select Case CType(TreeView.SelectedNode.Tag, tSchemaTreeMenuType).MenuType
@@ -1463,20 +1468,9 @@ Public Class frmSchema
                 End If
             Next
 
-            For Each lrPGSRelationshipNodeFactType In arFBMModel.FactType.FindAll(Function(x) x.IsCandidatePGSRelationshipNode)
+            For Each lrRDSRelationship In arFBMModel.RDS.Relation.FindAll(Function(x) x.ResponsibleFactType.IsCandidatePGSRelationshipNode)
 
-                Dim larFactType = {lrPGSRelationshipNodeFactType.Id}
-
-                For Each lrLinkFactType In lrPGSRelationshipNodeFactType.getLinkFactTypes
-                    larFactType.Add(lrLinkFactType.Id)
-                Next
-
-                Dim larRDSRelationship = From Relationship In arFBMModel.RDS.Relation
-                                         Where larFactType.Contains(Relationship.ResponsibleFactType.Id)
-                                         Select Relationship
-
-                Dim lrRDSRelationship = larRDSRelationship.First
-                Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrPGSRelationshipNodeFactType, lrRDSRelationship)
+                Call Me.AddRelationshipToTreeView(loSchemaTreeNode, lrRDSRelationship.ResponsibleFactType, lrRDSRelationship)
 
             Next
 
@@ -2297,6 +2291,40 @@ Public Class frmSchema
         If Me.Application.WorkingModel IsNot Nothing AndAlso Me.Application.WorkingModel.IsDirty Then
             Me.ToolStripButtonSave.Enabled = True
         End If
+
+    End Sub
+
+    Private Sub PropertiesToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles PropertiesToolStripMenuItem1.Click
+
+        Dim lrRDSRelation As RDS.Relation = Me.TreeView.SelectedNode.Tag
+
+        '=============================================================
+        'Properties Grid
+#Region "Properties Grid"
+        Dim lrERDRelation As New ERDRelationship
+
+        lrERDRelation.Model = lrRDSRelation.Model.Model
+        lrERDRelation.RDSRelation = lrRDSRelation
+        lrERDRelation.TreeNode = Me.TreeView.SelectedNode
+
+        If lrRDSRelation.ResponsibleFactType.isRDSTable Then
+            lrERDRelation.ModelElement = lrRDSRelation.ResponsibleFactType.getCorrespondingRDSTable
+            lrERDRelation.RDSTable = lrERDRelation.ModelElement
+        Else
+            lrERDRelation.ModelElement = lrRDSRelation
+        End If
+
+        Dim lfrmPropertiesGrid As New frmToolboxProperties
+        lfrmPropertiesGrid = frmMain.loadPropertiesGrid()
+
+        If lfrmPropertiesGrid IsNot Nothing Then
+            Dim loMiscFilterAttribute As Attribute = New System.ComponentModel.CategoryAttribute("Misc")
+            lfrmPropertiesGrid.PropertyGrid.HiddenAttributes = New System.ComponentModel.AttributeCollection(New System.Attribute() {loMiscFilterAttribute})
+
+            lfrmPropertiesGrid.SetSelectedObject(lrERDRelation)
+        End If
+#End Region
+
 
     End Sub
 

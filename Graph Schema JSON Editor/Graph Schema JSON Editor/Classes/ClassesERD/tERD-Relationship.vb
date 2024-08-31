@@ -83,6 +83,31 @@ Public Class ERDRelationship
         End Set
     End Property
 
+    <Browsable(True),
+     Description("Connected Node Type."),
+     Category("Relationship"),
+     DefaultValue("HAS"),
+     DisplayName("Node Type (A)")>
+    Public ReadOnly Property NodeTypeA As String
+        Get
+            If Me.RDSTable IsNot Nothing Then
+
+                Dim larRelation = From Relation In Me.Model.RDS.Relation
+                                  Where Relation.ResponsibleFactType Is Me.RDSTable.FBMModelElement
+                                  Select Relation
+
+                Return larRelation(0).OriginTable.Name
+
+            ElseIf Me.RDSRelation IsNot Nothing Then
+                Return Me.RDSRelation.OriginTable.Name
+            Else
+                Return "<Error>"
+            End If
+        End Get
+    End Property
+
+
+
     Private _RelationshipType As String = "HAS" 'Relationship Type as in Property Graph Schema RT...e.g. (Person)-[:LIKES]->(Film). HAS, IS_FOR, IS_IN etc
 
     <Browsable(True),
@@ -95,6 +120,8 @@ Public Class ERDRelationship
             'Code Safe
             If Me._GraphLabel.Count = 0 Then
                 Me._GraphLabel.Add("HAS")
+            Else
+                Return Me._GraphLabel(0)
             End If
 
             Return Me._GraphLabel(0)
@@ -107,6 +134,29 @@ Public Class ERDRelationship
                 Me._GraphLabel(0) = value 'Relationship Types are singular in Property Graph Schemas, as opposed Node Types that can have multiple Labels.
             End If
         End Set
+    End Property
+
+    <Browsable(True),
+     Description("Connected Node Type."),
+     Category("Relationship"),
+     DefaultValue("HAS"),
+     DisplayName("Node Type (B)")>
+    Public ReadOnly Property NodeTypeB As String
+        Get
+            If Me.RDSTable IsNot Nothing Then
+
+                Dim larRelation = From Relation In Me.Model.RDS.Relation
+                                  Where Relation.ResponsibleFactType Is Me.RDSTable.FBMModelElement
+                                  Select Relation
+
+                Return larRelation(0).DestinationTable.Name
+
+            ElseIf Me.RDSRelation IsNot Nothing Then
+                Return Me.RDSRelation.DestinationTable.Name
+            Else
+                Return "<Error>"
+            End If
+        End Get
     End Property
 
     ''' <summary>
@@ -264,17 +314,17 @@ Public Class ERDRelationship
                     Case Is = GetType(RDS.Relation)
                         If Me.RDSRelation.ResponsibleFactType.IsLinkFactType Then
 
-                            Dim lrObjectifyingFactType = (From FactType In Me.Model.FactType
-                                                          Where FactType.getLinkFactTypes.Contains(Me.RDSRelation.ResponsibleFactType)
-                                                          Select FactType).First
+                            'Dim lrObjectifyingFactType = (From FactType In Me.Model.FactType
+                            '                              Where FactType.getLinkFactTypes.Contains(Me.RDSRelation.ResponsibleFactType)
+                            '                              Select FactType).First
 
-                            'lrResponsibleFactType = lrObjectifyingFactType 'Keep LinkFactType
+                            ''lrResponsibleFactType = lrObjectifyingFactType 'Keep LinkFactType
 
-                            Dim larRelationshipRole = (From Role In lrObjectifyingFactType.RoleGroup.FindAll(Function(x) x.JoinsValueType Is Nothing)
-                                                       Select Role).ToList
+                            'Dim larRelationshipRole = (From Role In lrObjectifyingFactType.RoleGroup.FindAll(Function(x) x.JoinsValueType Is Nothing)
+                            '                           Select Role).ToList
 
-                            lrOriginTable = larRelationshipRole(0).JoinedORMObject.getCorrespondingRDSTable
-                            lrDestinationTable = larRelationshipRole(1).JoinedORMObject.getCorrespondingRDSTable
+                            lrOriginTable = Me.RDSRelation.OriginTable 'larRelationshipRole(0).JoinedORMObject.getCorrespondingRDSTable
+                            lrDestinationTable = Me.RDSRelation.DestinationTable 'larRelationshipRole(1).JoinedORMObject.getCorrespondingRDSTable
                         Else
                             lrOriginTable = Me.RDSRelation.OriginTable
                             lrDestinationTable = Me.RDSRelation.DestinationTable

@@ -193,6 +193,27 @@ Public Class frmMain
 
     End Sub
 
+    Public Function loadPropertiesGrid() As frmToolboxProperties
+
+        Dim lfrmToolboxProperties As New frmToolboxProperties
+
+        lfrmToolboxProperties = Me.GetToolboxForm(lfrmToolboxProperties.Name)
+
+        If lfrmToolboxProperties Is Nothing Then
+
+            lfrmToolboxProperties = New frmToolboxProperties
+
+            lfrmToolboxProperties.Show(Me.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.DockRight)
+
+            Me.RightToolboxForms.AddUnique(lfrmToolboxProperties)
+        Else
+            lfrmToolboxProperties.BringToFront()
+        End If
+
+        Return lfrmToolboxProperties
+
+    End Function
+
     Private Sub FactTypeReadingEditorToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FactTypeReadingEditorToolStripMenuItem.Click
 
         Try

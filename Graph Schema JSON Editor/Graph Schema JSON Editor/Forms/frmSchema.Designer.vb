@@ -53,6 +53,7 @@ Partial Class frmSchema
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.EportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AsJSONGraphSchemaToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AsfbmFactBasedModelingFileInXMLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeleteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.ConfigurationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -73,7 +74,7 @@ Partial Class frmSchema
         Me.ToolStripMenuItemRelationshipAddProperty = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStripProperties = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AddPropertyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AsfbmFactBasedModelingFileInXMLToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PropertiesToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.GroupBoxMain.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.ToolStripMain.SuspendLayout()
@@ -289,7 +290,7 @@ Partial Class frmSchema
         Me.ContextMenuStripSchema.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.ContextMenuStripSchema.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NodesToolStripMenuItem, Me.RelationshipsToolStripMenuItem, Me.ToolStripSeparator1, Me.EportToolStripMenuItem, Me.DeleteToolStripMenuItem, Me.ToolStripSeparator3, Me.ConfigurationToolStripMenuItem})
         Me.ContextMenuStripSchema.Name = "ContextMenuStripSchema"
-        Me.ContextMenuStripSchema.Size = New System.Drawing.Size(181, 148)
+        Me.ContextMenuStripSchema.Size = New System.Drawing.Size(172, 126)
         '
         'NodesToolStripMenuItem
         '
@@ -297,7 +298,7 @@ Partial Class frmSchema
         Me.NodesToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.PGSNodes16x16
         Me.NodesToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.NodesToolStripMenuItem.Name = "NodesToolStripMenuItem"
-        Me.NodesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.NodesToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.NodesToolStripMenuItem.Text = "&Node Types"
         '
         'AddNodeToolStripMenuItem
@@ -314,7 +315,7 @@ Partial Class frmSchema
         Me.RelationshipsToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.Relationships16x16
         Me.RelationshipsToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.RelationshipsToolStripMenuItem.Name = "RelationshipsToolStripMenuItem"
-        Me.RelationshipsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.RelationshipsToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.RelationshipsToolStripMenuItem.Text = "&Relationship Types"
         '
         'AddRelationshipToolStripMenuItem
@@ -328,7 +329,7 @@ Partial Class frmSchema
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(177, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(168, 6)
         '
         'EportToolStripMenuItem
         '
@@ -336,7 +337,7 @@ Partial Class frmSchema
         Me.EportToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.Export_JSON16x16
         Me.EportToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.EportToolStripMenuItem.Name = "EportToolStripMenuItem"
-        Me.EportToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.EportToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.EportToolStripMenuItem.Text = "&Export"
         '
         'AsJSONGraphSchemaToolStripMenuItem
@@ -347,25 +348,31 @@ Partial Class frmSchema
         Me.AsJSONGraphSchemaToolStripMenuItem.Size = New System.Drawing.Size(287, 22)
         Me.AsJSONGraphSchemaToolStripMenuItem.Text = "as Graph Schema in &JSON"
         '
+        'AsfbmFactBasedModelingFileInXMLToolStripMenuItem
+        '
+        Me.AsfbmFactBasedModelingFileInXMLToolStripMenuItem.Name = "AsfbmFactBasedModelingFileInXMLToolStripMenuItem"
+        Me.AsfbmFactBasedModelingFileInXMLToolStripMenuItem.Size = New System.Drawing.Size(287, 22)
+        Me.AsfbmFactBasedModelingFileInXMLToolStripMenuItem.Text = "as .fbm Fact-Based Modeling file in XML"
+        '
         'DeleteToolStripMenuItem
         '
         Me.DeleteToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.DeleteCross16x16
         Me.DeleteToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.DeleteToolStripMenuItem.Name = "DeleteToolStripMenuItem"
-        Me.DeleteToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DeleteToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.DeleteToolStripMenuItem.Text = "&Delete"
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(177, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(168, 6)
         '
         'ConfigurationToolStripMenuItem
         '
         Me.ConfigurationToolStripMenuItem.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.Cog16x16
         Me.ConfigurationToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.ConfigurationToolStripMenuItem.Name = "ConfigurationToolStripMenuItem"
-        Me.ConfigurationToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ConfigurationToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.ConfigurationToolStripMenuItem.Text = "&Configuration"
         '
         'ContextMenuStripNode
@@ -457,16 +464,16 @@ Partial Class frmSchema
         'ContextMenuStripRelationship
         '
         Me.ContextMenuStripRelationship.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.ContextMenuStripRelationship.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemRelationshipAddProperty})
+        Me.ContextMenuStripRelationship.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemRelationshipAddProperty, Me.PropertiesToolStripMenuItem1})
         Me.ContextMenuStripRelationship.Name = "ContextMenuStripRelationship"
-        Me.ContextMenuStripRelationship.Size = New System.Drawing.Size(149, 28)
+        Me.ContextMenuStripRelationship.Size = New System.Drawing.Size(185, 74)
         '
         'ToolStripMenuItemRelationshipAddProperty
         '
         Me.ToolStripMenuItemRelationshipAddProperty.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.AddAttribute16x16
         Me.ToolStripMenuItemRelationshipAddProperty.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.ToolStripMenuItemRelationshipAddProperty.Name = "ToolStripMenuItemRelationshipAddProperty"
-        Me.ToolStripMenuItemRelationshipAddProperty.Size = New System.Drawing.Size(148, 24)
+        Me.ToolStripMenuItemRelationshipAddProperty.Size = New System.Drawing.Size(184, 24)
         Me.ToolStripMenuItemRelationshipAddProperty.Text = "&Add Property"
         '
         'ContextMenuStripProperties
@@ -482,11 +489,13 @@ Partial Class frmSchema
         Me.AddPropertyToolStripMenuItem.Size = New System.Drawing.Size(144, 22)
         Me.AddPropertyToolStripMenuItem.Text = "&Add Property"
         '
-        'AsfbmFactBasedModelingFileInXMLToolStripMenuItem
+        'PropertiesToolStripMenuItem1
         '
-        Me.AsfbmFactBasedModelingFileInXMLToolStripMenuItem.Name = "AsfbmFactBasedModelingFileInXMLToolStripMenuItem"
-        Me.AsfbmFactBasedModelingFileInXMLToolStripMenuItem.Size = New System.Drawing.Size(287, 22)
-        Me.AsfbmFactBasedModelingFileInXMLToolStripMenuItem.Text = "as .fbm Fact-Based Modeling file in XML"
+        Me.PropertiesToolStripMenuItem1.Image = Global.JSON_Graph_Schema_Editor.My.Resources.Resources.Cog16x16
+        Me.PropertiesToolStripMenuItem1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.PropertiesToolStripMenuItem1.Name = "PropertiesToolStripMenuItem1"
+        Me.PropertiesToolStripMenuItem1.Size = New System.Drawing.Size(184, 24)
+        Me.PropertiesToolStripMenuItem1.Text = "&Properties"
         '
         'frmSchema
         '
@@ -563,4 +572,5 @@ Partial Class frmSchema
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
     Friend WithEvents ConfigurationToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AsfbmFactBasedModelingFileInXMLToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PropertiesToolStripMenuItem1 As ToolStripMenuItem
 End Class
